@@ -554,3 +554,236 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
     </div>
   );
 };
+
+// --- My Account (Profile) View ---
+interface ProfileProps {
+  user: UserProfile;
+  onNavigate: (view: ViewState) => void;
+  onUpdateUser: (updates: Partial<UserProfile>) => void;
+}
+
+export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdateUser }) => {
+  const [name, setName] = useState(user.name || '');
+  const [email, setEmail] = useState(user.email || '');
+  const [mobile, setMobile] = useState(user.mobile || '');
+  const [gst, setGst] = useState(user.gst || '');
+  const [businessName, setBusinessName] = useState(user.businessName || '');
+  const [stores, setStores] = useState<StoreInfo[]>(user.stores || []);
+
+  // Logo upload state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tempImage, setTempImage] = useState<string | null>(null);
+  const [isChecking, setIsChecking] = useState(false);
+  const [profanityResult, setProfanityResult] = useState<'idle' | 'passed' | 'failed'>('idle');
+  const [activeLogoStoreId, setActiveLogoStoreId] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddStore = () => {
+    setStores([...stores, { id: `s${Date.now()}`, name: '', address: '', contactNumber: '', logoUrl: '' }]);
+  };
+
+  const handleRemoveStore = (idToRemove: string) => {
+    if (stores.length > 1) {
+      setStores(stores.filter(s => s.id !== idToRemove));
+    }
+  };
+
+  const handleStoreChange = (id: string, field: keyof StoreInfo, value: string) => {
+    setStores(stores.map(s => s.id === id ? { ...s, [field]: value } : s));
+  };
+
+  const handleSave = () => {
+    onUpdateUser({ name, email, mobile, gst, businessName, stores });
+    onNavigate('dashboard');
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setTempImage(url);
+      setProfanityResult('idle');
+      setIsChecking(true);
+      setTimeout(() => {
+        setIsChecking(false);
+        if (file.name.toLowerCase().includes('bad') || file.name.toLowerCase().includes('nsfw')) {
+          setProfanityResult('failed');
+        } else {
+          setProfanityResult('passed');
+        }
+      }, 2000);
+    }
+  };
+
+  const confirmUpload = () => {
+    if (profanityResult === 'passed' && tempImage && activeLogoStoreId) {
+      handleStoreChange(activeLogoStoreId, 'logoUrl', tempImage);
+      setIsModalOpen(false);
+      setTempImage(null);
+      setProfanityResult('idle');
+      setActiveLogoStoreId(null);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTempImage(null);
+    setProfanityResult('idle');
+    setActiveLogoStoreId(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  return (
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <PageHeader title="My Account" onBack={() => onNavigate('dashboard')} />
+
+      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
+        <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Your Details</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+          <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
+          <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input label="Mobile Number" value={mobile} onChange={(e) => setMobile(e.target.value)} />
+          <Input label="GST Number" value={gst} onChange={(e) => setGst(e.target.value)} />
+        </div>
+        <Input label="Business Name" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
+
+        <div className="border-t border-gray-200 pt-6 mt-6">
+          <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Store Details</h3>
+          <div className="space-y-6">
+            {stores.map((store, index) => (
+              <div key={store.id} className="p-5 bg-gray-50 rounded-xl border border-gray-200 relative">
+                {stores.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveStore(store.id)}
+                    className="absolute top-3 right-3 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                )}
+                <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Store {index + 1}</h4>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Store Logo</label>
+                  <div className="flex items-center gap-4">
+                    {store.logoUrl ? (
+                      <img src={store.logoUrl} alt="Store Logo" className="h-16 w-16 object-cover rounded-full shadow-sm border border-gray-200" />
+                    ) : (
+                      <div className="h-16 w-16 rounded-full bg-white border border-gray-200 flex items-center justify-center shadow-sm">
+                        <ImageIcon className="w-6 h-6 text-gray-400" />
+                      </div>
+                    )}
+                    <Button variant="outline" size="sm" onClick={() => { setActiveLogoStoreId(store.id); setIsModalOpen(true); }}>
+                      {store.logoUrl ? 'Change Logo' : 'Upload Logo'}
+                    </Button>
+                  </div>
+                </div>
+
+                <Input
+                  label="Store Name"
+                  placeholder="e.g. Sharma Electronics"
+                  value={store.name}
+                  onChange={(e) => handleStoreChange(store.id, 'name', e.target.value)}
+                />
+                <Input
+                  label="Store Address"
+                  placeholder="e.g. 123 Main St, City"
+                  value={store.address}
+                  onChange={(e) => handleStoreChange(store.id, 'address', e.target.value)}
+                />
+                <Input
+                  label="Store Contact Number"
+                  placeholder="e.g. 98765 43210"
+                  value={store.contactNumber}
+                  onChange={(e) => handleStoreChange(store.id, 'contactNumber', e.target.value)}
+                />
+              </div>
+            ))}
+          </div>
+
+          <Button
+            type="button"
+            variant="outline"
+            fullWidth
+            className="mt-6 border-dashed"
+            onClick={handleAddStore}
+          >
+            <Plus className="w-4 h-4 mr-2" /> Add Another Store
+          </Button>
+        </div>
+
+        <div className="mt-8 flex justify-end gap-4">
+          <Button variant="ghost" onClick={() => onNavigate('dashboard')}>Cancel</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
+        </div>
+      </div>
+
+      {/* Upload & Content Check Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+              <h3 className="font-bold text-gray-900">Upload Store Logo</h3>
+              <button onClick={closeModal} className="p-1 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-200 transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 flex flex-col items-center">
+              {!tempImage ? (
+                <>
+                  <div className="w-20 h-20 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-4">
+                    <UploadCloud className="w-10 h-10" />
+                  </div>
+                  <p className="text-center text-gray-600 mb-6">Select an image from your device gallery to use as your store logo.</p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                  />
+                  <Button onClick={() => fileInputRef.current?.click()} fullWidth>
+                    Choose from Gallery
+                  </Button>
+                </>
+              ) : (
+                <div className="w-full flex flex-col items-center">
+                  <div className="relative w-32 h-32 mb-6">
+                    <img src={tempImage} alt="Preview" className="w-full h-full object-cover rounded-full shadow-md border-4 border-white" />
+                    {isChecking && (
+                      <div className="absolute inset-0 bg-white/70 rounded-full flex items-center justify-center backdrop-blur-sm">
+                        <Loader2 className="w-8 h-8 text-primary-600 animate-spin" />
+                      </div>
+                    )}
+                  </div>
+                  {isChecking ? (
+                    <p className="text-xs text-primary-400 mt-1">Checking image content...</p>
+                  ) : profanityResult === 'passed' ? (
+                    <div className="flex items-center text-green-600 mb-4">
+                      <CheckCircle2 className="w-5 h-5 mr-2" />
+                      <p className="text-sm font-medium">Image looks good</p>
+                    </div>
+                  ) : (
+                    <div className="flex items-start text-red-600 mb-4 max-w-xs">
+                      <AlertTriangle className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
+                      <p className="text-sm font-medium">This image was flagged by our content check. Please choose a different image.</p>
+                    </div>
+                  )}
+                  <div className="flex gap-3 w-full">
+                    <Button variant="outline" fullWidth onClick={() => { setTempImage(null); setProfanityResult('idle'); if (fileInputRef.current) fileInputRef.current.value = ''; }}>
+                      Choose Different
+                    </Button>
+                    <Button fullWidth onClick={confirmUpload} disabled={profanityResult !== 'passed'}>
+                      Use This Logo
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

@@ -1,7 +1,8 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import { AppState, Action, ViewState, UserProfile, Template, CampaignDraft } from './types';
 import { TopNav } from './components/SharedUI';
-import { LandingView, RegisterView, LoginView, OTPView, ProfileSetupView } from './views/AuthViews';
+import { LandingView, RegisterView, LoginView, OTPView } from './views/AuthViews';
+import { ProfileView } from './views/MainViews';
 import { DashboardView, StoreManagementView } from './views/MainViews';
 import { GalleryView, EditorView, GeneratingView, DownloadView } from './views/CampaignViews';
 import { HelpView, TermsView, PrivacyView, FaqView } from './views/MiscViews';
@@ -105,7 +106,7 @@ export default function App() {
       case 'otp':
         return <OTPView onNavigate={navigate} onLogin={login} />;
       case 'profile_setup':
-        return <ProfileSetupView onNavigate={navigate} onLogin={login} user={state.user} />;
+        return state.user ? <ProfileView user={state.user} onNavigate={navigate} onUpdateUser={updateUser} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
       case 'dashboard':
         return state.user ? <DashboardView user={state.user} onNavigate={navigate} onEditCampaign={editCampaign} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
       case 'store_management':

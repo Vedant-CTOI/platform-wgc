@@ -148,9 +148,15 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate }) => {
   ]);
 
   // Mock function to populate store details based on GST
+  const [gstFetched, setGstFetched] = useState(false);
+
   const handleGstChange = (value: string) => {
     setGstNumber(value.toUpperCase());
-    if (value.length === 15) {
+    setGstFetched(false);
+  };
+
+  const handleGstEnter = () => {
+    if (gstNumber.length === 15) {
       // Simulate fetching details
       setStores([{
         id: 's1',
@@ -158,6 +164,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate }) => {
         address: '123 Auto-populated Address, City',
         contactNumber: '9876543210'
       }]);
+      setGstFetched(true);
     }
   };
 
@@ -228,13 +235,30 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate }) => {
                 <h3 className="text-sm font-semibold text-gray-900">Store Details</h3>
               </div>
 
-              <Input 
-                label="GST Number" 
-                placeholder="Enter GST to auto-fill details"
-                value={gstNumber}
-                onChange={(e) => handleGstChange(e.target.value)}
-                helperText="Entering a valid GST will auto-populate store details."
-              />
+              <div>
+                <div className="flex items-end gap-2">
+                  <div className="flex-grow">
+                    <Input 
+                      label="GST Number" 
+                      placeholder="Enter GST to auto-fill details"
+                      value={gstNumber}
+                      onChange={(e) => handleGstChange(e.target.value)}
+                    />
+                  </div>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="mb-4"
+                    disabled={gstNumber.length !== 15 || gstFetched}
+                    onClick={handleGstEnter}
+                  >
+                    Enter
+                  </Button>
+                </div>
+                <p className={`text-sm mt-1 ${gstFetched ? 'text-green-600' : 'text-gray-500'}`}>
+                  {gstFetched ? 'Store details auto-populated.' : 'Entering a valid GST will auto-populate store details.'}
+                </p>
+              </div>
               
               <div className="space-y-6 mt-4">
                 {stores.map((store, index) => (
@@ -309,10 +333,9 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate }) => {
 
 export const LoginView: React.FC<AuthProps> = ({ onNavigate }) => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    if (!email || !password) return;
+    if (!email) return;
     onNavigate('otp');
   };
 
@@ -332,40 +355,18 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate }) => {
         <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
           <div className="space-y-5">
             <Input 
-              label="Email or phone" 
-              type="text" 
-              placeholder="Enter your email or phone"
+              label="Email" 
+              type="email" 
+              placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <Input 
-              label="Password or OTP" 
-              type="password" 
-              placeholder="Enter password or OTP"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                Remember me
-              </label>
-            </div>
-            <div className="text-sm">
-              <a href="#" className="font-medium text-primary-600 hover:text-primary-700">
-                Forgot password?
-              </a>
-            </div>
           </div>
 
           <div className="pt-4 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
-            <Button type="submit" size="lg" className="w-full sm:w-auto px-8" disabled={!email || !password}>
-              Next
+            <Button type="submit" size="lg" className="w-full sm:w-auto px-8" disabled={!email}>
+              Send
             </Button>
             <button type="button" onClick={() => onNavigate('register')} className="text-primary-600 font-medium hover:text-primary-700 text-sm">
               Create account
@@ -420,7 +421,7 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin }) => {
         ]
       };
       onLogin(mockUser);
-      onNavigate('landing');
+      onNavigate('dashboard');
     }, 1000);
   };
 

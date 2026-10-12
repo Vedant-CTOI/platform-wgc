@@ -443,14 +443,14 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
         {/* Left: Canvas Preview */}
         <div className="w-1/2 flex flex-col items-center justify-center bg-gray-100 rounded-xl sm:rounded-2xl p-2 sm:p-8 overflow-y-auto relative">
           
-          <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-10">
+          <div className="flex justify-between items-center mb-2 shrink-0">
             <span className="text-xs font-bold text-gray-500 tracking-wider uppercase">Selected Designs</span>
             <span className="text-xs bg-white px-3 py-1 rounded-full text-gray-600 font-medium shadow-sm">{previewIndex + 1} of {previewCombinations.length}</span>
           </div>
 
           {/* Carousel Controls */}
           {previewCombinations.length > 1 && (
-            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-1 sm:px-4 z-10 pointer-events-none">
+            <div className="absolute inset-x-0 top-[55%] -translate-y-1/2 flex justify-between px-1 sm:px-4 z-20 pointer-events-none">
               <button onClick={prevPreview} className="pointer-events-auto p-1 sm:p-2 bg-white/80 hover:bg-white text-gray-800 rounded-full shadow-md backdrop-blur-sm transition-all">
                 <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
               </button>
@@ -460,7 +460,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
             </div>
           )}
 
-          <div className="w-full max-w-md transition-all duration-500 flex items-center justify-center mt-8">
+          <div className="w-full max-w-md transition-all duration-500 flex items-center justify-center mt-10">
             <CanvasPreview template={activeCombo.template} data={currentData} ratioClass={activeRatioClass} />
           </div>
 
