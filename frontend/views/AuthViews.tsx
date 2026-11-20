@@ -278,15 +278,6 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) =>
     onNavigate('otp');
   };
 
-  // One-click demo sign-in: fills the email, then continues to OTP
-  const demoSignIn = (kind: 'new' | 'returning') => {
-    setEmail(DEMO_ACCOUNTS[kind].email);
-    setTimeout(() => {
-      onSetAuthMode?.(kind);
-      onNavigate('otp');
-    }, 600);
-  };
-
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-white sm:bg-gray-50">
       <div className="max-w-md w-full space-y-8 sm:bg-white p-4 sm:p-10 sm:rounded-3xl sm:shadow-sm sm:border border-gray-200">
@@ -322,24 +313,6 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) =>
           </div>
         </form>
 
-        {/* Demo accounts (for showcasing the two journeys) */}
-        <div className="border-t border-gray-200 pt-6">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 text-center">Demo accounts</p>
-          <div className="grid grid-cols-2 gap-3">
-            {(['new', 'returning'] as const).map(kind => (
-              <button
-                key={kind}
-                type="button"
-                onClick={() => demoSignIn(kind)}
-                className="p-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 transition-colors text-left"
-              >
-                <span className="block text-sm font-bold text-gray-900">{DEMO_ACCOUNTS[kind].label}</span>
-                <span className="block text-xs text-gray-500 mt-0.5 truncate">{DEMO_ACCOUNTS[kind].email}</span>
-              </button>
-            ))}
-          </div>
-          <p className="text-xs text-gray-400 mt-3 text-center">OTP: {DEMO_OTP}</p>
-        </div>
       </div>
     </div>
   );
