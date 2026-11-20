@@ -184,13 +184,82 @@ export const MOCK_TEMPLATES: Template[] = [
       offer: 'BOOK A SESSION',
     },
     colorScheme: { bg: 'bg-gray-200', text: 'text-gray-900', accent: 'bg-gray-800' }
+  },
+  {
+    id: 't15',
+    name: 'Festive Quarter Page',
+    category: 'Festive',
+    thumbnail: GRAY_PLACEHOLDER,
+    ratioClass: 'aspect-[468/709]',
+    defaultText: { headline: 'FESTIVE OFFERS', subheadline: 'Celebrate the season with us', offer: 'VISIT TODAY' },
+    colorScheme: { bg: 'bg-gray-100', text: 'text-gray-900', accent: 'bg-gray-800' }
+  },
+  {
+    id: 't16',
+    name: 'Bridal Standee',
+    category: 'Wedding',
+    thumbnail: GRAY_PLACEHOLDER,
+    ratioClass: 'aspect-[800/2000]',
+    defaultText: { headline: 'BRIDAL SEASON', subheadline: 'Walk in and explore the collection', offer: 'IN STORE NOW' },
+    colorScheme: { bg: 'bg-gray-200', text: 'text-gray-900', accent: 'bg-gray-900' }
+  },
+  {
+    id: 't17',
+    name: 'In-store Poster',
+    category: 'Everyday',
+    thumbnail: GRAY_PLACEHOLDER,
+    ratioClass: 'aspect-[1000/1414]',
+    defaultText: { headline: 'NEW ARRIVALS', subheadline: 'Ask our staff for details', offer: 'SHOP NOW' },
+    colorScheme: { bg: 'bg-white', text: 'text-gray-900', accent: 'bg-black' }
+  },
+  {
+    id: 't18',
+    name: 'Highway Billboard',
+    category: 'Minimalist',
+    thumbnail: GRAY_PLACEHOLDER,
+    ratioClass: 'aspect-[3000/1000]',
+    defaultText: { headline: 'PURE GOLD', subheadline: 'Timeless craftsmanship', offer: 'VISIT US' },
+    colorScheme: { bg: 'bg-gray-300', text: 'text-gray-900', accent: 'bg-gray-800' }
   }
 ];
 
 export const CATEGORIES = ['All', 'Wedding', 'Festive', 'Everyday', 'Minimalist'];
 
+// Media formats grouped into categories (gallery tabs + grouped size filter).
+// NOTE: Quarter Page, Standee, Poster and Billboard ratios are placeholders until final specs are shared.
+export const MEDIA_GROUPS = ['Print Ads', 'Social Media', 'Outdoor & Collateral'] as const;
+
 export const ASPECT_RATIOS = [
-  { id: '610x794', name: 'Full Page', class: 'aspect-[610/794]' },
-  { id: '936x709', name: 'Half Page', class: 'aspect-[936/709]' },
-  { id: '621x621', name: 'Social Media', class: 'aspect-square' },
+  { id: '610x794', name: 'Full Page', class: 'aspect-[610/794]', group: 'Print Ads' },
+  { id: '936x709', name: 'Half Page', class: 'aspect-[936/709]', group: 'Print Ads' },
+  { id: '468x709', name: 'Quarter Page', class: 'aspect-[468/709]', group: 'Print Ads' },
+  { id: '621x621', name: '1:1 Square Post', class: 'aspect-square', group: 'Social Media' },
+  { id: '800x2000', name: 'Vertical Standee', class: 'aspect-[800/2000]', group: 'Outdoor & Collateral' },
+  { id: '1000x1414', name: 'In-store Poster', class: 'aspect-[1000/1414]', group: 'Outdoor & Collateral' },
+  { id: '3000x1000', name: 'Landscape Billboard', class: 'aspect-[3000/1000]', group: 'Outdoor & Collateral' },
 ];
+
+// Max creatives a user can customise in one session.
+export const MAX_CREATIVES_PER_SESSION = 3;
+
+// Address character limits — placeholders, to be finalised during development.
+export const ADDRESS_LIMITS = { line1: 40, landmark: 30, city: 25 };
+
+export const formatAddress = (line1?: string, landmark?: string, city?: string) =>
+  [line1, landmark, city].filter(Boolean).join(', ');
+
+// Mock data: stores for a returning (multi-branch) retailer.
+export const RETURNING_USER_STORES = [
+  { id: 's1', name: 'Store 1', address: '12 MG Road', landmark: 'Near City Mall', city: 'Mumbai', contactNumber: '98765 43210', retailerUrl: 'www.yourstore.com' },
+  { id: 's2', name: 'Store 2', address: '45 Linking Road', landmark: 'Opp. Bandra Station', city: 'Mumbai', contactNumber: '91234 56789', retailerUrl: 'www.yourstore.com' },
+  { id: 's3', name: 'Store 3', address: '78 Connaught Place', landmark: '', city: 'Delhi', contactNumber: '99887 77665', retailerUrl: '' },
+  { id: 's4', name: 'Store 4', address: '9 Brigade Road', landmark: 'Near Metro', city: 'Bangalore', contactNumber: '90000 11122', retailerUrl: '' },
+  { id: 's5', name: 'Store 5', address: '21 Park Street', landmark: '', city: 'Kolkata', contactNumber: '93333 44455', retailerUrl: 'www.yourstore.com' },
+];
+
+// Demo accounts for showcasing the first-time vs repeat user journeys.
+export const DEMO_ACCOUNTS = {
+  new: { email: 'new@demo.com', label: 'First-time user' },
+  returning: { email: 'repeat@demo.com', label: 'Repeat user' },
+};
+export const DEMO_OTP = '1234';

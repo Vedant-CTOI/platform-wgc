@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, PageHeader, Input } from '../components/SharedUI';
+import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
 import { ViewState, Template, CampaignDraft, UserProfile, StoreInfo, PreviewData } from '../types';
-import { MOCK_TEMPLATES, CATEGORIES, ASPECT_RATIOS } from '../constants';
-import { Search, Filter, Download, Share2, Copy, Check, Loader2, Image as ImageIcon, MapPin, Phone, X, ChevronLeft, ChevronRight, UploadCloud, AlertTriangle, CheckCircle2, Eye } from 'lucide-react';
+import { MOCK_TEMPLATES, CATEGORIES, ASPECT_RATIOS, MEDIA_GROUPS, MAX_CREATIVES_PER_SESSION, formatAddress } from '../constants';
+import { Search, Filter, Download, Share2, Copy, Check, Loader2, Image as ImageIcon, MapPin, Phone, Globe, X, ChevronLeft, ChevronRight, UploadCloud, AlertTriangle, CheckCircle2, Eye } from 'lucide-react';
 
 interface FlowProps {
   onNavigate: (view: ViewState) => void;
@@ -12,9 +12,17 @@ interface FlowProps {
   draft?: CampaignDraft | null;
   updateDraft?: (updates: Partial<CampaignDraft>) => void;
   user?: UserProfile | null;
+  onUpdateUser?: (updates: Partial<UserProfile>) => void;
 }
 
 const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e5e7eb'/%3E%3Cpath d='M50 40a10 10 0 1 0 0-20 10 10 0 0 0 0 20zm-20 30l15-20 10 10 20-25 15 35H30z' fill='%239ca3af'/%3E%3C/svg%3E";
+
+// Keeps tall formats (e.g. standees) inside the preview stage by capping width from available height
+const stageStyle = (ratioClass?: string): React.CSSProperties => {
+  const m = (ratioClass || '').match(/aspect-\[(\d+)\/(\d+)\]/);
+  const ratio = m ? Number(m[1]) / Number(m[2]) : 1;
+  return { maxWidth: `min(28rem, calc((100vh - 22rem) * ${ratio}))`, marginLeft: 'auto', marginRight: 'auto' };
+};
 
 // --- Shared Canvas Preview Component ---
 const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClass?: string, isMini?: boolean }> = ({ template, data, ratioClass = 'aspect-[4/5]', isMini = false }) => {
@@ -26,6 +34,10 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
   if (ratioClass === 'aspect-[4/5]') scale = 1.1;  // 4:5 (Portrait)
   if (ratioClass === 'aspect-[610/794]') scale = 1.15; // Full Page
   if (ratioClass === 'aspect-[936/709]') scale = 0.8; // Half Page
+  if (ratioClass === 'aspect-[468/709]') scale = 1.2; // Quarter Page
+  if (ratioClass === 'aspect-[800/2000]') scale = 1.4; // Vertical Standee
+  if (ratioClass === 'aspect-[1000/1414]') scale = 1.15; // In-store Poster
+  if (ratioClass === 'aspect-[3000/1000]') scale = 0.45; // Landscape Billboard
 
   const displayLogo = data.logoUrl;
 
@@ -80,13 +92,20 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
         {data.storeAddress && (
           <div className="flex items-center truncate max-w-full">
             <MapPin className="mr-1 flex-shrink-0" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} /> 
-            <span className="truncate">{data.storeAddress}</span>
+            <span className="truncate">{formatAddress(data.storeAddress, data.landmark, data.city)}</span>
           </div>
         )}
         {data.contactNumber && (
           <div className="flex items-center flex-shrink-0">
             <Phone className="mr-1" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} /> 
             {data.contactNumber}
+          </div>
+        )}
+        {/* Retailer URL — locked position, hidden when left blank */}
+        {data.retailerUrl && (
+          <div className="flex items-center flex-shrink-0">
+            <Globe className="mr-1" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} /> 
+            {data.retailerUrl}
           </div>
         )}
       </div>
@@ -98,6 +117,7 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
 export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate }) => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeRatioFilter, setActiveRatioFilter] = useState('All');
+  const [activeMediaGroup, setActiveMediaGroup] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
   
@@ -109,7 +129,9 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
     const matchesCat = activeCategory === 'All' || t.category === activeCategory;
     const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRatio = activeRatioFilter === 'All' || t.ratioClass === activeRatioFilter;
-    return matchesCat && matchesSearch && matchesRatio;
+    const group = ASPECT_RATIOS.find(r => r.class === t.ratioClass)?.group;
+    const matchesGroup = activeMediaGroup === 'All' || group === activeMediaGroup;
+    return matchesCat && matchesSearch && matchesRatio && matchesGroup;
   });
 
   const handleTemplateSelect = (template: Template) => {
@@ -119,9 +141,8 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
       setSelectedTemplates(prev => prev.filter(t => t.id !== template.id));
       setShowLimitAlert(false);
     } else {
-      if (selectedTemplates.length >= 3) {
+      if (selectedTemplates.length >= MAX_CREATIVES_PER_SESSION) {
         setShowLimitAlert(true);
-        setTimeout(() => setShowLimitAlert(false), 3000);
       } else {
         setSelectedTemplates(prev => [...prev, template]);
       }
@@ -138,21 +159,38 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
       
-      {/* Limit Alert Toast */}
+      {/* Limit modal */}
       {showLimitAlert && (
-        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center z-50 transition-all duration-300">
-          <AlertTriangle className="w-5 h-5 mr-3" />
-          <span className="font-medium">You can only select up to 3 templates. Please deselect one to add another.</span>
-        </div>
+        <NoticeModal
+          title="Creative Limit Reached"
+          message={`You can only select up to ${MAX_CREATIVES_PER_SESSION} templates. Please deselect one to add another.`}
+          onClose={() => setShowLimitAlert(false)}
+        />
       )}
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-2">
         <PageHeader title="Choose Templates" onBack={() => onNavigate('dashboard')} />
         {selectedTemplates.length > 0 && (
           <Button onClick={handleContinue}>
-            Customize Selected ({selectedTemplates.length}/3)
+            Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})
           </Button>
         )}
+      </div>
+      <p className="text-sm text-gray-500 -mt-4 sm:-mt-6 mb-6">You can customise up to {MAX_CREATIVES_PER_SESSION} creatives per session.</p>
+
+      {/* Media format tabs */}
+      <div className="flex overflow-x-auto no-scrollbar border-b border-gray-200 mb-6">
+        {['All', ...MEDIA_GROUPS].map(group => (
+          <button
+            key={group}
+            onClick={() => { setActiveMediaGroup(group); setActiveRatioFilter('All'); }}
+            className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
+              activeMediaGroup === group ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-800'
+            }`}
+          >
+            {group}
+          </button>
+        ))}
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
@@ -178,9 +216,13 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
             className="pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
           >
             <option value="All">All Sizes</option>
-            <option value="aspect-[610/794]">Full Page</option>
-            <option value="aspect-[936/709]">Half Page</option>
-            <option value="aspect-square">Social Media</option>
+            {MEDIA_GROUPS.filter(g => activeMediaGroup === 'All' || g === activeMediaGroup).map(group => (
+              <optgroup key={group} label={group}>
+                {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
+                  <option key={r.id} value={r.class}>{r.name}</option>
+                ))}
+              </optgroup>
+            ))}
           </select>
           <div className="relative w-full sm:w-64">
             <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -287,7 +329,11 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
 };
 
 // --- 2. Editor View (Now Edit Content) ---
-export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates, draft, updateDraft, user }) => {
+// Mock gold-detection check for jewellery uploads. Real version: AI model with a 95–98% visible-gold threshold.
+// For the prototype, files named with diamond / kundan / stone are rejected.
+const GOLD_REJECT_KEYWORDS = ['diamond', 'kundan', 'stone'];
+
+export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates, draft, updateDraft, user, onUpdateUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadType, setUploadType] = useState<'logo' | 'jewelry' | null>(null);
   const [tempImage, setTempImage] = useState<string | null>(null);
@@ -299,6 +345,11 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
 
   if (!selectedTemplates || selectedTemplates.length === 0 || !draft || !updateDraft || !user) return null;
 
+  // First-time users have no saved stores: no Select Store dropdown, just the store fields
+  const isFirstTime = user.stores.length === 0;
+  const [saveForLater, setSaveForLater] = useState(true);
+  const firstStore = user.stores[0];
+
   // Create combinations of selected templates and selected sizes
   const safeSizes = draft.selectedSizes.length > 0 ? draft.selectedSizes : ['1:1'];
   
@@ -309,11 +360,14 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
   // Initialize artworksData to match previewCombinations
   const [artworksData, setArtworksData] = useState<PreviewData[]>(
     previewCombinations.map(() => ({
-      storeId: user?.stores[0]?.id || 'manual',
-      storeName: user?.stores[0]?.name || '',
-      storeAddress: user?.stores[0]?.address || '',
-      contactNumber: user?.stores[0]?.contactNumber || '',
-      logoUrl: user?.stores[0]?.logoUrl || '',
+      storeId: firstStore?.id || 'manual',
+      storeName: firstStore?.name || '',
+      storeAddress: firstStore?.address || '',
+      landmark: firstStore?.landmark || '',
+      city: firstStore?.city || '',
+      contactNumber: firstStore?.contactNumber || '',
+      retailerUrl: firstStore?.retailerUrl || '',
+      logoUrl: firstStore?.logoUrl || '',
       jewelryImageUrl: ''
     }))
   );
@@ -337,12 +391,12 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
       
       setTimeout(() => {
         setIsChecking(false);
-        // Mock logic: fail if filename contains 'bad' or 'nsfw', otherwise pass
-        if (file.name.toLowerCase().includes('bad') || file.name.toLowerCase().includes('nsfw')) {
-          setProfanityResult('failed');
-        } else {
-          setProfanityResult('passed');
-        }
+        const name = file.name.toLowerCase();
+        // Jewellery: gold-only check. Logo: existing content check ('bad' / 'nsfw').
+        const rejected = uploadType === 'jewelry'
+          ? GOLD_REJECT_KEYWORDS.some(k => name.includes(k))
+          : name.includes('bad') || name.includes('nsfw');
+        setProfanityResult(rejected ? 'failed' : 'passed');
       }, 2000);
     }
   };
@@ -365,13 +419,19 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
       storeId,
       storeName: store.name,
       storeAddress: store.address,
+      landmark: store.landmark || '',
+      city: store.city || '',
       contactNumber: store.contactNumber,
+      retailerUrl: store.retailerUrl || '',
       logoUrl: store.logoUrl || ''
     } : {
       storeId: 'manual',
       storeName: '',
       storeAddress: '',
+      landmark: '',
+      city: '',
       contactNumber: '',
+      retailerUrl: '',
       logoUrl: ''
     };
 
@@ -420,7 +480,34 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
     setPreviewIndex((prev) => (prev - 1 + previewCombinations.length) % previewCombinations.length);
   };
 
+  // Store name + Address Line 1 are mandatory for every creative being customised
+  const activeForms = useSameDetails ? [artworksData[0]] : artworksData;
+  const isFormValid = activeForms.every(d => d && d.storeName.trim() && d.storeAddress.trim());
+  const hasManualEntry = activeForms.some(d => d.storeId === 'manual');
+
   const handleGenerate = () => {
+    if (!isFormValid) return;
+    // "Save this for reusing later": manually entered stores are added to the user's saved stores
+    if (saveForLater && hasManualEntry && onUpdateUser) {
+      const seen = new Set(user.stores.map(st => `${st.name}|${st.address}`));
+      const newStores: StoreInfo[] = [];
+      activeForms.filter(d => d.storeId === 'manual').forEach((d, i) => {
+        const key = `${d.storeName}|${d.storeAddress}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        newStores.push({
+          id: `s${Date.now()}${i}`,
+          name: d.storeName,
+          address: d.storeAddress,
+          landmark: d.landmark,
+          city: d.city,
+          contactNumber: d.contactNumber,
+          retailerUrl: d.retailerUrl,
+          logoUrl: d.logoUrl
+        });
+      });
+      if (newStores.length) onUpdateUser({ stores: [...user.stores, ...newStores] });
+    }
     updateDraft({ artworksData, useSameDetails });
     onNavigate('generating');
   };
@@ -460,7 +547,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
             </div>
           )}
 
-          <div className="w-full max-w-md transition-all duration-500 flex items-center justify-center mt-10">
+          <div className="w-full max-w-md transition-all duration-500 flex items-center justify-center mt-10" style={stageStyle(activeRatioClass)}>
             <CanvasPreview template={activeCombo.template} data={currentData} ratioClass={activeRatioClass} />
           </div>
 
@@ -512,6 +599,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                   </h3>
                 )}
 
+                {!isFirstTime && (
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Store</label>
                   <select 
@@ -525,6 +613,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     <option value="manual">Enter Manually...</option>
                   </select>
                 </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                   <Input 
@@ -560,12 +649,20 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     onChange={(e) => handleFieldChange(index, 'contactNumber', e.target.value)}
                     maxLength={15}
                   />
+                  <div>
+                    <AddressFields
+                      line1={data.storeAddress}
+                      landmark={data.landmark}
+                      city={data.city}
+                      onChange={(f, v) => handleFieldChange(index, f === 'line1' ? 'storeAddress' : f, v)}
+                    />
+                  </div>
                   <Input 
-                    label="Store Address" 
-                    placeholder="Enter full address" 
-                    value={data.storeAddress}
-                    onChange={(e) => handleFieldChange(index, 'storeAddress', e.target.value)}
-                    maxLength={100}
+                    label="Retailer URL (Optional)" 
+                    placeholder="e.g. www.yourstore.com" 
+                    value={data.retailerUrl || ''}
+                    onChange={(e) => handleFieldChange(index, 'retailerUrl', e.target.value)}
+                    maxLength={40}
                   />
                 </div>
                 
@@ -587,9 +684,24 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                   <p className="text-xs text-gray-500 mt-2 leading-relaxed">
                     Best Practices: Use a high-resolution image with a clean, solid background (preferably white or transparent) for best results.
                   </p>
+                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                    Only gold jewellery is permitted. Diamond-centric pieces and large-stone Kundan pieces will be rejected; minor enamel accents or tiny embedded stones are fine.
+                  </p>
                 </div>
               </div>
             ))}
+
+            {(isFirstTime || hasManualEntry) && (
+              <label className="flex items-center cursor-pointer bg-gray-50 p-4 rounded-xl border border-gray-100">
+                <input
+                  type="checkbox"
+                  className="h-5 w-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                  checked={saveForLater}
+                  onChange={(e) => setSaveForLater(e.target.checked)}
+                />
+                <span className="ml-3 text-sm text-gray-700 font-medium">Save this for reusing later</span>
+              </label>
+            )}
 
             <div className="border-t border-gray-200 pt-6 mt-6">
               <Input 
@@ -607,6 +719,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
           <div className="absolute sm:static bottom-0 left-0 right-0 p-2 sm:p-4 border-t border-gray-200 bg-white flex flex-col sm:flex-row justify-end items-center gap-2 z-40">
             <Button 
               onClick={handleGenerate} 
+              disabled={!isFormValid}
               className="px-10 py-3 text-base w-full sm:w-auto"
             >
               Submit Request
@@ -660,7 +773,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     {isChecking && (
                       <div className="text-primary-600 flex flex-col items-center">
                         <p className="font-medium">Analyzing image...</p>
-                        <p className="text-xs text-primary-400 mt-1">Checking for inappropriate content</p>
+                        <p className="text-xs text-primary-400 mt-1">{uploadType === 'jewelry' ? 'Checking that this is gold jewellery' : 'Checking for inappropriate content'}</p>
                       </div>
                     )}
                     
@@ -675,8 +788,10 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     {profanityResult === 'failed' && (
                       <div className="text-red-600 flex flex-col items-center bg-red-50 w-full p-3 rounded-lg border border-red-100">
                         <AlertTriangle className="w-6 h-6 mb-1" />
-                        <p className="font-medium text-sm">Image rejected</p>
-                        <p className="text-xs text-red-700 mt-0.5">Image does not match the profanity check so please upload another one.</p>
+                        <p className="font-medium text-sm">{uploadType === 'jewelry' ? 'Only gold jewellery is permitted on this platform.' : 'Image rejected'}</p>
+                        <p className="text-xs text-red-700 mt-0.5">{uploadType === 'jewelry'
+                          ? "Pieces that are mainly diamond or large-stone Kundan can't be used. Minor enamel accents or tiny embedded stones are fine."
+                          : 'Image does not match the profanity check so please upload another one.'}</p>
                       </div>
                     )}
                   </div>
@@ -847,7 +962,7 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
             <button onClick={() => setPreviewItem(null)} className="absolute -top-12 right-0 p-2 text-white hover:text-gray-300 transition-colors">
               <X className="w-8 h-8" />
             </button>
-            <div className="w-full max-w-lg bg-white rounded-xl overflow-hidden shadow-2xl">
+            <div className="w-full max-w-lg bg-white rounded-xl overflow-hidden shadow-2xl" style={stageStyle(previewItem.template.ratioClass)}>
               <CanvasPreview 
                 template={previewItem.template} 
                 data={previewItem.data} 

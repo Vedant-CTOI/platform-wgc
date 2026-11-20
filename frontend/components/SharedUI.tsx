@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home } from 'lucide-react';
+import { ADDRESS_LIMITS } from '../constants';
 
 // --- Buttons ---
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -56,12 +57,81 @@ export const Input: React.FC<InputProps> = ({ label, error, helperText, classNam
   );
 };
 
+// --- In-app Notice Modal (replaces browser alerts) ---
+export const NoticeModal: React.FC<{ title: string; message: string; onClose: () => void; actionLabel?: string }> = ({ title, message, onClose, actionLabel = 'OK' }) => (
+  <div className="fixed inset-0 bg-black/60 z-[110] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+    <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+      <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <h3 className="font-bold text-gray-900 flex items-center"><AlertCircle className="w-5 h-5 mr-2 text-gray-700" /> {title}</h3>
+        <button onClick={onClose} className="p-1 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-200 transition-colors">
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+      <div className="p-6 text-center">
+        <p className="text-gray-700 mb-6">{message}</p>
+        <Button fullWidth onClick={onClose}>{actionLabel}</Button>
+      </div>
+    </div>
+  </div>
+);
+
+// --- Structured address fields (Line 1 mandatory; Landmark / City optional) with limit modal ---
+export const CHAR_LIMIT_MESSAGE = 'Maximum character limit reached. Please shorten your address.';
+
+export const AddressFields: React.FC<{
+  line1: string;
+  landmark?: string;
+  city?: string;
+  onChange: (field: 'line1' | 'landmark' | 'city', value: string) => void;
+}> = ({ line1, landmark = '', city = '', onChange }) => {
+  const [showLimitModal, setShowLimitModal] = useState(false);
+
+  const handle = (field: 'line1' | 'landmark' | 'city', limit: number, value: string) => {
+    if (value.length > limit) {
+      onChange(field, value.slice(0, limit));
+      setShowLimitModal(true);
+      return;
+    }
+    onChange(field, value);
+  };
+
+  return (
+    <>
+      <Input
+        label="Address Line 1 *"
+        placeholder="e.g. 12 MG Road"
+        value={line1}
+        onChange={(e) => handle('line1', ADDRESS_LIMITS.line1, e.target.value)}
+        helperText={`${line1.length}/${ADDRESS_LIMITS.line1} characters`}
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+        <Input
+          label="Landmark (Optional)"
+          placeholder="e.g. Near City Mall"
+          value={landmark}
+          onChange={(e) => handle('landmark', ADDRESS_LIMITS.landmark, e.target.value)}
+        />
+        <Input
+          label="City (Optional)"
+          placeholder="e.g. Mumbai"
+          value={city}
+          onChange={(e) => handle('city', ADDRESS_LIMITS.city, e.target.value)}
+        />
+      </div>
+      {showLimitModal && (
+        <NoticeModal title="Character Limit" message={CHAR_LIMIT_MESSAGE} onClose={() => setShowLimitModal(false)} />
+      )}
+    </>
+  );
+};
+
 // --- Layout Components ---
 export const TopNav: React.FC<{ 
   isLoggedIn: boolean; 
   onNavigate: (view: any) => void;
   onLogout: () => void;
-}> = ({ isLoggedIn, onNavigate, onLogout }) => {
+  accountLabel?: string;
+}> = ({ isLoggedIn, onNavigate, onLogout, accountLabel }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleNav = (view: string) => {
@@ -113,8 +183,16 @@ export const TopNav: React.FC<{
                   {/* Dropdown Menu */}
                   {isMenuOpen && (
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl py-2 ring-1 ring-black ring-opacity-5 z-50">
+                      {accountLabel && (
+                        <>
+                          <div className="px-4 py-2.5">
+                            <span className="block text-xs text-gray-500">Signed in as</span>
+                            <span className="block text-sm font-semibold text-gray-900">{accountLabel}</span>
+                          </div>
+                          <div className="border-t border-gray-100 my-1"></div>
+                        </>
+                      )}
                       <button onClick={() => handleNav('profile_setup')} className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors">My Account</button>
-                      <button onClick={() => handleNav('help')} className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors">Help & Support</button>
                       <button onClick={() => handleNav('faq')} className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors">FAQs</button>
                       
                       <div className="border-t border-gray-100 my-1"></div>

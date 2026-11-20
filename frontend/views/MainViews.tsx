@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { Button, PageHeader, Input } from '../components/SharedUI';
+import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo } from '../types';
-import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye } from 'lucide-react';
-import { ASPECT_RATIOS } from '../constants';
+import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye, Sparkles } from 'lucide-react';
+import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION } from '../constants';
 
 interface DashboardProps {
   user: UserProfile;
@@ -13,8 +13,8 @@ interface DashboardProps {
 const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23e5e7eb'/%3E%3Cpath d='M200 220a20 20 0 1 0 0-40 20 20 0 0 0 0 40zm-40 60l30-40 20 20 40-50 30 70H160z' fill='%239ca3af'/%3E%3C/svg%3E";
 
 export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEditCampaign }) => {
-  // Mock saved campaigns with dummy data and categories
-  const [savedCampaigns, setSavedCampaigns] = useState([
+  // Mock saved campaigns with dummy data and categories (first-time users start with none)
+  const [savedCampaigns, setSavedCampaigns] = useState(user.isNewUser ? [] : [
     { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't1', ratioClass: 'aspect-[610/794]' },
     { id: 'c2', name: 'Wedding Collection', date: 'Oct 22, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't2', ratioClass: 'aspect-[936/709]' },
     { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't3', ratioClass: 'aspect-square' },
@@ -24,6 +24,8 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
     { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't7', ratioClass: 'aspect-[610/794]' },
     { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't8', ratioClass: 'aspect-[936/709]' },
   ]);
+  const hasNoCreatives = savedCampaigns.length === 0;
+  const [showSelectLimit, setShowSelectLimit] = useState(false);
 
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -67,7 +69,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
   const handleCardClick = (campaign: any) => {
     if (isSelectMode) {
       if (!selectedCampaignIds.includes(campaign.id) && selectedCampaignIds.length >= 3) {
-        alert("Only three can be selected. Please deselect to add more.");
+        setShowSelectLimit(true);
         return;
       }
       setSelectedCampaignIds(prev => 
@@ -91,7 +93,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" onClick={() => setOpenMenuId(null)}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Welcome back, {user.businessName}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{user.isNewUser ? 'Welcome' : `Welcome back, ${user.businessName}`}</h1>
           <p className="text-gray-600 mt-1">Ready to create your next promotion?</p>
         </div>
         <Button size="lg" onClick={() => onNavigate('gallery')} className="w-full sm:w-auto shadow-md">
@@ -136,7 +138,21 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
           </div>
         </div>
         
-        {filteredCampaigns.length > 0 ? (
+        {hasNoCreatives ? (
+          /* Central CTA for users who haven't created any creatives yet */
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-16 sm:py-24 text-center flex flex-col items-center justify-center">
+            <div className="w-16 h-16 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-5">
+              <Sparkles className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Create your first creative</h3>
+            <p className="text-gray-500 max-w-md mx-auto mb-8">
+              Pick a template, add your store details and generate ready-to-use creatives in minutes.
+            </p>
+            <Button size="lg" onClick={() => onNavigate('gallery')} className="px-8 shadow-md">
+              <Plus className="w-5 h-5 mr-2" /> Create Creative
+            </Button>
+          </div>
+        ) : filteredCampaigns.length > 0 ? (
           <div className="columns-1 sm:columns-2 lg:columns-4 gap-6">
             {filteredCampaigns.map((campaign) => {
               const isSelected = selectedCampaignIds.includes(campaign.id);
@@ -238,6 +254,14 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
           </div>
         )}
       </div>
+
+      {showSelectLimit && (
+        <NoticeModal
+          title="Selection Limit"
+          message={`Only ${MAX_CREATIVES_PER_SESSION} can be selected. Please deselect to add more.`}
+          onClose={() => setShowSelectLimit(false)}
+        />
+      )}
 
       {/* Floating Action Bar for Bulk Download */}
       {isSelectMode && selectedCampaignIds.length > 0 && (
@@ -393,6 +417,11 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
         <p className="text-gray-600 mb-6">Manage the store details that will be available to auto-fill in your campaigns.</p>
         
         <div className="space-y-6">
+          {stores.length === 0 && (
+            <div className="p-6 bg-gray-50 rounded-lg border border-gray-200 text-center text-sm text-gray-500">
+              No saved stores yet. Stores you save while creating a creative will appear here.
+            </div>
+          )}
           {stores.map((store, index) => (
             <div key={store.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200 relative">
               {stores.length > 1 && (
@@ -429,12 +458,11 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                 onChange={(e) => handleStoreChange(store.id, 'name', e.target.value)}
                 required
               />
-              <Input 
-                label="Store Address" 
-                placeholder="e.g. 123 Main St, City"
-                value={store.address}
-                onChange={(e) => handleStoreChange(store.id, 'address', e.target.value)}
-                required
+              <AddressFields
+                line1={store.address}
+                landmark={store.landmark}
+                city={store.city}
+                onChange={(f, v) => handleStoreChange(store.id, f === 'line1' ? 'address' : f, v)}
               />
               <Input 
                 label="Store Contact Number" 
@@ -442,6 +470,13 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                 value={store.contactNumber}
                 onChange={(e) => handleStoreChange(store.id, 'contactNumber', e.target.value)}
                 required
+              />
+              <Input 
+                label="Retailer URL (Optional)" 
+                placeholder="e.g. www.yourstore.com"
+                value={store.retailerUrl || ''}
+                onChange={(e) => handleStoreChange(store.id, 'retailerUrl', e.target.value)}
+                maxLength={40}
               />
             </div>
           ))}
@@ -642,14 +677,18 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
           <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
           <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <Input label="Mobile Number" value={mobile} onChange={(e) => setMobile(e.target.value)} />
           <Input label="GST Number" value={gst} onChange={(e) => setGst(e.target.value)} />
+          <Input label="Business Name" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
         </div>
-        <Input label="Business Name" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
 
         <div className="border-t border-gray-200 pt-6 mt-6">
           <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Store Details</h3>
           <div className="space-y-6">
+            {stores.length === 0 && (
+              <div className="p-6 bg-gray-50 rounded-xl border border-gray-200 text-center text-sm text-gray-500">
+                No saved stores yet. Stores you save while creating a creative will appear here.
+              </div>
+            )}
             {stores.map((store, index) => (
               <div key={store.id} className="p-5 bg-gray-50 rounded-xl border border-gray-200 relative">
                 {stores.length > 1 && (
@@ -685,17 +724,24 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
                   value={store.name}
                   onChange={(e) => handleStoreChange(store.id, 'name', e.target.value)}
                 />
-                <Input
-                  label="Store Address"
-                  placeholder="e.g. 123 Main St, City"
-                  value={store.address}
-                  onChange={(e) => handleStoreChange(store.id, 'address', e.target.value)}
+                <AddressFields
+                  line1={store.address}
+                  landmark={store.landmark}
+                  city={store.city}
+                  onChange={(f, v) => handleStoreChange(store.id, f === 'line1' ? 'address' : f, v)}
                 />
                 <Input
                   label="Store Contact Number"
                   placeholder="e.g. 98765 43210"
                   value={store.contactNumber}
                   onChange={(e) => handleStoreChange(store.id, 'contactNumber', e.target.value)}
+                />
+                <Input
+                  label="Retailer URL (Optional)"
+                  placeholder="e.g. www.yourstore.com"
+                  value={store.retailerUrl || ''}
+                  onChange={(e) => handleStoreChange(store.id, 'retailerUrl', e.target.value)}
+                  maxLength={40}
                 />
               </div>
             ))}

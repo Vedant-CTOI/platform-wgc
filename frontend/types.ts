@@ -10,7 +10,6 @@ export type ViewState =
   | 'generating' 
   | 'download'
   | 'store_management'
-  | 'help'
   | 'faq'
   | 'terms'
   | 'privacy';
@@ -18,8 +17,11 @@ export type ViewState =
 export interface StoreInfo {
   id: string;
   name: string;
-  address: string;
+  address: string; // Address Line 1 (mandatory)
+  landmark?: string;
+  city?: string;
   contactNumber: string;
+  retailerUrl?: string;
   logoUrl?: string;
 }
 
@@ -33,6 +35,7 @@ export interface UserProfile {
   storeDetails: string;
   stores: StoreInfo[];
   logoUrl?: string;
+  isNewUser?: boolean;
 }
 
 export interface Template {
@@ -56,8 +59,11 @@ export interface Template {
 export interface PreviewData {
   storeId: string;
   storeName: string;
-  storeAddress: string;
+  storeAddress: string; // Address Line 1
+  landmark?: string;
+  city?: string;
   contactNumber: string;
+  retailerUrl?: string;
   logoUrl: string;
   jewelryImageUrl: string;
 }

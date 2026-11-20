@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, PageHeader } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo } from '../types';
+import { RETURNING_USER_STORES, DEMO_ACCOUNTS, DEMO_OTP } from '../constants';
 import { Store, Image as ImageIcon, MapPin, Phone, CheckCircle2, UploadCloud, AlertTriangle, X, Loader2, Plus, Trash2, Zap, Shield, Palette, Mail, Send } from 'lucide-react';
 
 interface AuthProps {
   onNavigate: (view: ViewState) => void;
   onLogin: (user: UserProfile) => void;
   user?: UserProfile | null;
+  onSetAuthMode?: (mode: 'new' | 'returning') => void;
+  authMode?: 'new' | 'returning';
 }
 
 export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
@@ -138,57 +141,38 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
   );
 };
 
-export const RegisterView: React.FC<AuthProps> = ({ onNavigate }) => {
+export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [gstNumber, setGstNumber] = useState('');
-  const [stores, setStores] = useState<StoreInfo[]>([
-    { id: 's1', name: '', address: '', contactNumber: '' }
-  ]);
+  const [gstStatus, setGstStatus] = useState<'idle' | 'verifying' | 'verified' | 'invalid'>('idle');
 
-  // Mock function to populate store details based on GST
-  const [gstFetched, setGstFetched] = useState(false);
+  // Standard 15-character GSTIN format: 2-digit state code + PAN + entity no. + 'Z' + checksum
+  const GSTIN_PATTERN = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
 
   const handleGstChange = (value: string) => {
-    setGstNumber(value.toUpperCase());
-    setGstFetched(false);
+    setGstNumber(value.toUpperCase().replace(/\s/g, ''));
+    setGstStatus('idle');
   };
 
-  const handleGstEnter = () => {
-    if (gstNumber.length === 15) {
-      // Simulate fetching details
-      setStores([{
-        id: 's1',
-        name: 'Auto-populated Store Name',
-        address: '123 Auto-populated Address, City',
-        contactNumber: '9876543210'
-      }]);
-      setGstFetched(true);
+  // Mock GSTIN verification — confirms the registrant is an actual business
+  const handleGstVerify = () => {
+    if (!GSTIN_PATTERN.test(gstNumber)) {
+      setGstStatus('invalid');
+      return;
     }
-  };
-
-  const handleAddStore = () => {
-    setStores([...stores, { id: `s${Date.now()}`, name: '', address: '', contactNumber: '' }]);
-  };
-
-  const handleRemoveStore = (idToRemove: string) => {
-    if (stores.length > 1) {
-      setStores(stores.filter(s => s.id !== idToRemove));
-    }
-  };
-
-  const handleStoreChange = (id: string, field: keyof StoreInfo, value: string) => {
-    setStores(stores.map(s => s.id === id ? { ...s, [field]: value } : s));
+    setGstStatus('verifying');
+    setTimeout(() => setGstStatus('verified'), 1500);
   };
 
   const handleContinue = () => {
-    const hasEmptyStore = stores.some(s => !s.name || !s.address || !s.contactNumber);
-    if (!email || !firstName || !lastName || hasEmptyStore) return;
+    if (!email || !firstName || !lastName || gstStatus !== 'verified') return;
+    onSetAuthMode?.('new');
     onNavigate('otp');
   };
 
-  const isFormValid = email && firstName && lastName && !stores.some(s => !s.name || !s.address || !s.contactNumber);
+  const isFormValid = email && firstName && lastName && gstStatus === 'verified';
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-white sm:bg-gray-50">
@@ -231,82 +215,35 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate }) => {
             />
             
             <div className="border-t border-gray-200 pt-6 mt-4">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-sm font-semibold text-gray-900">Store Details</h3>
-              </div>
-
-              <div>
-                <div className="flex items-end gap-2">
-                  <div className="flex-grow">
-                    <Input 
-                      label="GST Number" 
-                      placeholder="Enter GST to auto-fill details"
-                      value={gstNumber}
-                      onChange={(e) => handleGstChange(e.target.value)}
-                    />
-                  </div>
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    className="mb-4"
-                    disabled={gstNumber.length !== 15 || gstFetched}
-                    onClick={handleGstEnter}
-                  >
-                    Enter
-                  </Button>
+              <div className="flex items-end gap-2">
+                <div className="flex-grow">
+                  <Input 
+                    label="GST Number *" 
+                    placeholder="e.g. 22AAAAA0000A1Z5"
+                    value={gstNumber}
+                    maxLength={15}
+                    onChange={(e) => handleGstChange(e.target.value)}
+                    error={gstStatus === 'invalid' ? 'Please enter a valid 15-character GSTIN' : undefined}
+                  />
                 </div>
-                <p className={`text-sm mt-1 ${gstFetched ? 'text-green-600' : 'text-gray-500'}`}>
-                  {gstFetched ? 'Store details auto-populated.' : 'Entering a valid GST will auto-populate store details.'}
-                </p>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className={gstStatus === 'invalid' ? 'mb-11' : 'mb-4'}
+                  disabled={gstNumber.length !== 15 || gstStatus === 'verifying' || gstStatus === 'verified'}
+                  onClick={handleGstVerify}
+                >
+                  {gstStatus === 'verifying' ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify'}
+                </Button>
               </div>
-              
-              <div className="space-y-6 mt-4">
-                {stores.map((store, index) => (
-                  <div key={store.id} className="p-5 bg-gray-50 rounded-xl border border-gray-200 relative">
-                    {stores.length > 1 && (
-                      <button 
-                        type="button"
-                        onClick={() => handleRemoveStore(store.id)}
-                        className="absolute top-3 right-3 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    )}
-                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Store {index + 1}</h4>
-                    <Input 
-                      label="Store Name" 
-                      placeholder="e.g. Sharma Electronics"
-                      value={store.name}
-                      onChange={(e) => handleStoreChange(store.id, 'name', e.target.value)}
-                      required
-                    />
-                    <Input 
-                      label="Store Address" 
-                      placeholder="e.g. 123 Main St, City"
-                      value={store.address}
-                      onChange={(e) => handleStoreChange(store.id, 'address', e.target.value)}
-                      required
-                    />
-                    <Input 
-                      label="Store Contact Number" 
-                      placeholder="e.g. 98765 43210"
-                      value={store.contactNumber}
-                      onChange={(e) => handleStoreChange(store.id, 'contactNumber', e.target.value)}
-                      required
-                    />
-                  </div>
-                ))}
-              </div>
-              
-              <Button 
-                type="button" 
-                variant="ghost" 
-                size="sm" 
-                className="mt-4 text-primary-600 hover:text-primary-700 hover:bg-primary-50"
-                onClick={handleAddStore}
-              >
-                <Plus className="w-4 h-4 mr-2" /> Add Another Store
-              </Button>
+              <p className={`text-sm mt-1 flex items-center ${gstStatus === 'verified' ? 'text-green-600' : 'text-gray-500'}`}>
+                {gstStatus === 'verified' && <CheckCircle2 className="w-4 h-4 mr-1" />}
+                {gstStatus === 'verifying'
+                  ? 'Verifying GSTIN...'
+                  : gstStatus === 'verified'
+                    ? 'GSTIN verified'
+                    : 'We use your GSTIN to verify that you are a registered business.'}
+              </p>
             </div>
           </div>
 
@@ -331,12 +268,23 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate }) => {
   );
 };
 
-export const LoginView: React.FC<AuthProps> = ({ onNavigate }) => {
+export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) => {
   const [email, setEmail] = useState('');
 
   const handleLogin = () => {
     if (!email) return;
+    // new@demo.com always signs in as a fresh first-time user; any other email is a repeat user
+    onSetAuthMode?.(email.trim().toLowerCase() === DEMO_ACCOUNTS.new.email ? 'new' : 'returning');
     onNavigate('otp');
+  };
+
+  // One-click demo sign-in: fills the email, then continues to OTP
+  const demoSignIn = (kind: 'new' | 'returning') => {
+    setEmail(DEMO_ACCOUNTS[kind].email);
+    setTimeout(() => {
+      onSetAuthMode?.(kind);
+      onNavigate('otp');
+    }, 600);
   };
 
   return (
@@ -373,13 +321,33 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate }) => {
             </button>
           </div>
         </form>
+
+        {/* Demo accounts (for showcasing the two journeys) */}
+        <div className="border-t border-gray-200 pt-6">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 text-center">Demo accounts</p>
+          <div className="grid grid-cols-2 gap-3">
+            {(['new', 'returning'] as const).map(kind => (
+              <button
+                key={kind}
+                type="button"
+                onClick={() => demoSignIn(kind)}
+                className="p-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 hover:border-gray-300 transition-colors text-left"
+              >
+                <span className="block text-sm font-bold text-gray-900">{DEMO_ACCOUNTS[kind].label}</span>
+                <span className="block text-xs text-gray-500 mt-0.5 truncate">{DEMO_ACCOUNTS[kind].email}</span>
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-gray-400 mt-3 text-center">OTP: {DEMO_OTP}</p>
+        </div>
       </div>
     </div>
   );
 };
 
-export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin }) => {
-  const [otp, setOtp] = useState(['', '', '', '']);
+export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = 'returning' }) => {
+  // Demo OTP is pre-filled so the presenter only needs to press Verify
+  const [otp, setOtp] = useState(DEMO_OTP.split(''));
   const [timer, setTimer] = useState(30);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -407,18 +375,19 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin }) => {
     // Mock API call
     setTimeout(() => {
       setIsLoading(false);
-      // Mock user login
+      // First-time users land on the dashboard with no stores — they add store details
+      // while creating their first creative. Repeat users have their saved stores.
+      const isNew = authMode === 'new';
       const mockUser: UserProfile = {
         name: 'John Doe',
         userId: 'john123',
-        mobile: '9876543210',
-        email: 'john@example.com',
+        mobile: '',
+        email: isNew ? DEMO_ACCOUNTS.new.email : DEMO_ACCOUNTS.returning.email,
         gst: '22AAAAA0000A1Z5',
-        businessName: 'My Store',
+        businessName: isNew ? '' : 'My Store',
         storeDetails: 'Retail store',
-        stores: [
-          { id: 's1', name: 'Store 1', address: '123 Main St, Mumbai', contactNumber: '98765 43210' }
-        ]
+        stores: isNew ? [] : RETURNING_USER_STORES,
+        isNewUser: isNew
       };
       onLogin(mockUser);
       onNavigate('dashboard');
@@ -471,7 +440,7 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin }) => {
             >
               {isLoading ? 'Verifying...' : 'Verify'}
             </Button>
-            <button type="button" onClick={() => onNavigate('register')} className="text-primary-600 font-medium hover:text-primary-700 text-sm">
+            <button type="button" onClick={() => onNavigate(authMode === 'new' ? 'register' : 'login')} className="text-primary-600 font-medium hover:text-primary-700 text-sm">
               Back
             </button>
           </div>

@@ -5,7 +5,7 @@ import { LandingView, RegisterView, LoginView, OTPView } from './views/AuthViews
 import { ProfileView } from './views/MainViews';
 import { DashboardView, StoreManagementView } from './views/MainViews';
 import { GalleryView, EditorView, GeneratingView, DownloadView } from './views/CampaignViews';
-import { HelpView, TermsView, PrivacyView, FaqView } from './views/MiscViews';
+import { TermsView, PrivacyView, FaqView } from './views/MiscViews';
 import { MOCK_TEMPLATES, ASPECT_RATIOS } from './constants';
 
 const initialState: AppState = {
@@ -75,6 +75,8 @@ export default function App() {
   const startCampaign = (templates: Template[]) => dispatch({ type: 'START_CAMPAIGN', payload: templates });
   const updateDraft = (updates: Partial<CampaignDraft>) => dispatch({ type: 'UPDATE_DRAFT', payload: updates });
   const updateUser = (updates: Partial<UserProfile>) => dispatch({ type: 'UPDATE_USER', payload: updates });
+  // 'new' = Create Account / new@demo.com (first-time user), 'returning' = Sign in (repeat user)
+  const [authMode, setAuthMode] = useState<'new' | 'returning'>('returning');
 
   const editCampaign = (campaign: any) => {
     const template = MOCK_TEMPLATES.find(t => t.id === campaign.templateId);
@@ -100,19 +102,17 @@ export default function App() {
       case 'landing':
         return <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
       case 'register':
-        return <RegisterView onNavigate={navigate} onLogin={login} />;
+        return <RegisterView onNavigate={navigate} onLogin={login} onSetAuthMode={setAuthMode} />;
       case 'login':
-        return <LoginView onNavigate={navigate} onLogin={login} />;
+        return <LoginView onNavigate={navigate} onLogin={login} onSetAuthMode={setAuthMode} />;
       case 'otp':
-        return <OTPView onNavigate={navigate} onLogin={login} />;
+        return <OTPView onNavigate={navigate} onLogin={login} authMode={authMode} />;
       case 'profile_setup':
         return state.user ? <ProfileView user={state.user} onNavigate={navigate} onUpdateUser={updateUser} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
       case 'dashboard':
         return state.user ? <DashboardView user={state.user} onNavigate={navigate} onEditCampaign={editCampaign} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
       case 'store_management':
         return state.user ? <StoreManagementView user={state.user} onNavigate={navigate} onUpdateUser={updateUser} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
-      case 'help':
-        return <HelpView onBack={handleBackToHome} />;
       case 'faq':
         return <FaqView onBack={handleBackToHome} />;
       case 'terms':
@@ -128,6 +128,7 @@ export default function App() {
           draft={state.draft} 
           updateDraft={updateDraft}
           user={state.user}
+          onUpdateUser={updateUser}
         />;
       case 'generating':
         return <GeneratingView onNavigate={navigate} />;
@@ -148,6 +149,7 @@ export default function App() {
       <ResponsiveHelper />
       <TopNav 
         isLoggedIn={!!state.user} 
+        accountLabel={state.user ? (state.user.isNewUser ? 'First-time user' : 'Repeat user') : undefined}
         onNavigate={navigate} 
         onLogout={logout} 
       />
@@ -163,7 +165,6 @@ export default function App() {
             <div className="flex space-x-6 mt-4 sm:mt-0 text-sm text-gray-500">
               <a href="#" onClick={(e) => { e.preventDefault(); navigate('terms'); }} className="hover:text-gray-900">Terms</a>
               <a href="#" onClick={(e) => { e.preventDefault(); navigate('privacy'); }} className="hover:text-gray-900">Privacy</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('help'); }} className="hover:text-gray-900">Support</a>
             </div>
           </div>
         </footer>
