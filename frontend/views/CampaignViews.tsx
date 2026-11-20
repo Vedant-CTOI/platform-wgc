@@ -26,7 +26,7 @@ const stageStyle = (ratioClass?: string): React.CSSProperties => {
 
 // --- Shared Canvas Preview Component ---
 const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClass?: string, isMini?: boolean }> = ({ template, data, ratioClass = 'aspect-[4/5]', isMini = false }) => {
-  
+
   // Adjust scale based on aspect ratio to keep text balanced within the available vertical space
   let scale = 1;
   if (ratioClass === 'aspect-video') scale = 0.65; // 16:9 (Wide) - needs smaller text relative to width
@@ -42,7 +42,7 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
   const displayLogo = data.logoUrl;
 
   return (
-    <div 
+    <div
       className={`w-full ${ratioClass} ${isMini ? 'rounded-md' : 'rounded-lg sm:rounded-xl'} shadow-lg overflow-hidden relative flex flex-col ${template.colorScheme.bg}`}
       style={{ containerType: 'inline-size' }}
     >
@@ -71,13 +71,13 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
       </div>
 
       {/* Inset Circle for Jewelry */}
-      <div 
+      <div
         className="absolute bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-gray-200 z-10 flex items-center justify-center overflow-hidden"
-        style={{ 
-          bottom: `${12 * scale}cqi`, 
-          right: `${4 * scale}cqi`, 
-          width: `${14 * scale}cqi`, 
-          height: `${14 * scale}cqi` 
+        style={{
+          bottom: `${12 * scale}cqi`,
+          right: `${4 * scale}cqi`,
+          width: `${14 * scale}cqi`,
+          height: `${14 * scale}cqi`
         }}
       >
         {data.jewelryImageUrl ? (
@@ -91,20 +91,20 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
       <div className={`flex flex-col sm:flex-row justify-center items-center font-medium ${template.colorScheme.text} bg-black/5 backdrop-blur-sm shrink-0`} style={{ padding: `${3 * scale}cqi`, gap: `${2 * scale}cqi`, fontSize: `${2.5 * scale}cqi` }}>
         {data.storeAddress && (
           <div className="flex items-center truncate max-w-full">
-            <MapPin className="mr-1 flex-shrink-0" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} /> 
+            <MapPin className="mr-1 flex-shrink-0" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
             <span className="truncate">{formatAddress(data.storeAddress, data.landmark, data.city)}</span>
           </div>
         )}
         {data.contactNumber && (
           <div className="flex items-center flex-shrink-0">
-            <Phone className="mr-1" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} /> 
+            <Phone className="mr-1" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
             {data.contactNumber}
           </div>
         )}
         {/* Retailer URL — locked position, hidden when left blank */}
         {data.retailerUrl && (
           <div className="flex items-center flex-shrink-0">
-            <Globe className="mr-1" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} /> 
+            <Globe className="mr-1" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
             {data.retailerUrl}
           </div>
         )}
@@ -119,10 +119,11 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
   const [activeRatioFilter, setActiveRatioFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
-  
+
   // Multi-select state for templates
   const [selectedTemplates, setSelectedTemplates] = useState<Template[]>([]);
   const [showLimitAlert, setShowLimitAlert] = useState(false);
+  const [selectionNotice, setSelectionNotice] = useState<number | null>(null);
 
   const filteredTemplates = MOCK_TEMPLATES.filter(t => {
     const matchesCat = activeCategory === 'All' || t.category === activeCategory;
@@ -133,7 +134,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
 
   const handleTemplateSelect = (template: Template) => {
     const isSelected = selectedTemplates.some(t => t.id === template.id);
-    
+
     if (isSelected) {
       setSelectedTemplates(prev => prev.filter(t => t.id !== template.id));
       setShowLimitAlert(false);
@@ -142,6 +143,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
         setShowLimitAlert(true);
       } else {
         setSelectedTemplates(prev => [...prev, template]);
+        setSelectionNotice(selectedTemplates.length + 1);
       }
     }
   };
@@ -155,7 +157,16 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
-      
+
+      {/* Selection pop-up — shown every time a template is selected */}
+      {selectionNotice !== null && (
+        <NoticeModal
+          title="Template Selected"
+          message={`${selectionNotice}/${MAX_CREATIVES_PER_SESSION} selected, uncheck to deactivate selection.`}
+          onClose={() => setSelectionNotice(null)}
+        />
+      )}
+
       {/* Limit modal */}
       {showLimitAlert && (
         <NoticeModal
@@ -203,9 +214,9 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
           </select>
           <div className="relative w-full sm:w-64 sm:ml-auto">
             <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Search templates..." 
+            <input
+              type="text"
+              placeholder="Search templates..."
               className="w-full pl-10 pr-4 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -219,14 +230,14 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
         {filteredTemplates.map(template => {
           const isSelected = selectedTemplates.some(t => t.id === template.id);
           return (
-            <div 
-              key={template.id} 
+            <div
+              key={template.id}
               className={`break-inside-avoid mb-6 group bg-white rounded-xl overflow-hidden border shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer ${isSelected ? 'border-primary-500 ring-2 ring-primary-500' : 'border-gray-200'}`}
               onClick={() => handleTemplateSelect(template)}
             >
               <div className={`relative ${template.ratioClass} bg-gray-100 overflow-hidden flex items-center justify-center`}>
                 <img src={template.thumbnail} alt={template.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                
+
                 {/* Selection Checkmark */}
                 <div className="absolute top-3 left-3 z-20">
                   {isSelected ? (
@@ -251,7 +262,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
                     <h3 className="font-bold text-gray-900 mt-1">{template.name}</h3>
                     <p className="text-xs text-gray-500 mt-1">{ASPECT_RATIOS.find(r => r.class === template.ratioClass)?.name || 'Social Media'}</p>
                   </div>
-                  <button 
+                  <button
                     onClick={(e) => { e.stopPropagation(); setPreviewTemplate(template); }}
                     className="p-2 text-gray-400 hover:text-primary-600 hover:bg-primary-50 rounded-full transition-colors flex-shrink-0 -mt-1 -mr-2 z-30"
                     title="Preview"
@@ -285,7 +296,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
                 </button>
               </div>
               <p className="text-gray-600 mb-8">This template is perfect for {previewTemplate.category.toLowerCase()} promotions. It includes placeholders for your store logo, address, and contact details.</p>
-              
+
               <div className="mt-auto space-y-3">
                 <Button size="lg" fullWidth onClick={() => {
                   handleTemplateSelect(previewTemplate);
@@ -329,8 +340,8 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
 
   // Create combinations of selected templates and selected sizes
   const safeSizes = draft.selectedSizes.length > 0 ? draft.selectedSizes : ['1:1'];
-  
-  const previewCombinations = selectedTemplates.flatMap(template => 
+
+  const previewCombinations = selectedTemplates.flatMap(template =>
     safeSizes.map(size => ({ template, size }))
   );
 
@@ -349,7 +360,6 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
     }))
   );
   const [useSameDetails, setUseSameDetails] = useState(draft.useSameDetails ?? true);
-  const [globalEmail, setGlobalEmail] = useState(user?.email || '');
 
   // Ensure previewIndex is valid
   useEffect(() => {
@@ -365,7 +375,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
       setTempImage(url);
       setProfanityResult('idle');
       setIsChecking(true);
-      
+
       setTimeout(() => {
         setIsChecking(false);
         const name = file.name.toLowerCase();
@@ -503,10 +513,10 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
 
       {/* Side-by-side layout forced on both mobile and desktop */}
       <div className="flex-grow flex flex-row gap-2 sm:gap-8 overflow-hidden pb-16 sm:pb-0">
-        
+
         {/* Left: Canvas Preview */}
         <div className="w-1/2 flex flex-col items-center justify-center bg-gray-100 rounded-xl sm:rounded-2xl p-2 sm:p-8 overflow-y-auto relative">
-          
+
           <div className="flex justify-between items-center mb-2 shrink-0">
             <span className="text-xs font-bold text-gray-500 tracking-wider uppercase">Selected Designs</span>
             <span className="text-xs bg-white px-3 py-1 rounded-full text-gray-600 font-medium shadow-sm">{previewIndex + 1} of {previewCombinations.length}</span>
@@ -536,7 +546,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 ))}
               </div>
             )}
-            
+
             {/* Info Card */}
             <div className="w-full max-w-md border border-gray-200 rounded-xl p-4 flex justify-between items-center bg-white shadow-sm">
               <div>
@@ -552,20 +562,23 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
 
         {/* Right: Editing Controls */}
         <div className="w-1/2 flex flex-col bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm overflow-hidden relative">
-          
+
           <div className="p-2 sm:p-6 overflow-y-auto flex-grow space-y-4 sm:space-y-6 pb-20 sm:pb-6">
-            
+
+            {/* "Use same details" only applies when more than one template is selected */}
+            {selectedTemplates.length > 1 && (
             <label className="flex items-start mb-6 cursor-pointer group bg-gray-50 p-4 rounded-xl border border-gray-100">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 checked={useSameDetails}
                 onChange={(e) => setUseSameDetails(e.target.checked)}
-                className="mt-1 h-5 w-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500" 
+                className="mt-1 h-5 w-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
               />
               <span className="ml-3 text-sm text-gray-700 font-medium group-hover:text-gray-900 transition-colors">
                 Use same contact number, address, and jewelry piece for all selected creatives
               </span>
             </label>
+            )}
 
             {/* Render forms based on useSameDetails */}
             {(useSameDetails ? [artworksData[0]] : artworksData).map((data, index) => (
@@ -579,7 +592,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 {!isFirstTime && (
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Store</label>
-                  <select 
+                  <select
                     className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 shadow-sm focus:border-primary-500 focus:outline-none sm:text-sm bg-white"
                     value={data.storeId}
                     onChange={(e) => handleStoreSelect(index, e.target.value)}
@@ -593,24 +606,24 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                  <Input 
-                    label="Store Name *" 
-                    placeholder="e.g. Royal Jewellers" 
+                  <Input
+                    label="Store Name *"
+                    placeholder="e.g. Royal Jewellers"
                     value={data.storeName}
                     onChange={(e) => handleFieldChange(index, 'storeName', e.target.value)}
                     maxLength={50}
                   />
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Store Logo</label>
-                    <div 
-                      onClick={() => openUpload(index, 'logo')} 
+                    <div
+                      onClick={() => openUpload(index, 'logo')}
                       className="border border-dashed border-gray-300 rounded-lg h-[44px] flex items-center justify-center text-sm text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors overflow-hidden relative"
                     >
                       {data.logoUrl ? (
                         <img src={data.logoUrl} className="absolute inset-0 w-full h-full object-contain p-1" />
                       ) : (
                         <>
-                          <UploadCloud className="w-4 h-4 mr-2 text-gray-400" /> 
+                          <UploadCloud className="w-4 h-4 mr-2 text-gray-400" />
                           <span>Click or drag file to upload</span>
                         </>
                       )}
@@ -619,9 +632,9 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 </div>
 
                 <div className="space-y-6 mb-6">
-                  <Input 
-                    label="Contact Number" 
-                    placeholder="+1 (555) 000-0000" 
+                  <Input
+                    label="Contact Number"
+                    placeholder="+1 (555) 000-0000"
                     value={data.contactNumber}
                     onChange={(e) => handleFieldChange(index, 'contactNumber', e.target.value)}
                     maxLength={15}
@@ -634,19 +647,19 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                       onChange={(f, v) => handleFieldChange(index, f === 'line1' ? 'storeAddress' : f, v)}
                     />
                   </div>
-                  <Input 
-                    label="Retailer URL (Optional)" 
-                    placeholder="e.g. www.yourstore.com" 
+                  <Input
+                    label="Retailer URL (Optional)"
+                    placeholder="e.g. www.yourstore.com"
                     value={data.retailerUrl || ''}
                     onChange={(e) => handleFieldChange(index, 'retailerUrl', e.target.value)}
                     maxLength={40}
                   />
                 </div>
-                
+
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Jewelry Piece for Insert *</label>
-                  <div 
-                    onClick={() => openUpload(index, 'jewelry')} 
+                  <div
+                    onClick={() => openUpload(index, 'jewelry')}
                     className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center text-sm text-gray-500 cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden min-h-[120px]"
                   >
                     {data.jewelryImageUrl ? (
@@ -680,22 +693,13 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
               </label>
             )}
 
-            <div className="border-t border-gray-200 pt-6 mt-6">
-              <Input 
-                label="Email ID *" 
-                placeholder="store@example.com" 
-                helperText="Your personalized creatives will be shared via this email." 
-                value={globalEmail}
-                onChange={(e) => setGlobalEmail(e.target.value)}
-              />
-            </div>
 
           </div>
 
           {/* Fixed Bottom Bar inside the right panel for desktop, or global for mobile */}
           <div className="absolute sm:static bottom-0 left-0 right-0 p-2 sm:p-4 border-t border-gray-200 bg-white flex flex-col sm:flex-row justify-end items-center gap-2 z-40">
-            <Button 
-              onClick={handleGenerate} 
+            <Button
+              onClick={handleGenerate}
               disabled={!isFormValid}
               className="px-10 py-3 text-base w-full sm:w-auto"
             >
@@ -715,7 +719,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="p-6 flex flex-col items-center">
               {!tempImage ? (
                 <>
@@ -723,10 +727,10 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     <UploadCloud className="w-10 h-10" />
                   </div>
                   <p className="text-center text-gray-600 mb-6">Select an image from your device gallery.</p>
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    className="hidden" 
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
                     ref={fileInputRef}
                     onChange={handleFileChange}
                   />
@@ -753,7 +757,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                         <p className="text-xs text-primary-400 mt-1">{uploadType === 'jewelry' ? 'Checking that this is gold jewellery' : 'Checking for inappropriate content'}</p>
                       </div>
                     )}
-                    
+
                     {profanityResult === 'passed' && (
                       <div className="text-green-600 flex flex-col items-center bg-green-50 w-full p-3 rounded-lg border border-green-100">
                         <CheckCircle2 className="w-6 h-6 mb-1" />
@@ -781,8 +785,8 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     }}>
                       Try Another
                     </Button>
-                    <Button 
-                      className="flex-1" 
+                    <Button
+                      className="flex-1"
                       disabled={profanityResult !== 'passed'}
                       onClick={confirmUpload}
                     >
@@ -820,7 +824,7 @@ export const GeneratingView: React.FC<FlowProps> = ({ onNavigate }) => {
       </div>
       <h2 className="text-2xl font-bold text-gray-900 mb-2">Crafting your campaign...</h2>
       <p className="text-gray-500 max-w-md">Applying your brand details and generating high-quality images in all selected sizes.</p>
-      
+
       {/* Skeleton mockups */}
       <div className="mt-12 flex space-x-4 opacity-50">
         <div className="w-16 h-16 bg-gray-200 rounded animate-pulse"></div>
@@ -850,9 +854,9 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
     setTimeout(() => setShowSuccess(false), 3000);
   };
 
-  const generatedFiles = selectedTemplates.flatMap((template, idx) => 
-    draft.selectedSizes.map(sizeId => ({ 
-      template, 
+  const generatedFiles = selectedTemplates.flatMap((template, idx) =>
+    draft.selectedSizes.map(sizeId => ({
+      template,
       sizeId,
       data: draft.useSameDetails ? draft.artworksData[0] : draft.artworksData[idx]
     }))
@@ -860,7 +864,7 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
-      
+
       {/* Success Toast */}
       {showSuccess && (
         <div className="fixed bottom-4 right-4 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-2xl flex items-center z-50 transition-all duration-300 transform translate-y-0 opacity-100">
@@ -940,10 +944,10 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
               <X className="w-8 h-8" />
             </button>
             <div className="w-full max-w-lg bg-white rounded-xl overflow-hidden shadow-2xl" style={stageStyle(previewItem.template.ratioClass)}>
-              <CanvasPreview 
-                template={previewItem.template} 
-                data={previewItem.data} 
-                ratioClass={ASPECT_RATIOS.find(r => r.id === previewItem.sizeId)?.class} 
+              <CanvasPreview
+                template={previewItem.template}
+                data={previewItem.data}
+                ratioClass={ASPECT_RATIOS.find(r => r.id === previewItem.sizeId)?.class}
               />
             </div>
             <div className="mt-6 flex space-x-4">

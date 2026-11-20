@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo } from '../types';
 import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye, Sparkles } from 'lucide-react';
-import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES } from '../constants';
+import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES, MEDIA_GROUPS } from '../constants';
 
 interface DashboardProps {
   user: UserProfile;
@@ -41,9 +41,12 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
     setActiveFilter(prev => prev === category ? null : category);
   };
 
-  const filteredCampaigns = activeFilter 
-    ? savedCampaigns.filter(c => c.category === activeFilter)
-    : savedCampaigns;
+  const [sizeFilter, setSizeFilter] = useState<string>('All');
+  const filteredCampaigns = savedCampaigns.filter(c =>
+    (!activeFilter || c.category === activeFilter) && (sizeFilter === 'All' || c.ratioClass === sizeFilter)
+  );
+  const sizeFilterName = ASPECT_RATIOS.find(r => r.class === sizeFilter)?.name;
+  const filterLabel = [activeFilter, sizeFilterName].filter(Boolean).join(' · ');
 
   const handleDownload = (e: React.MouseEvent, campaignName: string) => {
     e.stopPropagation();
@@ -55,10 +58,6 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
     setOpenMenuId(null);
   };
 
-  const handleFavorite = (name: string) => {
-    alert(`${name} added to favourites!`);
-    setOpenMenuId(null);
-  };
 
   const toggleSelectMode = () => {
     setIsSelectMode(!isSelectMode);
@@ -72,8 +71,8 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
         setShowSelectLimit(true);
         return;
       }
-      setSelectedCampaignIds(prev => 
-        prev.includes(campaign.id) 
+      setSelectedCampaignIds(prev =>
+        prev.includes(campaign.id)
           ? prev.filter(id => id !== campaign.id)
           : [...prev, campaign.id]
       );
@@ -101,29 +100,41 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
         </Button>
       </div>
 
-      {/* Occasion filter */}
-      {!hasNoCreatives && (
-        <div className="mb-8">
-          <select
-            value={activeFilter || 'All'}
-            onChange={(e) => setActiveFilter(e.target.value === 'All' ? null : e.target.value)}
-            className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
-          >
-            {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
-            ))}
-          </select>
-        </div>
-      )}
+      {/* Occasion + Size filters (shown to all users) */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-3">
+        <select
+          value={activeFilter || 'All'}
+          onChange={(e) => setActiveFilter(e.target.value === 'All' ? null : e.target.value)}
+          className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
+        >
+          {CATEGORIES.map(cat => (
+            <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
+          ))}
+        </select>
+        <select
+          value={sizeFilter}
+          onChange={(e) => setSizeFilter(e.target.value)}
+          className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
+        >
+          <option value="All">All Sizes</option>
+          {MEDIA_GROUPS.map(group => (
+            <optgroup key={group} label={group}>
+              {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
+                <option key={r.id} value={r.class}>{r.name}</option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </div>
 
       <div>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-gray-900">
-            Your Recent campaigns {activeFilter && <span className="text-primary-600 font-medium text-lg ml-2">({activeFilter})</span>}
+            Your Recent campaigns {filterLabel && <span className="text-primary-600 font-medium text-lg ml-2">({filterLabel})</span>}
           </h2>
           <div className="flex items-center gap-3">
-            {activeFilter && (
-              <button onClick={() => setActiveFilter(null)} className="text-sm text-gray-500 hover:text-gray-900">
+            {filterLabel && (
+              <button onClick={() => { setActiveFilter(null); setSizeFilter('All'); }} className="text-sm text-gray-500 hover:text-gray-900">
                 Clear filter
               </button>
             )}
@@ -134,7 +145,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
             )}
           </div>
         </div>
-        
+
         {hasNoCreatives ? (
           /* Central CTA for users who haven't created any creatives yet */
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-16 sm:py-24 text-center flex flex-col items-center justify-center">
@@ -154,14 +165,14 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
             {filteredCampaigns.map((campaign) => {
               const isSelected = selectedCampaignIds.includes(campaign.id);
               return (
-                <div 
-                  key={campaign.id} 
+                <div
+                  key={campaign.id}
                   className={`break-inside-avoid mb-6 bg-white rounded-xl border shadow-sm overflow-hidden group transition-all cursor-pointer flex flex-col ${isSelectMode && isSelected ? 'border-primary-500 ring-2 ring-primary-500' : 'border-gray-200 hover:shadow-md'}`}
                   onClick={() => handleCardClick(campaign)}
                 >
                   <div className={`${campaign.ratioClass} bg-gray-100 relative overflow-hidden flex items-center justify-center`}>
                     <img src={campaign.thumbnail} alt={campaign.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    
+
                     {/* Selection Checkmark */}
                     {isSelectMode && (
                       <div className="absolute top-3 left-3 z-20">
@@ -178,15 +189,15 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                     {/* Hover Actions - Only show if NOT in select mode */}
                     {!isSelectMode && (
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                        <button 
-                          className="p-2 bg-white text-gray-900 rounded-full hover:bg-gray-100 transition-colors" 
+                        <button
+                          className="p-2 bg-white text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
                           title="Preview"
                           onClick={(e) => { e.stopPropagation(); setPreviewCampaign(campaign); }}
                         >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button 
-                          className="p-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 transition-colors" 
+                        <button
+                          className="p-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 transition-colors"
                           title="Download"
                           onClick={(e) => handleDownload(e, campaign.name)}
                         >
@@ -203,9 +214,9 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                       <p className="text-xs text-gray-500 mt-0.5">{ASPECT_RATIOS.find(r => r.class === campaign.ratioClass)?.name || 'Social Media'}</p>
                       <p className="text-xs text-gray-400 mt-0.5">By {user.name || 'User'} • {campaign.date}</p>
                     </div>
-                    
+
                     {!isSelectMode && (
-                      <button 
+                      <button
                         className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-100"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -219,13 +230,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                     {/* Dropdown Menu */}
                     {openMenuId === campaign.id && !isSelectMode && (
                       <div className="absolute right-4 bottom-12 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-10" onClick={e => e.stopPropagation()}>
-                        <button 
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center"
-                          onClick={() => handleFavorite(campaign.name)}
-                        >
-                          <Heart className="w-4 h-4 mr-2 text-gray-400" /> Add to favourites
-                        </button>
-                        <button 
+                        <button
                           className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
                           onClick={() => handleDelete(campaign.id)}
                         >
@@ -282,7 +287,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
             </div>
             <div className="p-6">
               <p className="text-gray-600 mb-6 text-sm">Choose your preferred format for the {selectedCampaignIds.length} selected campaigns.</p>
-              
+
               <div className="space-y-3 mb-8">
                 <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${downloadFormat === 'digital' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'}`}>
                   <input type="radio" name="bulkFormat" checked={downloadFormat === 'digital'} onChange={() => setDownloadFormat('digital')} className="text-primary-600 focus:ring-primary-500 h-4 w-4" />
@@ -299,7 +304,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                   </div>
                 </label>
               </div>
-              
+
               <Button fullWidth size="lg" onClick={confirmBulkDownload}>
                 <Download className="w-4 h-4 mr-2" /> Download ZIP
               </Button>
@@ -374,7 +379,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
       setTempImage(url);
       setProfanityResult('idle');
       setIsChecking(true);
-      
+
       // Simulate AI Profanity / Content Check
       setTimeout(() => {
         setIsChecking(false);
@@ -409,10 +414,10 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader title="Store Management" onBack={() => onNavigate('dashboard')} />
-      
+
       <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100">
         <p className="text-gray-600 mb-6">Manage the store details that will be available to auto-fill in your campaigns.</p>
-        
+
         <div className="space-y-6">
           {stores.length === 0 && (
             <div className="p-6 bg-gray-50 rounded-lg border border-gray-200 text-center text-sm text-gray-500">
@@ -422,7 +427,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
           {stores.map((store, index) => (
             <div key={store.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200 relative">
               {stores.length > 1 && (
-                <button 
+                <button
                   type="button"
                   onClick={() => handleRemoveStore(store.id)}
                   className="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500 transition-colors"
@@ -431,7 +436,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                 </button>
               )}
               <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">Store {index + 1}</h4>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Store Logo</label>
                 <div className="flex items-center gap-4">
@@ -448,8 +453,8 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                 </div>
               </div>
 
-              <Input 
-                label="Store Name" 
+              <Input
+                label="Store Name"
                 placeholder="e.g. Sharma Electronics"
                 value={store.name}
                 onChange={(e) => handleStoreChange(store.id, 'name', e.target.value)}
@@ -461,15 +466,15 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                 city={store.city}
                 onChange={(f, v) => handleStoreChange(store.id, f === 'line1' ? 'address' : f, v)}
               />
-              <Input 
-                label="Store Contact Number" 
+              <Input
+                label="Store Contact Number"
                 placeholder="e.g. 98765 43210"
                 value={store.contactNumber}
                 onChange={(e) => handleStoreChange(store.id, 'contactNumber', e.target.value)}
                 required
               />
-              <Input 
-                label="Retailer URL (Optional)" 
+              <Input
+                label="Retailer URL (Optional)"
                 placeholder="e.g. www.yourstore.com"
                 value={store.retailerUrl || ''}
                 onChange={(e) => handleStoreChange(store.id, 'retailerUrl', e.target.value)}
@@ -478,11 +483,11 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
             </div>
           ))}
         </div>
-        
-        <Button 
-          type="button" 
-          variant="outline" 
-          fullWidth 
+
+        <Button
+          type="button"
+          variant="outline"
+          fullWidth
           className="mt-6 border-dashed"
           onClick={handleAddStore}
         >
@@ -505,7 +510,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <div className="p-6 flex flex-col items-center">
               {!tempImage ? (
                 <>
@@ -513,10 +518,10 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                     <UploadCloud className="w-10 h-10" />
                   </div>
                   <p className="text-center text-gray-600 mb-6">Select an image from your device gallery to use as your store logo.</p>
-                  <input 
-                    type="file" 
-                    accept="image/*" 
-                    className="hidden" 
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
                     ref={fileInputRef}
                     onChange={handleFileChange}
                   />
@@ -543,7 +548,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                         <p className="text-xs text-primary-400 mt-1">Checking for inappropriate content</p>
                       </div>
                     )}
-                    
+
                     {profanityResult === 'passed' && (
                       <div className="text-green-600 flex flex-col items-center bg-green-50 w-full p-3 rounded-lg border border-green-100">
                         <CheckCircle2 className="w-6 h-6 mb-1" />
@@ -569,8 +574,8 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                     }}>
                       Try Another
                     </Button>
-                    <Button 
-                      className="flex-1" 
+                    <Button
+                      className="flex-1"
                       disabled={profanityResult !== 'passed'}
                       onClick={confirmUpload}
                     >

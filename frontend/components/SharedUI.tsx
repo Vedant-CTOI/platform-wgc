@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home } from 'lucide-react';
+import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home, Globe, Check } from 'lucide-react';
 import { ADDRESS_LIMITS } from '../constants';
 
 // --- Buttons ---
@@ -125,6 +125,46 @@ export const AddressFields: React.FC<{
   );
 };
 
+// --- Language selector (English default; Hindi as 2nd language — label only until translated copy is supplied) ---
+const LANGUAGES = [
+  { code: 'EN', name: 'English' },
+  { code: 'HI', name: 'हिन्दी (Hindi)' },
+];
+
+const LanguageSelector: React.FC = () => {
+  const [lang, setLang] = useState('EN');
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 px-2.5 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-md hover:bg-gray-100 transition-colors"
+        title="Language"
+      >
+        <Globe className="w-5 h-5" />
+        <span>{lang}</span>
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl py-2 ring-1 ring-black ring-opacity-5 z-50">
+            {LANGUAGES.map(l => (
+              <button
+                key={l.code}
+                onClick={() => { setLang(l.code); setOpen(false); }}
+                className="flex items-center justify-between w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                <span>{l.name}</span>
+                {lang === l.code && <Check className="w-4 h-4 text-gray-900" />}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
 // --- Layout Components ---
 export const TopNav: React.FC<{ 
   isLoggedIn: boolean; 
@@ -169,8 +209,9 @@ export const TopNav: React.FC<{
               <span className="font-bold text-xl tracking-tight text-gray-900">Platform</span>
             </div>
             
-            {/* Right: Hamburger Menu */}
-            <div className="flex-1 flex justify-end items-center">
+            {/* Right: Language + Hamburger Menu */}
+            <div className="flex-1 flex justify-end items-center gap-1">
+              <LanguageSelector />
               {isLoggedIn && (
                 <div className="relative">
                   <button 
