@@ -117,7 +117,6 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
 export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate }) => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeRatioFilter, setActiveRatioFilter] = useState('All');
-  const [activeMediaGroup, setActiveMediaGroup] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [previewTemplate, setPreviewTemplate] = useState<Template | null>(null);
   
@@ -129,9 +128,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
     const matchesCat = activeCategory === 'All' || t.category === activeCategory;
     const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRatio = activeRatioFilter === 'All' || t.ratioClass === activeRatioFilter;
-    const group = ASPECT_RATIOS.find(r => r.class === t.ratioClass)?.group;
-    const matchesGroup = activeMediaGroup === 'All' || group === activeMediaGroup;
-    return matchesCat && matchesSearch && matchesRatio && matchesGroup;
+    return matchesCat && matchesSearch && matchesRatio;
   });
 
   const handleTemplateSelect = (template: Template) => {
@@ -178,45 +175,25 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
       </div>
       <p className="text-sm text-gray-500 -mt-4 sm:-mt-6 mb-6">You can customise up to {MAX_CREATIVES_PER_SESSION} creatives per session.</p>
 
-      {/* Media format tabs */}
-      <div className="flex overflow-x-auto no-scrollbar border-b border-gray-200 mb-6">
-        {['All', ...MEDIA_GROUPS].map(group => (
-          <button
-            key={group}
-            onClick={() => { setActiveMediaGroup(group); setActiveRatioFilter('All'); }}
-            className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
-              activeMediaGroup === group ? 'border-gray-900 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-800'
-            }`}
-          >
-            {group}
-          </button>
-        ))}
-      </div>
-
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-        <div className="flex overflow-x-auto no-scrollbar space-x-2 w-full sm:w-auto pb-2 sm:pb-0">
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors min-h-[36px] ${
-                activeCategory === cat 
-                  ? 'bg-gray-900 text-white' 
-                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          {/* Occasion filter */}
+          <select
+            value={activeCategory}
+            onChange={(e) => setActiveCategory(e.target.value)}
+            className="pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
+          >
+            {CATEGORIES.map(cat => (
+              <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
+            ))}
+          </select>
           <select
             value={activeRatioFilter}
             onChange={(e) => setActiveRatioFilter(e.target.value)}
             className="pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
           >
             <option value="All">All Sizes</option>
-            {MEDIA_GROUPS.filter(g => activeMediaGroup === 'All' || g === activeMediaGroup).map(group => (
+            {MEDIA_GROUPS.map(group => (
               <optgroup key={group} label={group}>
                 {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
                   <option key={r.id} value={r.class}>{r.name}</option>
@@ -224,7 +201,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
               </optgroup>
             ))}
           </select>
-          <div className="relative w-full sm:w-64">
+          <div className="relative w-full sm:w-64 sm:ml-auto">
             <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input 
               type="text" 

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo } from '../types';
 import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye, Sparkles } from 'lucide-react';
-import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION } from '../constants';
+import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES } from '../constants';
 
 interface DashboardProps {
   user: UserProfile;
@@ -101,23 +101,20 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
         </Button>
       </div>
 
-      {/* Quick Stats / Shortcuts */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-12">
-        {['Wedding', 'Festive', 'Everyday', 'Minimalist'].map((cat) => (
-          <div 
-            key={cat} 
-            onClick={() => toggleFilter(cat)} 
-            className={`p-4 rounded-xl border shadow-sm transition-all cursor-pointer flex flex-col items-center justify-center text-center group
-              ${activeFilter === cat ? 'bg-primary-50 border-primary-300 shadow-md' : 'bg-white border-gray-200 hover:shadow-md hover:border-primary-300'}`}
+      {/* Occasion filter */}
+      {!hasNoCreatives && (
+        <div className="mb-8">
+          <select
+            value={activeFilter || 'All'}
+            onChange={(e) => setActiveFilter(e.target.value === 'All' ? null : e.target.value)}
+            className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
           >
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-colors
-              ${activeFilter === cat ? 'bg-primary-600 text-white' : 'bg-primary-50 text-primary-600 group-hover:bg-primary-100'}`}>
-              <ImageIcon className="w-5 h-5" />
-            </div>
-            <span className={`font-medium text-sm ${activeFilter === cat ? 'text-primary-700' : 'text-gray-800'}`}>{cat}</span>
-          </div>
-        ))}
-      </div>
+            {CATEGORIES.map(cat => (
+              <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div>
         <div className="flex justify-between items-center mb-6">
