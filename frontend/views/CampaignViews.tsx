@@ -123,7 +123,17 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
   // Multi-select state for templates
   const [selectedTemplates, setSelectedTemplates] = useState<Template[]>([]);
   const [showLimitAlert, setShowLimitAlert] = useState(false);
+  // Non-interruptive top notification for selection count (auto-hides)
   const [selectionNotice, setSelectionNotice] = useState<number | null>(null);
+  const [noticeVisible, setNoticeVisible] = useState(false);
+  const noticeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const showSelectionNotice = (count: number) => {
+    setSelectionNotice(count);
+    setNoticeVisible(true);
+    if (noticeTimer.current) clearTimeout(noticeTimer.current);
+    noticeTimer.current = setTimeout(() => setNoticeVisible(false), 2500);
+  };
+  useEffect(() => () => { if (noticeTimer.current) clearTimeout(noticeTimer.current); }, []);
 
   const filteredTemplates = MOCK_TEMPLATES.filter(t => {
     const matchesCat = activeCategory === 'All' || t.category === activeCategory;
@@ -138,12 +148,13 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
     if (isSelected) {
       setSelectedTemplates(prev => prev.filter(t => t.id !== template.id));
       setShowLimitAlert(false);
+      showSelectionNotice(selectedTemplates.length - 1);
     } else {
       if (selectedTemplates.length >= MAX_CREATIVES_PER_SESSION) {
         setShowLimitAlert(true);
       } else {
         setSelectedTemplates(prev => [...prev, template]);
-        setSelectionNotice(selectedTemplates.length + 1);
+        showSelectionNotice(selectedTemplates.length + 1);
       }
     }
   };
@@ -158,13 +169,18 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
 
-      {/* Selection pop-up — shown every time a template is selected */}
+      {/* Selection notification — non-interruptive, top of screen, auto-hides */}
       {selectionNotice !== null && (
-        <NoticeModal
-          title="Template Selected"
-          message={`${selectionNotice}/${MAX_CREATIVES_PER_SESSION} selected, uncheck to deactivate selection.`}
-          onClose={() => setSelectionNotice(null)}
-        />
+        <div
+          role="status"
+          aria-live="polite"
+          className={`fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm pointer-events-none transition-all duration-300 ${noticeVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}`}
+        >
+          <div className="bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center justify-center text-sm font-medium">
+            <CheckCircle2 className="w-4 h-4 mr-2 text-green-400 flex-shrink-0" />
+            <span>{selectionNotice}/{MAX_CREATIVES_PER_SESSION} selected, uncheck to deactivate selection.</span>
+          </div>
+        </div>
       )}
 
       {/* Limit modal */}
