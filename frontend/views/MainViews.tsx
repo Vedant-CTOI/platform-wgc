@@ -157,7 +157,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
               Pick a template, add your store details and generate ready-to-use creatives in minutes.
             </p>
             <Button size="lg" onClick={() => onNavigate('gallery')} className="px-8 shadow-md">
-              <Plus className="w-5 h-5 mr-2" /> Create Creative
+              <Plus className="w-5 h-5 mr-2" /> Create New Campaign
             </Button>
           </div>
         ) : filteredCampaigns.length > 0 ? (

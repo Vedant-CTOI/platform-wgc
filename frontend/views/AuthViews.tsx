@@ -30,15 +30,15 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
             </Button>
             {!user && (
               <div className="flex items-center space-x-4">
-                <button 
-                  onClick={() => onNavigate('register')} 
+                <button
+                  onClick={() => onNavigate('register')}
                   className="text-primary-600 font-medium hover:text-primary-700 hover:underline text-sm"
                 >
                   Create Account
                 </button>
                 <span className="text-gray-300">|</span>
-                <button 
-                  onClick={() => onNavigate('login')} 
+                <button
+                  onClick={() => onNavigate('login')}
                   className="text-primary-600 font-medium hover:text-primary-700 hover:underline text-sm"
                 >
                   Sign In
@@ -59,10 +59,10 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
         </div>
       </section>
 
-      {/* Key Values */}
+      {/* Features */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Key Values</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-12 text-center">Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center flex flex-col items-center">
               <div className="w-14 h-14 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-6">
@@ -113,30 +113,6 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
         </div>
       </section>
 
-      {/* Contact Us */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Contact Us</h2>
-          <p className="text-lg text-gray-600 mb-10">Have questions or need custom templates? We're here to help.</p>
-          
-          <form className="space-y-4 text-left bg-white p-8 rounded-2xl border border-gray-100 shadow-sm" onSubmit={(e) => e.preventDefault()}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Input label="Name" placeholder="Your name" />
-              <Input label="Email" type="email" placeholder="Your email address" />
-            </div>
-            <div className="w-full mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-              <textarea 
-                className="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-primary-500 focus:ring-primary-500 focus:outline-none sm:text-sm transition-colors min-h-[120px]"
-                placeholder="How can we help you?"
-              ></textarea>
-            </div>
-            <Button type="submit" size="lg" className="w-full sm:w-auto">
-              <Send className="w-4 h-4 mr-2" /> Send Message
-            </Button>
-          </form>
-        </div>
-      </section>
     </div>
   );
 };
@@ -186,39 +162,39 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
             to continue to Platform
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <Input 
-                label="First Name" 
+              <Input
+                label="First Name"
                 placeholder="First Name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
               />
-              <Input 
-                label="Last Name" 
+              <Input
+                label="Last Name"
                 placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
               />
             </div>
-            <Input 
-              label="Email ID" 
-              type="email" 
+            <Input
+              label="Email ID"
+              type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            
+
             <div className="border-t border-gray-200 pt-6 mt-4">
               <div className="flex items-end gap-2">
                 <div className="flex-grow">
-                  <Input 
-                    label="GST Number *" 
+                  <Input
+                    label="GST Number *"
                     placeholder="e.g. 22AAAAA0000A1Z5"
                     value={gstNumber}
                     maxLength={15}
@@ -226,9 +202,9 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
                     error={gstStatus === 'invalid' ? 'Please enter a valid 15-character GSTIN' : undefined}
                   />
                 </div>
-                <Button 
-                  type="button" 
-                  variant="outline" 
+                <Button
+                  type="button"
+                  variant="outline"
                   className={gstStatus === 'invalid' ? 'mb-11' : 'mb-4'}
                   disabled={gstNumber.length !== 15 || gstStatus === 'verifying' || gstStatus === 'verified'}
                   onClick={handleGstVerify}
@@ -290,12 +266,12 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) =>
             to continue to Platform
           </p>
         </div>
-        
+
         <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
           <div className="space-y-5">
-            <Input 
-              label="Email" 
-              type="email" 
+            <Input
+              label="Email"
+              type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -336,7 +312,7 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = '
     const newOtp = [...otp];
     newOtp[index] = element.value;
     setOtp(newOtp);
-    
+
     // Focus next input
     if (element.nextSibling && element.value !== '') {
       (element.nextSibling as HTMLInputElement).focus();
@@ -379,7 +355,7 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = '
             We've sent a 4-digit code to your email.
           </p>
         </div>
-        
+
         <div className="mt-8 space-y-8">
           <div className="flex justify-center space-x-4">
             {otp.map((data, index) => (
@@ -405,10 +381,10 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = '
           </div>
 
           <div className="pt-2 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="w-full sm:w-auto px-8"
-              onClick={handleVerify} 
+              onClick={handleVerify}
               disabled={otp.join('').length !== 4 || isLoading}
             >
               {isLoading ? 'Verifying...' : 'Verify'}

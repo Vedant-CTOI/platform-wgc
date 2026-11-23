@@ -930,10 +930,6 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
       <div className="flex flex-col sm:flex-row justify-center gap-4">
         <Button variant="outline" onClick={() => onNavigate('dashboard')}>Back to Dashboard</Button>
         <Button variant="outline" onClick={() => onNavigate('gallery')}>Create Another</Button>
-        <Button variant="secondary" onClick={handleCopyLink}>
-          {copied ? <Check className="w-4 h-4 mr-2" /> : <Share2 className="w-4 h-4 mr-2" />}
-          {copied ? 'Link Copied!' : 'Share Link'}
-        </Button>
       </div>
 
       {/* Full Size Preview Modal */}
