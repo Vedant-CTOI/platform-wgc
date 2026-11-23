@@ -269,9 +269,13 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
       {isSelectMode && selectedCampaignIds.length > 0 && (
         <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-4 rounded-full shadow-2xl flex items-center gap-6 z-50">
           <span className="font-medium text-sm whitespace-nowrap">{selectedCampaignIds.length} selected</span>
-          <Button size="sm" onClick={() => setShowDownloadModal(true)} className="bg-white text-gray-900 hover:bg-gray-100 border-none whitespace-nowrap">
+          {/* Plain button (not the primary variant) so its white bg / dark text isn't overridden by primary colours */}
+          <button
+            onClick={() => setShowDownloadModal(true)}
+            className="inline-flex items-center justify-center rounded-lg font-medium px-3 py-2 text-sm min-h-[36px] whitespace-nowrap bg-white text-gray-900 hover:bg-gray-200 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-900"
+          >
             <Download className="w-4 h-4 mr-2" /> Download Selected
-          </Button>
+          </button>
         </div>
       )}
 
