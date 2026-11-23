@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import { AppState, Action, ViewState, UserProfile, Template, CampaignDraft } from './types';
-import { TopNav } from './components/SharedUI';
+import { TopNav, ShareBand } from './components/SharedUI';
 import { LandingView, RegisterView, LoginView, OTPView } from './views/AuthViews';
 import { ProfileView } from './views/MainViews';
 import { DashboardView, StoreManagementView } from './views/MainViews';
@@ -156,6 +156,9 @@ export default function App() {
       <main className="flex-grow">
         {renderView()}
       </main>
+
+      {/* Remarketing band — homepage for logged-out (landing) and logged-in (dashboard) users */}
+      {(state.currentView === 'landing' || (state.currentView === 'dashboard' && state.user)) && <ShareBand />}
       
       {/* Simple Footer for Landing */}
       {state.currentView === 'landing' && (

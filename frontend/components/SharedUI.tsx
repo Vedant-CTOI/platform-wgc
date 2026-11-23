@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home, Globe, Check } from 'lucide-react';
+import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home, Globe, Check, Link2, Mail, MessageCircle } from 'lucide-react';
 import { ADDRESS_LIMITS } from '../constants';
 
 // --- Buttons ---
@@ -162,6 +162,71 @@ const LanguageSelector: React.FC = () => {
         </>
       )}
     </div>
+  );
+};
+
+// --- Remarketing "Tell a friend" band (homepage, logged-in + logged-out) ---
+export const ShareBand: React.FC = () => {
+  const [showOptions, setShowOptions] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const shareUrl = typeof window !== 'undefined' ? window.location.origin + '/' : '';
+  const shareText = 'Create professional marketing creatives for your store in minutes.';
+
+  const handleShare = async () => {
+    // Phones: native share sheet. Desktop (or if unsupported/cancelled oddly): in-app options.
+    const isTouch = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+    if (isTouch && navigator.share) {
+      try { await navigator.share({ title: 'Platform', text: shareText, url: shareUrl }); return; }
+      catch (e: any) { if (e?.name === 'AbortError') return; }
+    }
+    setShowOptions(true);
+  };
+
+  const copyLink = async () => {
+    try { await navigator.clipboard.writeText(shareUrl); }
+    catch {
+      const t = document.createElement('textarea'); t.value = shareUrl; document.body.appendChild(t); t.select();
+      document.execCommand('copy'); document.body.removeChild(t);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const enc = encodeURIComponent;
+  const optionClass = "flex items-center w-full px-4 py-3 rounded-lg border border-gray-200 text-sm font-medium text-gray-900 hover:bg-gray-50 transition-colors";
+
+  return (
+    <section className="bg-gray-100 border-y border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p className="text-lg sm:text-xl font-bold text-gray-900 text-center sm:text-left">Loving the experience? Tell a friend</p>
+        <Button size="lg" onClick={handleShare} className="w-full sm:w-auto px-8">Share Now</Button>
+      </div>
+
+      {showOptions && (
+        <div className="fixed inset-0 bg-black/60 z-[110] flex items-center justify-center p-4 backdrop-blur-sm" onClick={() => setShowOptions(false)}>
+          <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+              <h3 className="font-bold text-gray-900">Share Platform</h3>
+              <button onClick={() => setShowOptions(false)} className="p-1 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-200 transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 space-y-3">
+              <button onClick={copyLink} className={optionClass}>
+                {copied ? <Check className="w-5 h-5 mr-3 text-green-600" /> : <Link2 className="w-5 h-5 mr-3 text-gray-500" />}
+                {copied ? 'Link copied' : 'Copy link'}
+              </button>
+              <a href={`https://wa.me/?text=${enc(shareText + ' ' + shareUrl)}`} target="_blank" rel="noopener noreferrer" className={optionClass}>
+                <MessageCircle className="w-5 h-5 mr-3 text-gray-500" /> WhatsApp
+              </a>
+              <a href={`mailto:?subject=${enc('Check out Platform')}&body=${enc(shareText + '\n\n' + shareUrl)}`} className={optionClass}>
+                <Mail className="w-5 h-5 mr-3 text-gray-500" /> Email
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
   );
 };
 
