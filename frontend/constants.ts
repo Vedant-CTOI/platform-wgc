@@ -234,9 +234,9 @@ export const ASPECT_RATIOS = [
   { id: '936x709', name: 'Half Page', class: 'aspect-[936/709]', group: 'Print Ads' },
   { id: '468x709', name: 'Quarter Page', class: 'aspect-[468/709]', group: 'Print Ads' },
   { id: '621x621', name: '1:1 Square Post', class: 'aspect-square', group: 'Social Media' },
-  { id: '800x2000', name: 'Vertical Standee', class: 'aspect-[800/2000]', group: 'Outdoor & Collateral' },
-  { id: '1000x1414', name: 'In-store Poster', class: 'aspect-[1000/1414]', group: 'Outdoor & Collateral' },
-  { id: '3000x1000', name: 'Landscape Billboard', class: 'aspect-[3000/1000]', group: 'Outdoor & Collateral' },
+  { id: '800x2000', name: '1:2 Vertical Standee', class: 'aspect-[800/2000]', group: 'Outdoor & Collateral' },
+  { id: '1000x1414', name: '1:1 In-store Poster', class: 'aspect-[1000/1414]', group: 'Outdoor & Collateral' },
+  { id: '3000x1000', name: '2:1 Landscape Banner', class: 'aspect-[3000/1000]', group: 'Outdoor & Collateral' },
 ];
 
 // Max creatives a user can customise in one session.
