@@ -5,7 +5,7 @@ import { LandingView, RegisterView, LoginView, OTPView } from './views/AuthViews
 import { ProfileView } from './views/MainViews';
 import { DashboardView, StoreManagementView } from './views/MainViews';
 import { GalleryView, EditorView, GeneratingView, DownloadView } from './views/CampaignViews';
-import { TermsView, PrivacyView, FaqView } from './views/MiscViews';
+import { TermsView, PrivacyView, FaqView, LegalModal } from './views/MiscViews';
 import { MOCK_TEMPLATES, ASPECT_RATIOS } from './constants';
 
 const initialState: AppState = {
@@ -67,6 +67,7 @@ const ResponsiveHelper = () => {
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [showLegalModal, setShowLegalModal] = useState(false);
 
   // Helper functions to pass to views
   const navigate = (view: ViewState) => dispatch({ type: 'NAVIGATE', payload: view });
@@ -166,11 +167,17 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm">© 2024 Platform. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 sm:mt-0 text-sm text-gray-500">
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('terms'); }} className="hover:text-gray-900">Terms</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('privacy'); }} className="hover:text-gray-900">Privacy</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setShowLegalModal(true); }} className="hover:text-gray-900">Terms</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setShowLegalModal(true); }} className="hover:text-gray-900">Privacy</a>
             </div>
           </div>
         </footer>
+      )}
+
+      {showLegalModal && (
+        <LegalModal
+          onClose={() => setShowLegalModal(false)}
+        />
       )}
     </div>
   );

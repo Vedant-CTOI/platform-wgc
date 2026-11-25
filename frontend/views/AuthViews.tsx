@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, PageHeader } from '../components/SharedUI';
+import { LegalModal } from './MiscViews';
 import { ViewState, UserProfile, StoreInfo } from '../types';
 import { RETURNING_USER_STORES, DEMO_ACCOUNTS, DEMO_OTP } from '../constants';
 import { Store, Image as ImageIcon, MapPin, Phone, CheckCircle2, UploadCloud, AlertTriangle, X, Loader2, Plus, Trash2, Zap, Shield, Palette, Mail, Send } from 'lucide-react';
@@ -123,6 +124,11 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
   const [email, setEmail] = useState('');
   const [gstNumber, setGstNumber] = useState('');
   const [gstStatus, setGstStatus] = useState<'idle' | 'verifying' | 'verified' | 'invalid'>('idle');
+  const [storeName, setStoreName] = useState('');
+  const [storeAddress, setStoreAddress] = useState('');
+  const [storeContactNumber, setStoreContactNumber] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showLegalModal, setShowLegalModal] = useState(false);
 
   // Standard 15-character GSTIN format: 2-digit state code + PAN + entity no. + 'Z' + checksum
   const GSTIN_PATTERN = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
@@ -130,25 +136,33 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
   const handleGstChange = (value: string) => {
     setGstNumber(value.toUpperCase().replace(/\s/g, ''));
     setGstStatus('idle');
+    setStoreName('');
+    setStoreAddress('');
+    setStoreContactNumber('');
   };
 
-  // Mock GSTIN verification — confirms the registrant is an actual business
+  // Mock GSTIN verification — confirms the registrant is an actual business and auto-populates store details
   const handleGstVerify = () => {
     if (!GSTIN_PATTERN.test(gstNumber)) {
       setGstStatus('invalid');
       return;
     }
     setGstStatus('verifying');
-    setTimeout(() => setGstStatus('verified'), 1500);
+    setTimeout(() => {
+      setGstStatus('verified');
+      setStoreName('Auto-populated Store Name');
+      setStoreAddress('123 Auto-populated Address, City');
+      setStoreContactNumber('9876543210');
+    }, 1500);
   };
 
   const handleContinue = () => {
-    if (!email || !firstName || !lastName || gstStatus !== 'verified') return;
+    if (!email || !firstName || !lastName || gstStatus !== 'verified' || !storeName || !storeAddress || !storeContactNumber || !termsAccepted) return;
     onSetAuthMode?.('new');
     onNavigate('otp');
   };
 
-  const isFormValid = email && firstName && lastName && gstStatus === 'verified';
+  const isFormValid = email && firstName && lastName && gstStatus === 'verified' && storeName && storeAddress && storeContactNumber && termsAccepted;
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-white sm:bg-gray-50">
@@ -217,16 +231,68 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
                 {gstStatus === 'verifying'
                   ? 'Verifying GSTIN...'
                   : gstStatus === 'verified'
-                    ? 'GSTIN verified'
+                    ? 'GSTIN verified — store details auto-populated.'
                     : 'We use your GSTIN to verify that you are a registered business.'}
               </p>
+
+              {gstStatus === 'verified' && (
+                <div className="p-5 bg-gray-50 rounded-xl border border-gray-200 mt-4">
+                  <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Store Details</h4>
+                  <Input
+                    label="Store Name"
+                    value={storeName}
+                    readOnly
+                    disabled
+                    className="bg-gray-100 text-gray-600 cursor-not-allowed"
+                  />
+                  <Input
+                    label="Store Address"
+                    value={storeAddress}
+                    readOnly
+                    disabled
+                    className="bg-gray-100 text-gray-600 cursor-not-allowed"
+                  />
+                  <Input
+                    label="Store Contact Number"
+                    value={storeContactNumber}
+                    readOnly
+                    disabled
+                    className="bg-gray-100 text-gray-600 cursor-not-allowed"
+                  />
+                </div>
+              )}
             </div>
           </div>
 
           <div className="flex items-center">
-            <input id="terms" name="terms" type="checkbox" required className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" />
+            <input
+              id="terms"
+              name="terms"
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setShowLegalModal(true);
+                } else {
+                  setTermsAccepted(false);
+                }
+              }}
+              required
+              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded cursor-pointer"
+            />
             <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-              I agree to the <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">Terms</a> and <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">Privacy Policy</a>
+              I agree to the{' '}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setShowLegalModal(true);
+                }}
+                className="text-primary-600 hover:text-primary-700 font-medium underline"
+              >
+                Terms &amp; Privacy Policy
+              </button>
             </label>
           </div>
 
@@ -240,6 +306,13 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
           </div>
         </form>
       </div>
+      {showLegalModal && (
+        <LegalModal
+          requireConsent
+          onAccept={() => setTermsAccepted(true)}
+          onClose={() => setShowLegalModal(false)}
+        />
+      )}
     </div>
   );
 };

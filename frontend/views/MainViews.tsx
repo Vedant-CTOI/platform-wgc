@@ -15,14 +15,14 @@ const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
 export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEditCampaign }) => {
   // Mock saved campaigns with dummy data and categories (first-time users start with none)
   const [savedCampaigns, setSavedCampaigns] = useState(user.isNewUser ? [] : [
-    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't1', ratioClass: 'aspect-[610/794]' },
+    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Diwali', templateId: 't1', ratioClass: 'aspect-[610/794]' },
     { id: 'c2', name: 'Wedding Collection', date: 'Oct 22, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't2', ratioClass: 'aspect-[936/709]' },
-    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't3', ratioClass: 'aspect-square' },
-    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't4', ratioClass: 'aspect-[610/794]' },
-    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't5', ratioClass: 'aspect-square' },
+    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Concert', templateId: 't3', ratioClass: 'aspect-square' },
+    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Office', templateId: 't4', ratioClass: 'aspect-[610/794]' },
+    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Diwali', templateId: 't5', ratioClass: 'aspect-square' },
     { id: 'c6', name: 'Wedding Decor', date: 'Oct 01, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't6', ratioClass: 'aspect-[936/709]' },
-    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't7', ratioClass: 'aspect-[610/794]' },
-    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't8', ratioClass: 'aspect-[936/709]' },
+    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Concert', templateId: 't7', ratioClass: 'aspect-[610/794]' },
+    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Office', templateId: 't8', ratioClass: 'aspect-[936/709]' },
   ]);
   const hasNoCreatives = savedCampaigns.length === 0;
   const [showSelectLimit, setShowSelectLimit] = useState(false);

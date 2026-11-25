@@ -6,7 +6,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't1',
     name: 'Diwali Mega Sale',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -32,7 +32,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't3',
     name: 'Concert Tickets',
-    category: 'Everyday',
+    category: 'Concert',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-square',
     defaultText: {
@@ -45,7 +45,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't4',
     name: 'Office Supplies',
-    category: 'Minimalist',
+    category: 'Office',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -58,7 +58,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't5',
     name: 'Diwali Gifts',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-square',
     defaultText: {
@@ -84,7 +84,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't7',
     name: 'Music Festival',
-    category: 'Everyday',
+    category: 'Concert',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -97,7 +97,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't8',
     name: 'Corporate Event',
-    category: 'Minimalist',
+    category: 'Office',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[936/709]',
     defaultText: {
@@ -110,7 +110,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't9',
     name: 'Diwali Sweets',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-square',
     defaultText: {
@@ -136,7 +136,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't11',
     name: 'Rock Concert',
-    category: 'Everyday',
+    category: 'Concert',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[936/709]',
     defaultText: {
@@ -149,7 +149,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't12',
     name: 'Office Furniture',
-    category: 'Minimalist',
+    category: 'Office',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-square',
     defaultText: {
@@ -162,7 +162,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't13',
     name: 'Diwali Crackers',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -188,7 +188,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't15',
     name: 'Festive Quarter Page',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[468/709]',
     defaultText: { headline: 'FESTIVE OFFERS', subheadline: 'Celebrate the season with us', offer: 'VISIT TODAY' },
@@ -206,7 +206,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't17',
     name: 'In-store Poster',
-    category: 'Everyday',
+    category: 'Concert',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[1000/1414]',
     defaultText: { headline: 'NEW ARRIVALS', subheadline: 'Ask our staff for details', offer: 'SHOP NOW' },
@@ -215,7 +215,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't18',
     name: 'Highway Billboard',
-    category: 'Minimalist',
+    category: 'Office',
     thumbnail: GRAY_PLACEHOLDER,
     ratioClass: 'aspect-[3000/1000]',
     defaultText: { headline: 'PURE GOLD', subheadline: 'Timeless craftsmanship', offer: 'VISIT US' },
@@ -223,15 +223,15 @@ export const MOCK_TEMPLATES: Template[] = [
   }
 ];
 
-export const CATEGORIES = ['All', 'Wedding', 'Festive', 'Everyday', 'Minimalist'];
+export const CATEGORIES = ['All', 'Diwali', 'Concert', 'Wedding', 'Office', 'Option 5', 'Option 6', 'Option 7', 'Option 8'];
 
 // Media formats grouped into categories (gallery tabs + grouped size filter).
 // NOTE: Quarter Page, Standee, Poster and Billboard ratios are placeholders until final specs are shared.
 export const MEDIA_GROUPS = ['Print Ads', 'Social Media', 'Outdoor & Collateral'] as const;
 
 export const ASPECT_RATIOS = [
-  { id: '610x794', name: 'Full Page', class: 'aspect-[610/794]', group: 'Print Ads' },
-  { id: '936x709', name: 'Half Page', class: 'aspect-[936/709]', group: 'Print Ads' },
+  { id: '610x794', name: 'Vertical Full Page', class: 'aspect-[610/794]', group: 'Print Ads' },
+  { id: '936x709', name: 'Horizontal Half Page', class: 'aspect-[936/709]', group: 'Print Ads' },
   { id: '468x709', name: 'Quarter Page', class: 'aspect-[468/709]', group: 'Print Ads' },
   { id: '621x621', name: '1:1 Square Post', class: 'aspect-square', group: 'Social Media' },
   { id: '800x2000', name: '1:2 Vertical Standee', class: 'aspect-[800/2000]', group: 'Outdoor & Collateral' },

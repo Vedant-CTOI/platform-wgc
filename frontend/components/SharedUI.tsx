@@ -303,8 +303,7 @@ export const TopNav: React.FC<{
                       
                       <div className="border-t border-gray-100 my-1"></div>
                       
-                      <button onClick={() => handleNav('terms')} className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">Terms & Conditions</button>
-                      <button onClick={() => handleNav('privacy')} className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">Privacy Policy</button>
+                      <button onClick={() => handleNav('terms')} className="block w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600 transition-colors">Terms &amp; Privacy Policy</button>
                       
                       <div className="border-t border-gray-100 my-1"></div>
                       <button onClick={() => { setIsMenuOpen(false); onLogout(); }} className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium">Sign out</button>
