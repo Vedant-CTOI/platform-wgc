@@ -27,45 +27,6 @@ const LANDING_FAQS = [
   },
 ];
 
-const HERO_SHOWCASE = [
-  {
-    src: '/showcase/diwali-social.jpg',
-    alt: 'Festive 1:1 Square social campaign creative',
-    category: 'Festive',
-    format: '1:1 Square Post',
-    aspect: 'aspect-square',
-    offset: 'sm:translate-y-4',
-    border: 'border-[#E6E9ED]',
-    shadow: 'shadow-lg',
-    delay: 'bh-d3',
-    driftMult: 0.28,
-  },
-  {
-    src: '/showcase/wedding-print.jpg',
-    alt: 'Wedding Full Page campaign creative',
-    category: 'Wedding',
-    format: 'Full Page',
-    aspect: 'aspect-[632/1000]',
-    offset: 'sm:-translate-y-2',
-    border: 'border-[#F2BE42]/65 ring-1 ring-[#F2BE42]/30',
-    shadow: 'shadow-2xl',
-    delay: 'bh-d2',
-    driftMult: -0.16,
-  },
-  {
-    src: '/showcase/concert-poster.jpg',
-    alt: 'Everyday Poster campaign creative',
-    category: 'Everyday',
-    format: 'Poster',
-    aspect: 'aspect-[743/1000]',
-    offset: 'sm:translate-y-4',
-    border: 'border-[#E6E9ED]',
-    shadow: 'shadow-lg',
-    delay: 'bh-d4',
-    driftMult: 0.24,
-  },
-];
-
 export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
   const hero = useInViewOnce(true);
   const about = useInViewOnce();
@@ -85,109 +46,127 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-white">
-      {/* Hero Section — White bg, concentric gold/plum arcs, existing copy untouched + 3-creative visual showcase */}
+      {/* Hero Section — White bg, concentric gold/plum arcs, compact height with non-clickable flanking creatives */}
       <section
         ref={hero.ref}
         data-hero="true"
-        className={`relative overflow-hidden flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-20 sm:pb-28 bg-white ${hero.inView ? 'is-inview' : ''}`}
+        className={`relative overflow-hidden flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-28 bg-white ${hero.inView ? 'is-inview' : ''}`}
       >
         {/* Subtle counter-rotating concentric hairline arcs framing the hero copy */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-[560px] sm:h-[680px] overflow-hidden"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
           style={{ transform: `translate3d(0, ${heroDrift}px, 0)` }}
         >
           <span
-            className="bh-arc-outer w-[500px] h-[500px] sm:w-[700px] sm:h-[700px]"
+            className="bh-arc-outer w-[500px] h-[500px] sm:w-[680px] sm:h-[680px]"
             style={{ borderTopColor: 'rgba(216, 172, 77, 0.34)', borderRightColor: 'rgba(216, 172, 77, 0.34)' }}
           />
           <span
-            className="bh-arc-inner w-[310px] h-[310px] sm:w-[440px] sm:h-[440px]"
+            className="bh-arc-inner w-[310px] h-[310px] sm:w-[430px] sm:h-[430px]"
             style={{ borderTopColor: 'rgba(112, 66, 135, 0.18)', borderRightColor: 'rgba(112, 66, 135, 0.18)' }}
           />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-6xl font-light text-black tracking-tight mb-6 leading-[1.12]">
-            <span className="bh-line-mask">
-              <span className="bh-line-inner">Lorem ipsum dolor sit amet</span>
-            </span>
-            <span className="bh-line-mask">
-              <span className="bh-line-inner bh-d1 text-[#704287] font-semibold">consectetur.</span>
-            </span>
-          </h1>
-          <p className="bh-fade-up bh-d2 text-lg sm:text-xl text-[#634B6F] mb-10 max-w-2xl mx-auto">
-            Choose a template, add your store details once, and generate professional marketing materials for all your social channels instantly.
-          </p>
-          <div className="bh-fade-up bh-d3 flex flex-col items-center space-y-4">
-            <Button
-              variant="gold"
-              size="lg"
-              onClick={() => onNavigate(user ? 'gallery' : 'login')}
-              className="group w-full sm:w-auto px-8"
-            >
-              <span>Choose a Template</span>
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
-            </Button>
-            {!user && (
-              <div className="bh-fade-up bh-d4 flex items-center space-x-4">
-                <button
-                  onClick={() => onNavigate('register')}
-                  className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors"
-                >
-                  Create Account
-                </button>
-                <span className="text-[#E6E9ED]">|</span>
-                <button
-                  onClick={() => onNavigate('login')}
-                  className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors"
-                >
-                  Sign In
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* 3-Creative Staggered Showcase (real Goldify campaign visuals) */}
-        <div className="relative z-10 w-full max-w-4xl mx-auto mt-12 sm:mt-14 pb-2 sm:pb-6">
-          <div className="grid grid-cols-3 gap-2.5 sm:gap-6 lg:gap-8 items-center">
-            {HERO_SHOWCASE.map((card) => {
-              const badgeStyle = CATEGORY_BADGE_STYLES[card.category] || 'bg-[#ECE9ED] text-[#381F49]';
-              return (
-                <div
-                  key={card.src}
-                  className={`bh-fade-up ${card.delay} ${card.offset}`}
-                >
-                  <div style={{ transform: `translate3d(0, ${Math.round(heroDrift * card.driftMult)}px, 0)` }}>
-                    <button
-                      type="button"
-                      onClick={() => onNavigate(user ? 'gallery' : 'login')}
-                      className={`bh-showcase-card group w-full text-left bg-white rounded-xl sm:rounded-2xl overflow-hidden border ${card.border} ${card.shadow} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#704287]`}
-                    >
-                      <div className={`w-full ${card.aspect} bg-[#ECE9ED] overflow-hidden`}>
-                        <img
-                          src={card.src}
-                          alt={card.alt}
-                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                        />
-                      </div>
-                      <div className="px-2 py-2 sm:px-4 sm:py-3 bg-white border-t border-[#E6E9ED] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                        <span className={`inline-block self-start text-[9px] sm:text-[11px] font-bold uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded-full ${badgeStyle}`}>
-                          {card.category}
-                        </span>
-                        <span className="text-[10px] sm:text-xs font-medium text-[#634B6F] truncate">{card.format}</span>
-                      </div>
-                    </button>
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-between gap-4 sm:gap-5 lg:gap-10">
+          {/* Left decorative non-clickable creative */}
+          <div
+            aria-hidden="true"
+            className="hidden sm:block flex-shrink-0 w-[124px] md:w-[156px] lg:w-[205px] xl:w-[230px] pointer-events-none select-none"
+          >
+            <div className="bh-fade-up bh-d2">
+              <div style={{ transform: `translate3d(0, ${Math.round(heroDrift * 0.24)}px, 0) rotate(-2deg)` }}>
+                <div className="bg-white rounded-xl lg:rounded-2xl overflow-hidden border border-[#F2BE42]/55 shadow-xl">
+                  <div className="w-full aspect-[632/1000] bg-[#ECE9ED] overflow-hidden">
+                    <img
+                      src="/showcase/wedding-print.jpg"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="px-2.5 py-2 lg:px-3.5 lg:py-2.5 bg-white border-t border-[#E6E9ED] flex items-center justify-center md:justify-between gap-1">
+                    <span className={`inline-block text-[9px] lg:text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${CATEGORY_BADGE_STYLES.Wedding}`}>
+                      Wedding
+                    </span>
+                    <span className="hidden md:inline text-[10px] lg:text-[11px] font-medium text-[#634B6F] whitespace-nowrap">Full Page</span>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            </div>
+          </div>
+
+          {/* Center Hero Copy & CTA */}
+          <div className="flex-1 min-w-0 max-w-2xl mx-auto text-center">
+            <h1 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-black tracking-tight mb-6 leading-[1.12]">
+              <span className="bh-line-mask">
+                <span className="bh-line-inner">Lorem ipsum dolor sit amet</span>
+              </span>
+              <span className="bh-line-mask">
+                <span className="bh-line-inner bh-d1 text-[#704287] font-semibold">consectetur.</span>
+              </span>
+            </h1>
+            <p className="bh-fade-up bh-d2 text-base sm:text-lg lg:text-xl text-[#634B6F] mb-9 max-w-xl mx-auto">
+              Choose a template, add your store details once, and generate professional marketing materials for all your social channels instantly.
+            </p>
+            <div className="bh-fade-up bh-d3 flex flex-col items-center space-y-4">
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => onNavigate(user ? 'gallery' : 'login')}
+                className="group w-full sm:w-auto px-8"
+              >
+                <span>Choose a Template</span>
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
+              </Button>
+              {!user && (
+                <div className="bh-fade-up bh-d4 flex items-center space-x-4">
+                  <button
+                    onClick={() => onNavigate('register')}
+                    className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors"
+                  >
+                    Create Account
+                  </button>
+                  <span className="text-[#E6E9ED]">|</span>
+                  <button
+                    onClick={() => onNavigate('login')}
+                    className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors"
+                  >
+                    Sign In
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Right decorative non-clickable creative */}
+          <div
+            aria-hidden="true"
+            className="hidden sm:block flex-shrink-0 w-[128px] md:w-[162px] lg:w-[215px] xl:w-[240px] pointer-events-none select-none"
+          >
+            <div className="bh-fade-up bh-d3">
+              <div style={{ transform: `translate3d(0, ${Math.round(-heroDrift * 0.22)}px, 0) rotate(2deg)` }}>
+                <div className="bg-white rounded-xl lg:rounded-2xl overflow-hidden border border-[#F2BE42]/55 shadow-xl">
+                  <div className="w-full aspect-square bg-[#ECE9ED] overflow-hidden">
+                    <img
+                      src="/showcase/diwali-social.jpg"
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="px-2.5 py-2 lg:px-3.5 lg:py-2.5 bg-white border-t border-[#E6E9ED] flex items-center justify-center md:justify-between gap-1">
+                    <span className={`inline-block text-[9px] lg:text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${CATEGORY_BADGE_STYLES.Festive}`}>
+                      Festive
+                    </span>
+                    <span className="hidden md:inline text-[10px] lg:text-[11px] font-medium text-[#634B6F] whitespace-nowrap">1:1 Post</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* About Goldify — Editorial 2-column split */}
+      {/* About Goldify — Clean editorial 2-column split */}
       <section
         ref={about.ref}
         className={`relative py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white ${about.inView ? 'is-inview' : ''}`}
@@ -209,20 +188,6 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
             <p className="bh-fade-up bh-d2 text-lg text-[#634B6F] leading-relaxed">
               Goldify is designed specifically for small and medium businesses to effortlessly create high-quality, branded promotional content. We bridge the gap between complex design tools and the fast-paced needs of retail marketing, allowing you to focus on what you do best: running your business.
             </p>
-            <div className="bh-fade-up bh-d3 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 mt-8 border-t border-[#E6E9ED]">
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#704287]">Formats</p>
-                <p className="text-sm font-semibold text-black mt-1">Print, Social, Outdoor & Collaterals</p>
-              </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#704287]">Retail Scale</p>
-                <p className="text-sm font-semibold text-black mt-1">Multi-store ready</p>
-              </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#704287]">Delivery</p>
-                <p className="text-sm font-semibold text-black mt-1">Instant PNG & print PDF</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -259,21 +224,18 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
             {[
               {
                 num: '1',
-                eyebrow: '01 · Speed',
                 stagger: 'bh-card-d1',
                 title: 'Lightning Fast',
                 desc: 'Generate campaigns in seconds. No more waiting for designers or struggling with complex software.',
               },
               {
                 num: '2',
-                eyebrow: '02 · Consistency',
                 stagger: 'bh-card-d2',
                 title: 'On-Brand Always',
                 desc: 'Your logo, your address, your contact info—automatically applied to every template perfectly.',
               },
               {
                 num: '3',
-                eyebrow: '03 · Security',
                 stagger: 'bh-card-d3',
                 title: 'Reliable & Secure',
                 desc: 'Your data and assets are stored securely, ensuring your business information is always protected.',
@@ -284,20 +246,15 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
                   className={`bh-fade-up bh-feature-card ${item.stagger} relative overflow-hidden w-full bg-white p-8 rounded-2xl shadow-lg border border-white/10 text-left flex flex-col items-start`}
                 >
                   <span aria-hidden="true" className="bh-feature-top-rule" />
-                  <div className="w-full flex items-center justify-between mb-6">
-                    <div className={`bh-feature-ring ${item.stagger} relative w-[68px] h-[68px] select-none`}>
-                      <img
-                        src="/goldify-ring.png"
-                        alt=""
-                        aria-hidden="true"
-                        className="bh-feature-ring-img w-full h-full object-contain"
-                      />
-                      <span className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 text-xl font-semibold text-[#381F49] leading-none">
-                        {item.num}
-                      </span>
-                    </div>
-                    <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#704287]">
-                      {item.eyebrow}
+                  <div className={`bh-feature-ring ${item.stagger} relative w-[68px] h-[68px] mb-6 select-none`}>
+                    <img
+                      src="/goldify-ring.png"
+                      alt=""
+                      aria-hidden="true"
+                      className="bh-feature-ring-img w-full h-full object-contain"
+                    />
+                    <span className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 text-xl font-semibold text-[#381F49] leading-none">
+                      {item.num}
                     </span>
                   </div>
                   <h3 className="text-xl font-light text-black mb-3">{item.title}</h3>

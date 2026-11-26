@@ -161,13 +161,6 @@ export default function App() {
               <nav className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-semibold" aria-label="Footer navigation">
                 <button
                   type="button"
-                  onClick={() => navigate(state.user ? 'gallery' : 'login')}
-                  className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
-                >
-                  Choose a Template
-                </button>
-                <button
-                  type="button"
                   onClick={() => navigate('faq')}
                   className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
                 >
