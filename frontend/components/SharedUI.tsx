@@ -1,6 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home, Globe, Check, Link2, Mail, MessageCircle } from 'lucide-react';
 import { ADDRESS_LIMITS } from '../constants';
+
+// --- Play-once viewport reveal hook (Barber Hauler style) ---
+export const useInViewOnce = (immediate = false) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setInView(true);
+      return;
+    }
+    if (immediate) {
+      const timer = window.setTimeout(() => setInView(true), 40);
+      return () => window.clearTimeout(timer);
+    }
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setInView(true);
+      return;
+    }
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.96 && rect.bottom > 0) {
+      const timer = window.setTimeout(() => setInView(true), 40);
+      return () => window.clearTimeout(timer);
+    }
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [immediate]);
+
+  return { ref, inView };
+};
 
 // --- Buttons ---
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -15,11 +55,11 @@ export const Button: React.FC<ButtonProps> = ({
   const baseStyle = "inline-flex items-center justify-center rounded-lg font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
   
   const variants = {
-    primary: "bg-[#381F49] text-white hover:bg-[#704287] focus:ring-[#704287] shadow-sm",
+    primary: "bh-btn-wipe bh-btn-primary bg-[#381F49] text-white focus:ring-[#704287] shadow-sm",
     secondary: "bg-[#ECE9ED] text-[#381F49] hover:bg-[#e1dce5] focus:ring-[#704287]",
-    outline: "border border-[#634B6F] bg-white text-[#381F49] hover:bg-[#ECE9ED] focus:ring-[#704287]",
+    outline: "bh-btn-wipe bh-btn-outline border border-[#634B6F] bg-white text-[#381F49] focus:ring-[#704287]",
     ghost: "bg-transparent text-[#634B6F] hover:bg-[#ECE9ED] hover:text-[#381F49] focus:ring-[#704287]",
-    gold: "bg-[#F2BE42] text-black hover:bg-[#e5b030] focus:ring-[#F2BE42] shadow-sm"
+    gold: "bh-btn-wipe bh-btn-gold bg-[#F2BE42] text-black focus:ring-[#F2BE42] shadow-sm"
   };
 
   const sizes = {
@@ -168,6 +208,7 @@ const LanguageSelector: React.FC = () => {
 
 // --- Remarketing "Tell a friend" band (homepage, logged-in + logged-out) ---
 export const ShareBand: React.FC = () => {
+  const band = useInViewOnce();
   const [showOptions, setShowOptions] = useState(false);
   const [copied, setCopied] = useState(false);
   const shareUrl = typeof window !== 'undefined' ? window.location.origin + '/' : '';
@@ -197,10 +238,18 @@ export const ShareBand: React.FC = () => {
   const optionClass = "flex items-center w-full px-4 py-3 rounded-lg border border-[#E6E9ED] text-sm font-semibold text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors";
 
   return (
-    <section className="bg-[#ECE9ED] border-y border-[#E6E9ED]">
+    <section ref={band.ref} className={`relative bg-[#ECE9ED] ${band.inView ? 'is-inview' : ''}`}>
+      <div aria-hidden="true" className="bh-border-draw absolute top-0 inset-x-0 h-px bg-[#634B6F]/25" />
+      <div aria-hidden="true" className="bh-border-draw bh-d1 absolute bottom-0 inset-x-0 h-px bg-[#634B6F]/25" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p className="text-lg sm:text-xl font-semibold text-black text-center sm:text-left">Loving the experience? Tell a friend</p>
-        <Button size="lg" onClick={handleShare} className="w-full sm:w-auto px-8">Share Now</Button>
+        <p className="text-lg sm:text-xl font-semibold text-black text-center sm:text-left">
+          <span className="bh-line-mask">
+            <span className="bh-line-inner">Loving the experience? Tell a friend</span>
+          </span>
+        </p>
+        <div className="bh-fade-up bh-d2 w-full sm:w-auto">
+          <Button size="lg" onClick={handleShare} className="w-full sm:w-auto px-8">Share Now</Button>
+        </div>
       </div>
 
       {showOptions && (

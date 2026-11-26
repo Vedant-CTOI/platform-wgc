@@ -166,8 +166,8 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-white/80 text-sm">© 2024 Goldify. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 sm:mt-0 text-sm">
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('terms'); }} className="text-[#E5A9FF] hover:text-[#F2BE42] transition-colors">Terms</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('privacy'); }} className="text-[#E5A9FF] hover:text-[#F2BE42] transition-colors">Privacy</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('terms'); }} className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors">Terms</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('privacy'); }} className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors">Privacy</a>
             </div>
           </div>
         </footer>

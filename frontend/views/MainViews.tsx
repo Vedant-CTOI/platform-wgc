@@ -178,7 +178,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
               </h2>
               <div className="flex items-center gap-3">
                 {filterLabel && (
-                  <button onClick={() => { setActiveFilter(null); setSizeFilter('All'); }} className="text-sm font-semibold text-[#704287] hover:text-[#381F49]">
+                  <button onClick={() => { setActiveFilter(null); setSizeFilter('All'); }} className="bh-link text-sm font-semibold text-[#704287] hover:text-[#381F49]">
                     Clear filter
                   </button>
                 )}

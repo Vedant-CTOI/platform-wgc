@@ -48,11 +48,193 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap');
+        :root {
+            --ease-editorial: cubic-bezier(0.215, 0.61, 0.355, 1);
+            --ease-arch: cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
         body { font-family: 'Noto Sans', Roboto, Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; background-color: #FFFFFF; color: #000000; }
         input[type="checkbox"], input[type="radio"] { accent-color: #381F49; }
         /* Hide scrollbar for horizontal scrolling areas but keep functionality */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* --- Editorial Motion System (inspired by Barber Hauler, adapted for Goldify) --- */
+        .bh-line-mask {
+            overflow: hidden;
+            display: block;
+            padding-bottom: 0.08em;
+            margin-bottom: -0.08em;
+        }
+        .bh-line-inner {
+            display: block;
+            transform: translate3d(0, 108%, 0);
+            opacity: 0;
+            transition: transform 0.72s var(--ease-editorial), opacity 0.55s var(--ease-editorial);
+            will-change: transform, opacity;
+        }
+        .is-inview .bh-line-inner {
+            transform: translate3d(0, 0, 0);
+            opacity: 1;
+        }
+        .bh-fade-up {
+            opacity: 0;
+            transform: translate3d(0, 22px, 0);
+            transition: transform 0.72s var(--ease-editorial), opacity 0.6s var(--ease-editorial);
+            will-change: transform, opacity;
+        }
+        .is-inview .bh-fade-up,
+        .bh-fade-up.is-inview {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+        .bh-d1 { transition-delay: 0.08s; }
+        .bh-d2 { transition-delay: 0.18s; }
+        .bh-d3 { transition-delay: 0.28s; }
+        .bh-d4 { transition-delay: 0.38s; }
+        .bh-d5 { transition-delay: 0.48s; }
+
+        /* Architectural hairline divider draw */
+        .bh-border-draw {
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.9s var(--ease-editorial);
+            will-change: transform;
+        }
+        .is-inview .bh-border-draw,
+        .bh-border-draw.is-inview {
+            transform: scaleX(1);
+        }
+
+        /* Counter-rotating concentric arcs (echoing Goldify rings) */
+        @keyframes bhArcOuter {
+            0% { transform: translate3d(-50%, -50%, 0) rotate(-135deg) scale(0.94); opacity: 0; }
+            25% { opacity: 1; }
+            100% { transform: translate3d(-50%, -50%, 0) rotate(45deg) scale(1); opacity: 1; }
+        }
+        @keyframes bhArcInner {
+            0% { transform: translate3d(-50%, -50%, 0) rotate(225deg) scale(0.94); opacity: 0; }
+            25% { opacity: 1; }
+            100% { transform: translate3d(-50%, -50%, 0) rotate(45deg) scale(1); opacity: 1; }
+        }
+        .bh-arc-outer, .bh-arc-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 9999px;
+            border: 1px solid transparent;
+            opacity: 0;
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+        .is-inview .bh-arc-outer {
+            animation: bhArcOuter 1.6s var(--ease-arch) 0.15s 1 normal forwards;
+        }
+        .is-inview .bh-arc-inner {
+            animation: bhArcInner 1.6s var(--ease-arch) 0.25s 1 normal forwards;
+        }
+
+        /* Feature cards & Goldify 1-2-3 ring reveal + hover */
+        .bh-feature-card {
+            transition: transform 0.55s var(--ease-editorial), box-shadow 0.55s var(--ease-editorial), opacity 0.65s var(--ease-editorial);
+        }
+        .bh-feature-card:hover {
+            transform: translate3d(0, -6px, 0);
+            box-shadow: 0 22px 44px -14px rgba(18, 7, 26, 0.45);
+        }
+        .bh-feature-ring {
+            transform: rotate(-35deg) scale(0.92);
+            transition: transform 0.95s var(--ease-arch);
+        }
+        .is-inview .bh-feature-ring {
+            transform: rotate(0deg) scale(1);
+        }
+        .bh-feature-ring-img {
+            transition: transform 0.7s var(--ease-editorial);
+        }
+        .bh-feature-card:hover .bh-feature-ring-img {
+            transform: rotate(18deg);
+        }
+
+        /* Directional fill-wipe buttons (shared across app) */
+        .bh-btn-wipe {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            transition: color 0.45s var(--ease-editorial), border-color 0.45s var(--ease-editorial), box-shadow 0.45s var(--ease-editorial);
+        }
+        .bh-btn-wipe::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            transform: scaleX(0);
+            transform-origin: right center;
+            transition: transform 0.5s var(--ease-editorial);
+        }
+        .bh-btn-wipe:not(:disabled):hover::before,
+        .bh-btn-wipe:not(:disabled):focus-visible::before {
+            transform: scaleX(1);
+            transform-origin: left center;
+        }
+        .bh-btn-primary::before { background-color: #704287; }
+        .bh-btn-gold::before { background-color: #381F49; }
+        .bh-btn-gold:not(:disabled):hover,
+        .bh-btn-gold:not(:disabled):focus-visible { color: #F2BE42; }
+        .bh-btn-outline::before { background-color: #381F49; }
+        .bh-btn-outline:not(:disabled):hover,
+        .bh-btn-outline:not(:disabled):focus-visible { color: #FFFFFF; border-color: #381F49; }
+
+        /* Sliding hairline link underlines (shared across app) */
+        .bh-link {
+            position: relative;
+            display: inline-block;
+        }
+        .bh-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100%;
+            height: 1px;
+            background-color: currentColor;
+            transform: scaleX(0);
+            transform-origin: right center;
+            transition: transform 0.45s var(--ease-editorial);
+        }
+        .bh-link:hover::after,
+        .bh-link:focus-visible::after {
+            transform: scaleX(1);
+            transform-origin: left center;
+        }
+
+        /* Smooth FAQ accordion panel */
+        .bh-accordion-body {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.45s var(--ease-editorial);
+        }
+        .bh-accordion-body[data-open="true"] {
+            grid-template-rows: 1fr;
+        }
+        .bh-accordion-inner {
+            overflow: hidden;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bh-line-inner, .bh-fade-up, .bh-border-draw, .bh-feature-ring {
+                transform: none !important;
+                opacity: 1 !important;
+                transition: none !important;
+            }
+            .bh-arc-outer, .bh-arc-inner {
+                animation: none !important;
+                opacity: 1 !important;
+                transform: translate3d(-50%, -50%, 0) rotate(45deg) !important;
+            }
+            .bh-btn-wipe::before, .bh-link::after, .bh-accordion-body, .bh-feature-card, .bh-feature-ring-img {
+                transition: none !important;
+            }
+        }
     </style>
     </head>
 <body class="bg-white text-black">
