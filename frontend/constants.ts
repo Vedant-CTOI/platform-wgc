@@ -1,6 +1,6 @@
 import { Template } from './types';
 
-const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23e5e7eb'/%3E%3Cpath d='M200 220a20 20 0 1 0 0-40 20 20 0 0 0 0 40zm-40 60l30-40 20 20 40-50 30 70H160z' fill='%239ca3af'/%3E%3C/svg%3E";
+const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23E6E9ED'/%3E%3Cpath d='M200 220a20 20 0 1 0 0-40 20 20 0 0 0 0 40zm-40 60l30-40 20 20 40-50 30 70H160z' fill='%23634B6F' fill-opacity='0.45'/%3E%3C/svg%3E";
 
 export const MOCK_TEMPLATES: Template[] = [
   {
@@ -262,6 +262,14 @@ export const MOCK_TEMPLATES: Template[] = [
 ];
 
 export const CATEGORIES = ['All', 'Wedding', 'Festive', 'Everyday', 'Minimalist'];
+
+// Goldify sparing Category Accents (Sky #8BD6FF, Mint #40DDB1, Teal #00323C, Navy #001E46) — high-contrast pills on white
+export const CATEGORY_BADGE_STYLES: Record<string, string> = {
+  Wedding: 'bg-[#001E46]/10 text-[#001E46] border border-[#001E46]/20',
+  Festive: 'bg-[#00323C]/10 text-[#00323C] border border-[#00323C]/20',
+  Everyday: 'bg-[#40DDB1]/20 text-[#00323C] border border-[#40DDB1]/50',
+  Minimalist: 'bg-[#8BD6FF]/25 text-[#001E46] border border-[#8BD6FF]/60',
+};
 
 // Media formats grouped into categories (grouped size filter across gallery + dashboard).
 export const MEDIA_GROUPS = ['Print Ads', 'Social Media', 'Outdoor', 'Collaterals'] as const;

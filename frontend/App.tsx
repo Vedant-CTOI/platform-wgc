@@ -51,14 +51,14 @@ const ResponsiveHelper = () => {
   const [isVisible, setIsVisible] = useState(true);
   if (!isVisible) return null;
   return (
-    <div className="fixed bottom-4 right-4 bg-gray-900 text-white p-4 rounded-xl shadow-2xl z-50 max-w-sm flex items-start space-x-3 transition-opacity">
+    <div className="fixed bottom-4 right-4 bg-[#282828] text-white p-4 rounded-xl shadow-2xl border border-[#F2BE42]/40 z-50 max-w-sm flex items-start space-x-3 transition-opacity">
       <div className="flex-1">
-        <p className="text-sm font-bold mb-1 flex items-center">
+        <p className="text-sm font-bold mb-1 flex items-center text-[#F2BE42]">
           <span className="mr-2">📱</span> Responsive Prototype
         </p>
-        <p className="text-xs text-gray-300 leading-relaxed">This wireframe adapts to any screen size. Resize your browser window to switch between Desktop (1440px) and Mobile (375px) layouts.</p>
+        <p className="text-xs text-white/80 leading-relaxed">This wireframe adapts to any screen size. Resize your browser window to switch between Desktop (1440px) and Mobile (375px) layouts.</p>
       </div>
-      <button onClick={() => setIsVisible(false)} className="text-gray-400 hover:text-white p-1 bg-gray-800 rounded-md transition-colors">
+      <button onClick={() => setIsVisible(false)} className="text-white/70 hover:text-white p-1 bg-white/10 hover:bg-white/20 rounded-md transition-colors">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
     </div>
@@ -145,7 +145,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 font-sans text-gray-900">
+    <div className="min-h-screen flex flex-col bg-white font-sans text-black">
       <ResponsiveHelper />
       <TopNav 
         isLoggedIn={!!state.user} 
@@ -153,21 +153,21 @@ export default function App() {
         onNavigate={navigate} 
         onLogout={logout} 
       />
-      <main className="flex-grow">
+      <main className="flex-grow bg-white">
         {renderView()}
       </main>
 
       {/* Remarketing band — homepage for logged-out (landing) and logged-in (dashboard) users */}
       {(state.currentView === 'landing' || (state.currentView === 'dashboard' && state.user)) && <ShareBand />}
       
-      {/* Simple Footer for Landing */}
+      {/* Plum 900 Footer for Landing (per Goldify Visual Identity: footer is plum) */}
       {state.currentView === 'landing' && (
-        <footer className="bg-white border-t border-gray-200 py-8 mt-auto">
+        <footer className="bg-[#381F49] border-t border-[#704287]/40 py-8 mt-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
-            <p className="text-gray-500 text-sm">© 2024 Platform. All rights reserved.</p>
-            <div className="flex space-x-6 mt-4 sm:mt-0 text-sm text-gray-500">
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('terms'); }} className="hover:text-gray-900">Terms</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('privacy'); }} className="hover:text-gray-900">Privacy</a>
+            <p className="text-white/80 text-sm">© 2024 Goldify. All rights reserved.</p>
+            <div className="flex space-x-6 mt-4 sm:mt-0 text-sm">
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('terms'); }} className="text-[#E5A9FF] hover:text-[#F2BE42] transition-colors">Terms</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); navigate('privacy'); }} className="text-[#E5A9FF] hover:text-[#F2BE42] transition-colors">Privacy</a>
             </div>
           </div>
         </footer>

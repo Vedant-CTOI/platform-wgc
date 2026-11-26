@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platform</title>
+    <title>Goldify</title>
+    <meta name="theme-color" content="#381F49">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,29 +12,50 @@
                 extend: {
                     colors: {
                         primary: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            500: '#6b7280',
-                            600: '#111827',
-                            700: '#000000',
+                            50: '#ECE9ED',
+                            100: '#E5A9FF',
+                            300: '#E5A9FF',
+                            400: '#9B75B0',
+                            500: '#704287',
+                            600: '#381F49',
+                            700: '#704287',
+                        },
+                        plum: {
+                            900: '#381F49',
+                            700: '#704287',
+                            muted: '#634B6F',
+                        },
+                        gold: {
+                            500: '#F2BE42',
+                            600: '#E0AC30',
+                        },
+                        lilac: {
+                            300: '#E5A9FF',
+                        },
+                        lavender: {
+                            100: '#ECE9ED',
+                        },
+                        charcoal: {
+                            900: '#282828',
                         }
                     },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Noto Sans', 'Roboto', 'Arial', 'Helvetica', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Noto Sans', Roboto, Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; background-color: #FFFFFF; color: #000000; }
+        input[type="checkbox"], input[type="radio"] { accent-color: #381F49; }
         /* Hide scrollbar for horizontal scrolling areas but keep functionality */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
     </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-white text-black">
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
 </body>
