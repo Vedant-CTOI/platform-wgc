@@ -3,7 +3,9 @@ import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home, Glob
 import { ADDRESS_LIMITS } from '../constants';
 
 // --- Play-once viewport reveal hook (Barber Hauler style) ---
-export const useInViewOnce = (immediate = false) => {
+// Waits until an element genuinely enters the user's sightline (default 30% up from viewport bottom),
+// with a bottom-of-page fallback so elements near the footer always reveal cleanly.
+export const useInViewOnce = (immediate = false, rootMargin = '0px 0px -30% 0px') => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
 
@@ -21,25 +23,53 @@ export const useInViewOnce = (immediate = false) => {
       setInView(true);
       return;
     }
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.96 && rect.bottom > 0) {
+    const initialRect = el.getBoundingClientRect();
+    if (initialRect.top < window.innerHeight * 0.65 && initialRect.bottom > 0) {
       const timer = window.setTimeout(() => setInView(true), 40);
       return () => window.clearTimeout(timer);
     }
+    let done = false;
+    const reveal = () => {
+      if (done) return;
+      done = true;
+      setInView(true);
+      obs.disconnect();
+      window.removeEventListener('scroll', checkNearBottom);
+    };
     const obs = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
+        if (entry.isIntersecting) reveal();
       },
-      { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
+      { threshold: 0.01, rootMargin }
     );
+    const checkNearBottom = () => {
+      const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 40;
+      if (!atBottom) return;
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) reveal();
+    };
     obs.observe(el);
-    return () => obs.disconnect();
-  }, [immediate]);
+    window.addEventListener('scroll', checkNearBottom, { passive: true });
+    return () => {
+      obs.disconnect();
+      window.removeEventListener('scroll', checkNearBottom);
+    };
+  }, [immediate, rootMargin]);
 
   return { ref, inView };
+};
+
+export const RevealItem: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  rootMargin?: string;
+}> = ({ children, className = '', rootMargin = '0px 0px -22% 0px' }) => {
+  const { ref, inView } = useInViewOnce(false, rootMargin);
+  return (
+    <div ref={ref} className={`${inView ? 'is-inview' : ''} ${className}`}>
+      {children}
+    </div>
+  );
 };
 
 // --- Buttons ---
@@ -208,7 +238,7 @@ const LanguageSelector: React.FC = () => {
 
 // --- Remarketing "Tell a friend" band (homepage, logged-in + logged-out) ---
 export const ShareBand: React.FC = () => {
-  const band = useInViewOnce();
+  const band = useInViewOnce(false, '0px 0px -8% 0px');
   const [showOptions, setShowOptions] = useState(false);
   const [copied, setCopied] = useState(false);
   const shareUrl = typeof window !== 'undefined' ? window.location.origin + '/' : '';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Input, PageHeader, NoticeModal, useInViewOnce } from '../components/SharedUI';
+import { Button, Input, PageHeader, NoticeModal, useInViewOnce, RevealItem } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo } from '../types';
 import { RETURNING_USER_STORES, DEMO_ACCOUNTS, DEMO_OTP } from '../constants';
 import { Store, Image as ImageIcon, MapPin, Phone, CheckCircle2, UploadCloud, AlertTriangle, X, Loader2, Plus, Trash2, Mail, Send, ArrowRight } from 'lucide-react';
@@ -129,24 +129,21 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
         </div>
       </section>
 
-      {/* Features — Plum 900 section with concentric gold/lilac arcs & staggered Goldify ring 1, 2, 3 cards */}
-      <section
-        ref={features.ref}
-        className={`relative overflow-hidden py-20 px-4 sm:px-6 lg:px-8 bg-[#381F49] ${features.inView ? 'is-inview' : ''}`}
-      >
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-          <span
-            className="bh-arc-outer w-[560px] h-[560px] sm:w-[820px] sm:h-[820px]"
-            style={{ borderTopColor: 'rgba(242, 190, 66, 0.28)', borderRightColor: 'rgba(242, 190, 66, 0.28)' }}
-          />
-          <span
-            className="bh-arc-inner w-[360px] h-[360px] sm:w-[500px] sm:h-[500px]"
-            style={{ borderTopColor: 'rgba(229, 169, 255, 0.22)', borderRightColor: 'rgba(229, 169, 255, 0.22)' }}
-          />
-        </div>
+      {/* Features — Plum 900 section with concentric gold/lilac arcs & per-card reveal triggers */}
+      <section className="relative overflow-hidden py-20 px-4 sm:px-6 lg:px-8 bg-[#381F49]">
+        <div ref={features.ref} className={features.inView ? 'is-inview' : ''}>
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+            <span
+              className="bh-arc-outer w-[560px] h-[560px] sm:w-[820px] sm:h-[820px]"
+              style={{ borderTopColor: 'rgba(242, 190, 66, 0.28)', borderRightColor: 'rgba(242, 190, 66, 0.28)' }}
+            />
+            <span
+              className="bh-arc-inner w-[360px] h-[360px] sm:w-[500px] sm:h-[500px]"
+              style={{ borderTopColor: 'rgba(229, 169, 255, 0.22)', borderRightColor: 'rgba(229, 169, 255, 0.22)' }}
+            />
+          </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="relative z-10 max-w-7xl mx-auto text-center mb-12">
             <h2 className="text-3xl font-light text-white">
               <span className="bh-line-mask">
                 <span className="bh-line-inner">Features</span>
@@ -154,98 +151,103 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
             </h2>
             <div aria-hidden="true" className="bh-border-draw bh-d1 mx-auto mt-4 h-px w-14 bg-[#F2BE42]/75" />
           </div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
               {
                 num: '1',
-                delay: 'bh-d1',
+                stagger: 'bh-card-d1',
                 title: 'Lightning Fast',
                 desc: 'Generate campaigns in seconds. No more waiting for designers or struggling with complex software.',
               },
               {
                 num: '2',
-                delay: 'bh-d2',
+                stagger: 'bh-card-d2',
                 title: 'On-Brand Always',
                 desc: 'Your logo, your address, your contact info—automatically applied to every template perfectly.',
               },
               {
                 num: '3',
-                delay: 'bh-d3',
+                stagger: 'bh-card-d3',
                 title: 'Reliable & Secure',
                 desc: 'Your data and assets are stored securely, ensuring your business information is always protected.',
               },
             ].map((item) => (
-              <div
-                key={item.num}
-                className={`bh-fade-up bh-feature-card ${item.delay} bg-white p-8 rounded-2xl shadow-lg border border-white/10 text-center flex flex-col items-center`}
-              >
-                <div className={`bh-feature-ring ${item.delay} relative w-[68px] h-[68px] mb-6 select-none`}>
-                  <img
-                    src="/goldify-ring.png"
-                    alt=""
-                    aria-hidden="true"
-                    className="bh-feature-ring-img w-full h-full object-contain"
-                  />
-                  <span className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 text-xl font-semibold text-[#381F49] leading-none">
-                    {item.num}
-                  </span>
+              <RevealItem key={item.num} rootMargin="0px 0px -22% 0px" className="flex">
+                <div
+                  className={`bh-fade-up bh-feature-card ${item.stagger} w-full bg-white p-8 rounded-2xl shadow-lg border border-white/10 text-center flex flex-col items-center`}
+                >
+                  <div className={`bh-feature-ring ${item.stagger} relative w-[68px] h-[68px] mb-6 select-none`}>
+                    <img
+                      src="/goldify-ring.png"
+                      alt=""
+                      aria-hidden="true"
+                      className="bh-feature-ring-img w-full h-full object-contain"
+                    />
+                    <span className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 text-xl font-semibold text-[#381F49] leading-none">
+                      {item.num}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-light text-black mb-3">{item.title}</h3>
+                  <p className="text-[#634B6F]">{item.desc}</p>
                 </div>
-                <h3 className="text-xl font-light text-black mb-3">{item.title}</h3>
-                <p className="text-[#634B6F]">{item.desc}</p>
-              </div>
+              </RevealItem>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQs — Interactive smooth accordions */}
-      <section
-        ref={faqs.ref}
-        className={`py-20 px-4 sm:px-6 lg:px-8 bg-white ${faqs.inView ? 'is-inview' : ''}`}
-      >
+      {/* FAQs — Interactive smooth accordions with per-item scroll triggers */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-semibold text-black mb-10">
-            <span className="bh-line-mask">
-              <span className="bh-line-inner">Frequently Asked Questions</span>
-            </span>
-          </h2>
+          <div ref={faqs.ref} className={faqs.inView ? 'is-inview' : ''}>
+            <h2 className="text-3xl font-semibold text-black mb-10">
+              <span className="bh-line-mask">
+                <span className="bh-line-inner">Frequently Asked Questions</span>
+              </span>
+            </h2>
+          </div>
           <div className="space-y-4 text-left">
             {LANDING_FAQS.map((faq, idx) => {
               const isOpen = openFaq === idx;
-              const delayCls = idx === 0 ? 'bh-d1' : idx === 1 ? 'bh-d2' : 'bh-d3';
               return (
-                <div
-                  key={faq.q}
-                  className={`bh-fade-up ${delayCls} bg-[#ECE9ED] rounded-2xl border transition-colors duration-300 ${isOpen ? 'border-[#704287]/45' : 'border-[#E6E9ED] hover:border-[#634B6F]/35'}`}
-                >
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full p-6 flex items-center justify-between gap-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#704287] rounded-2xl"
+                <RevealItem key={faq.q} rootMargin="0px 0px -18% 0px">
+                  <div
+                    className={`bh-fade-up bh-d1 bg-[#ECE9ED] rounded-2xl border transition-colors duration-300 ${isOpen ? 'border-[#704287]/45' : 'border-[#E6E9ED] hover:border-[#634B6F]/35'}`}
                   >
-                    <h3 className="font-semibold text-black">{faq.q}</h3>
-                    <span
-                      aria-hidden="true"
-                      className={`flex-shrink-0 w-7 h-7 rounded-full border border-[#634B6F]/35 flex items-center justify-center text-[#381F49] transition-transform duration-400 ${isOpen ? 'rotate-45 bg-[#381F49] text-white border-[#381F49]' : 'bg-white/70'}`}
+                    <button
+                      type="button"
+                      aria-expanded={isOpen}
+                      onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      className="w-full p-6 flex items-center justify-between gap-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-[#704287] rounded-2xl"
                     >
-                      <Plus className="w-4 h-4" />
-                    </span>
-                  </button>
-                  <div className="bh-accordion-body" data-open={isOpen ? 'true' : 'false'}>
-                    <div className="bh-accordion-inner">
-                      <p className="text-[#634B6F] px-6 pb-6 -mt-1 leading-relaxed">{faq.a}</p>
+                      <h3 className="font-semibold text-black">{faq.q}</h3>
+                      <span
+                        aria-hidden="true"
+                        className={`flex-shrink-0 w-7 h-7 rounded-full border border-[#634B6F]/35 flex items-center justify-center text-[#381F49] transition-transform duration-400 ${isOpen ? 'rotate-45 bg-[#381F49] text-white border-[#381F49]' : 'bg-white/70'}`}
+                      >
+                        <Plus className="w-4 h-4" />
+                      </span>
+                    </button>
+                    <div className="bh-accordion-body" data-open={isOpen ? 'true' : 'false'}>
+                      <div className="bh-accordion-inner">
+                        <p className="text-[#634B6F] px-6 pb-6 -mt-1 leading-relaxed">{faq.a}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </RevealItem>
               );
             })}
           </div>
-          <div className="bh-fade-up bh-d4">
-            <Button variant="outline" className="mt-10" onClick={() => onNavigate('faq')}>
-              View All FAQs
-            </Button>
-          </div>
+          <RevealItem rootMargin="0px 0px -10% 0px">
+            <div className="bh-fade-up bh-d1">
+              <Button variant="outline" className="mt-10" onClick={() => onNavigate('faq')}>
+                View All FAQs
+              </Button>
+            </div>
+          </RevealItem>
         </div>
       </section>
 
