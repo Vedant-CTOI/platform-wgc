@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Input, PageHeader } from '../components/SharedUI';
+import { Button, Input, PageHeader, NoticeModal } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo } from '../types';
 import { RETURNING_USER_STORES, DEMO_ACCOUNTS, DEMO_OTP } from '../constants';
 import { Store, Image as ImageIcon, MapPin, Phone, CheckCircle2, UploadCloud, AlertTriangle, X, Loader2, Plus, Trash2, Zap, Shield, Palette, Mail, Send } from 'lucide-react';
@@ -123,6 +123,8 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
   const [email, setEmail] = useState('');
   const [gstNumber, setGstNumber] = useState('');
   const [gstStatus, setGstStatus] = useState<'idle' | 'verifying' | 'verified' | 'invalid'>('idle');
+  const [agreedTerms, setAgreedTerms] = useState(false);
+  const [showGstPopup, setShowGstPopup] = useState(false);
 
   // Standard 15-character GSTIN format: 2-digit state code + PAN + entity no. + 'Z' + checksum
   const GSTIN_PATTERN = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
@@ -130,6 +132,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
   const handleGstChange = (value: string) => {
     setGstNumber(value.toUpperCase().replace(/\s/g, ''));
     setGstStatus('idle');
+    setAgreedTerms(false);
   };
 
   // Mock GSTIN verification — confirms the registrant is an actual business
@@ -142,8 +145,29 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
     setTimeout(() => setGstStatus('verified'), 1500);
   };
 
+  const handleTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked && gstStatus !== 'verified') {
+      setShowGstPopup(true);
+      return;
+    }
+    setAgreedTerms(e.target.checked);
+  };
+
+  const handleGstPopupAction = () => {
+    setShowGstPopup(false);
+    if (gstNumber.length === 15 && gstStatus !== 'verifying' && gstStatus !== 'verified') {
+      handleGstVerify();
+    } else {
+      setTimeout(() => {
+        const el = document.getElementById('register-gst-input');
+        el?.focus();
+        el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 50);
+    }
+  };
+
   const handleContinue = () => {
-    if (!email || !firstName || !lastName || gstStatus !== 'verified') return;
+    if (!email || !firstName || !lastName || gstStatus !== 'verified' || !agreedTerms) return;
     onSetAuthMode?.('new');
     onNavigate('otp');
   };
@@ -167,14 +191,14 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Input
-                label="First Name"
+                label="First Name *"
                 placeholder="First Name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
               />
               <Input
-                label="Last Name"
+                label="Last Name *"
                 placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
@@ -182,7 +206,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
               />
             </div>
             <Input
-              label="Email ID"
+              label="Email ID *"
               type="email"
               placeholder="Enter your email"
               value={email}
@@ -194,6 +218,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
               <div className="flex items-end gap-2">
                 <div className="flex-grow">
                   <Input
+                    id="register-gst-input"
                     label="GST Number *"
                     placeholder="e.g. 22AAAAA0000A1Z5"
                     value={gstNumber}
@@ -224,11 +249,21 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
           </div>
 
           <div className="flex items-center">
-            <input id="terms" name="terms" type="checkbox" required className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" />
+            <input
+              id="terms"
+              name="terms"
+              type="checkbox"
+              checked={agreedTerms}
+              onChange={handleTermsChange}
+              required
+              className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+            />
             <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
               I agree to the <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">Terms</a> and <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">Privacy Policy</a>
             </label>
           </div>
+
+          <p className="text-xs text-gray-500">* Mandatory fields</p>
 
           <div className="pt-2 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
             <Button type="submit" size="lg" className="w-full sm:w-auto px-8" disabled={!isFormValid}>
@@ -240,6 +275,16 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
           </div>
         </form>
       </div>
+
+      {showGstPopup && (
+        <NoticeModal
+          title="GST Verification Required"
+          message="Please verify your GST Number before agreeing to the Terms and Privacy Policy."
+          actionLabel="Verify GST"
+          onAction={handleGstPopupAction}
+          onClose={() => setShowGstPopup(false)}
+        />
+      )}
     </div>
   );
 };

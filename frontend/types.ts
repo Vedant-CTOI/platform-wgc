@@ -43,6 +43,7 @@ export interface Template {
   name: string;
   category: string;
   thumbnail: string;
+  ratioId: string;
   ratioClass: string;
   defaultText: {
     headline: string;

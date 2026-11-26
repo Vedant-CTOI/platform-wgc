@@ -28,7 +28,7 @@ function appReducer(state: AppState, action: Action): AppState {
     case 'START_CAMPAIGN':
       // Use the first template's ratio as default, or fallback
       const firstTemplate = action.payload[0];
-      const ratioId = firstTemplate ? (ASPECT_RATIOS.find(r => r.class === firstTemplate.ratioClass)?.id || '621x621') : '621x621';
+      const ratioId = firstTemplate?.ratioId || (firstTemplate ? (ASPECT_RATIOS.find(r => r.class === firstTemplate.ratioClass)?.id || '621x621') : '621x621');
       return { 
         ...state, 
         draft: {
@@ -110,7 +110,7 @@ export default function App() {
       case 'profile_setup':
         return state.user ? <ProfileView user={state.user} onNavigate={navigate} onUpdateUser={updateUser} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
       case 'dashboard':
-        return state.user ? <DashboardView user={state.user} onNavigate={navigate} onEditCampaign={editCampaign} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
+        return state.user ? <DashboardView user={state.user} onNavigate={navigate} onEditCampaign={editCampaign} onSelectTemplate={startCampaign} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
       case 'store_management':
         return state.user ? <StoreManagementView user={state.user} onNavigate={navigate} onUpdateUser={updateUser} /> : <LandingView onNavigate={navigate} onLogin={login} user={state.user} />;
       case 'faq':

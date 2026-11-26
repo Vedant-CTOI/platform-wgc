@@ -1,31 +1,35 @@
 import React, { useState, useRef } from 'react';
 import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
-import { ViewState, UserProfile, StoreInfo } from '../types';
+import { ViewState, UserProfile, StoreInfo, Template } from '../types';
 import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye, Sparkles } from 'lucide-react';
-import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES, MEDIA_GROUPS } from '../constants';
+import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES, MEDIA_GROUPS, getRatioDisplayLabel } from '../constants';
+import { GalleryView } from './CampaignViews';
 
 interface DashboardProps {
   user: UserProfile;
   onNavigate: (view: ViewState) => void;
   onEditCampaign: (campaign: any) => void;
+  onSelectTemplate: (templates: Template[]) => void;
 }
 
 const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23e5e7eb'/%3E%3Cpath d='M200 220a20 20 0 1 0 0-40 20 20 0 0 0 0 40zm-40 60l30-40 20 20 40-50 30 70H160z' fill='%239ca3af'/%3E%3C/svg%3E";
 
-export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEditCampaign }) => {
+export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEditCampaign, onSelectTemplate }) => {
   // Mock saved campaigns with dummy data and categories (first-time users start with none)
   const [savedCampaigns, setSavedCampaigns] = useState(user.isNewUser ? [] : [
-    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't1', ratioClass: 'aspect-[610/794]' },
-    { id: 'c2', name: 'Wedding Collection', date: 'Oct 22, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't2', ratioClass: 'aspect-[936/709]' },
-    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't3', ratioClass: 'aspect-square' },
-    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't4', ratioClass: 'aspect-[610/794]' },
-    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't5', ratioClass: 'aspect-square' },
-    { id: 'c6', name: 'Wedding Decor', date: 'Oct 01, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't6', ratioClass: 'aspect-[936/709]' },
-    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't7', ratioClass: 'aspect-[610/794]' },
-    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't8', ratioClass: 'aspect-[936/709]' },
+    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't1', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c2', name: 'Wedding Collection', date: 'Oct 22, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't2', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't3', ratioId: '621x621', ratioClass: 'aspect-square' },
+    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't4', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't5', ratioId: '621x621', ratioClass: 'aspect-square' },
+    { id: 'c6', name: 'Wedding Decor', date: 'Oct 01, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't6', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't7', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't8', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
   ]);
   const hasNoCreatives = savedCampaigns.length === 0;
   const [showSelectLimit, setShowSelectLimit] = useState(false);
+  // Repeat users open directly on the Templates gallery tab, with Your Recent campaigns one click away
+  const [activeTab, setActiveTab] = useState<'templates' | 'campaigns'>('templates');
 
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -43,9 +47,9 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
 
   const [sizeFilter, setSizeFilter] = useState<string>('All');
   const filteredCampaigns = savedCampaigns.filter(c =>
-    (!activeFilter || c.category === activeFilter) && (sizeFilter === 'All' || c.ratioClass === sizeFilter)
+    (!activeFilter || c.category === activeFilter) && (sizeFilter === 'All' || c.ratioId === sizeFilter)
   );
-  const sizeFilterName = ASPECT_RATIOS.find(r => r.class === sizeFilter)?.name;
+  const sizeFilterName = sizeFilter === 'All' ? undefined : getRatioDisplayLabel(sizeFilter);
   const filterLabel = [activeFilter, sizeFilterName].filter(Boolean).join(' · ');
 
   const handleDownload = (e: React.MouseEvent, campaignName: string) => {
@@ -90,172 +94,214 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" onClick={() => setOpenMenuId(null)}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{user.isNewUser ? 'Welcome' : `Welcome back, ${user.businessName}`}</h1>
           <p className="text-gray-600 mt-1">Ready to create your next promotion?</p>
         </div>
-        <Button size="lg" onClick={() => onNavigate('gallery')} className="w-full sm:w-auto shadow-md">
-          <Plus className="w-5 h-5 mr-2" /> Create New Campaign
-        </Button>
-      </div>
-
-      {/* Occasion + Size filters (shown to all users) */}
-      <div className="mb-8 flex flex-col sm:flex-row gap-3">
-        <select
-          value={activeFilter || 'All'}
-          onChange={(e) => setActiveFilter(e.target.value === 'All' ? null : e.target.value)}
-          className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
-        >
-          {CATEGORIES.map(cat => (
-            <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
-          ))}
-        </select>
-        <select
-          value={sizeFilter}
-          onChange={(e) => setSizeFilter(e.target.value)}
-          className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
-        >
-          <option value="All">All Sizes</option>
-          {MEDIA_GROUPS.map(group => (
-            <optgroup key={group} label={group}>
-              {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
-                <option key={r.id} value={r.class}>{r.name}</option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-gray-900">
-            Your Recent campaigns {filterLabel && <span className="text-primary-600 font-medium text-lg ml-2">({filterLabel})</span>}
-          </h2>
-          <div className="flex items-center gap-3">
-            {filterLabel && (
-              <button onClick={() => { setActiveFilter(null); setSizeFilter('All'); }} className="text-sm text-gray-500 hover:text-gray-900">
-                Clear filter
-              </button>
-            )}
-            {filteredCampaigns.length > 0 && (
-              <Button variant={isSelectMode ? "secondary" : "outline"} size="sm" onClick={toggleSelectMode}>
-                {isSelectMode ? 'Cancel Selection' : 'Select'}
-              </Button>
-            )}
-          </div>
-        </div>
-
-        {hasNoCreatives ? (
-          /* Central CTA for users who haven't created any creatives yet */
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-16 sm:py-24 text-center flex flex-col items-center justify-center">
-            <div className="w-16 h-16 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-5">
-              <Sparkles className="w-8 h-8" />
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Create your first creative</h3>
-            <p className="text-gray-500 max-w-md mx-auto mb-8">
-              Pick a template, add your store details and generate ready-to-use creatives in minutes.
-            </p>
-            <Button size="lg" onClick={() => onNavigate('gallery')} className="px-8 shadow-md">
-              <Plus className="w-5 h-5 mr-2" /> Create New Campaign
-            </Button>
-          </div>
-        ) : filteredCampaigns.length > 0 ? (
-          <div className="columns-1 sm:columns-2 lg:columns-4 gap-6">
-            {filteredCampaigns.map((campaign) => {
-              const isSelected = selectedCampaignIds.includes(campaign.id);
-              return (
-                <div
-                  key={campaign.id}
-                  className={`break-inside-avoid mb-6 bg-white rounded-xl border shadow-sm overflow-hidden group transition-all cursor-pointer flex flex-col ${isSelectMode && isSelected ? 'border-primary-500 ring-2 ring-primary-500' : 'border-gray-200 hover:shadow-md'}`}
-                  onClick={() => handleCardClick(campaign)}
-                >
-                  <div className={`${campaign.ratioClass} bg-gray-100 relative overflow-hidden flex items-center justify-center`}>
-                    <img src={campaign.thumbnail} alt={campaign.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-
-                    {/* Selection Checkmark */}
-                    {isSelectMode && (
-                      <div className="absolute top-3 left-3 z-20">
-                        {isSelected ? (
-                          <div className="w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center shadow-sm">
-                            <Check className="w-4 h-4 text-white" />
-                          </div>
-                        ) : (
-                          <div className="w-6 h-6 bg-white/80 border-2 border-gray-300 rounded-full shadow-sm backdrop-blur-sm" />
-                        )}
-                      </div>
-                    )}
-
-                    {/* Hover Actions - Only show if NOT in select mode */}
-                    {!isSelectMode && (
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                        <button
-                          className="p-2 bg-white text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
-                          title="Preview"
-                          onClick={(e) => { e.stopPropagation(); setPreviewCampaign(campaign); }}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button
-                          className="p-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 transition-colors"
-                          title="Download"
-                          onClick={(e) => handleDownload(e, campaign.name)}
-                        >
-                          <Download className="w-4 h-4" />
-                        </button>
-                      </div>
-                    )}
-                    {/* Inset circle on the right bottom */}
-                    <div className="absolute bottom-3 right-3 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-sm border border-gray-200 z-10"></div>
-                  </div>
-                  <div className="p-4 flex justify-between items-center relative mt-auto border-t border-gray-100 bg-white">
-                    <div>
-                      <h3 className="font-bold text-gray-900 text-sm">{campaign.name}</h3>
-                      <p className="text-xs text-gray-500 mt-0.5">{ASPECT_RATIOS.find(r => r.class === campaign.ratioClass)?.name || 'Social Media'}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">By {user.name || 'User'} • {campaign.date}</p>
-                    </div>
-
-                    {!isSelectMode && (
-                      <button
-                        className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-100"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenMenuId(openMenuId === campaign.id ? null : campaign.id);
-                        }}
-                      >
-                        <MoreVertical className="w-5 h-5" />
-                      </button>
-                    )}
-
-                    {/* Dropdown Menu */}
-                    {openMenuId === campaign.id && !isSelectMode && (
-                      <div className="absolute right-4 bottom-12 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-10" onClick={e => e.stopPropagation()}>
-                        <button
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
-                          onClick={() => handleDelete(campaign.id)}
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" /> Delete campaign
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="bg-white rounded-2xl border border-dashed border-gray-300 p-12 text-center flex flex-col items-center justify-center">
-            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
-              <Clock className="w-8 h-8 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No campaigns found</h3>
-            <p className="text-gray-500 max-w-sm mx-auto mb-6">
-              {activeFilter ? `You haven't created any ${activeFilter} campaigns yet.` : "You haven't created any promotional materials yet."}
-            </p>
-            <Button onClick={() => onNavigate('gallery')}>Browse Templates</Button>
-          </div>
+        {(user.isNewUser || activeTab === 'campaigns') && (
+          <Button
+            size="lg"
+            onClick={() => user.isNewUser ? onNavigate('gallery') : setActiveTab('templates')}
+            className="w-full sm:w-auto shadow-md"
+          >
+            <Plus className="w-5 h-5 mr-2" /> Create New Campaign
+          </Button>
         )}
       </div>
+
+      {/* Repeat user top tabs: Templates (Gallery, default on login) & Your Recent campaigns */}
+      {!user.isNewUser && (
+        <div className="border-b border-gray-200 mb-6">
+          <nav className="flex space-x-8" aria-label="Dashboard tabs">
+            <button
+              type="button"
+              onClick={() => setActiveTab('templates')}
+              className={`pb-3.5 text-sm font-semibold border-b-2 transition-colors ${
+                activeTab === 'templates'
+                  ? 'border-primary-600 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Templates
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('campaigns')}
+              className={`pb-3.5 text-sm font-semibold border-b-2 transition-colors ${
+                activeTab === 'campaigns'
+                  ? 'border-primary-600 text-gray-900'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Your Recent campaigns ({savedCampaigns.length})
+            </button>
+          </nav>
+        </div>
+      )}
+
+      {!user.isNewUser && activeTab === 'templates' ? (
+        <GalleryView embedded onNavigate={onNavigate} onSelectTemplate={onSelectTemplate} />
+      ) : (
+        <>
+          {/* Occasion + Size filters (shown to all users) */}
+          <div className="mb-8 flex flex-col sm:flex-row gap-3">
+            <select
+              value={activeFilter || 'All'}
+              onChange={(e) => setActiveFilter(e.target.value === 'All' ? null : e.target.value)}
+              className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
+            >
+              {CATEGORIES.map(cat => (
+                <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
+              ))}
+            </select>
+            <select
+              value={sizeFilter}
+              onChange={(e) => setSizeFilter(e.target.value)}
+              className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none text-sm bg-white"
+            >
+              <option value="All">All Sizes</option>
+              {MEDIA_GROUPS.map(group => (
+                <optgroup key={group} label={group}>
+                  {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-gray-900">
+                Your Recent campaigns {filterLabel && <span className="text-primary-600 font-medium text-lg ml-2">({filterLabel})</span>}
+              </h2>
+              <div className="flex items-center gap-3">
+                {filterLabel && (
+                  <button onClick={() => { setActiveFilter(null); setSizeFilter('All'); }} className="text-sm text-gray-500 hover:text-gray-900">
+                    Clear filter
+                  </button>
+                )}
+                {filteredCampaigns.length > 0 && (
+                  <Button variant={isSelectMode ? "secondary" : "outline"} size="sm" onClick={toggleSelectMode}>
+                    {isSelectMode ? 'Cancel Selection' : 'Select'}
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {hasNoCreatives ? (
+              /* Central CTA for users who haven't created any creatives yet */
+              <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-16 sm:py-24 text-center flex flex-col items-center justify-center">
+                <div className="w-16 h-16 bg-primary-50 text-primary-600 rounded-full flex items-center justify-center mb-5">
+                  <Sparkles className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Create your first creative</h3>
+                <p className="text-gray-500 max-w-md mx-auto mb-8">
+                  Pick a template, add your store details and generate ready-to-use creatives in minutes.
+                </p>
+                <Button size="lg" onClick={() => onNavigate('gallery')} className="px-8 shadow-md">
+                  <Plus className="w-5 h-5 mr-2" /> Create New Campaign
+                </Button>
+              </div>
+            ) : filteredCampaigns.length > 0 ? (
+              <div className="columns-1 sm:columns-2 lg:columns-4 gap-6">
+                {filteredCampaigns.map((campaign) => {
+                  const isSelected = selectedCampaignIds.includes(campaign.id);
+                  return (
+                    <div
+                      key={campaign.id}
+                      className={`break-inside-avoid mb-6 bg-white rounded-xl border shadow-sm overflow-hidden group transition-all cursor-pointer flex flex-col ${isSelectMode && isSelected ? 'border-primary-500 ring-2 ring-primary-500' : 'border-gray-200 hover:shadow-md'}`}
+                      onClick={() => handleCardClick(campaign)}
+                    >
+                      <div className={`${campaign.ratioClass} bg-gray-100 relative overflow-hidden flex items-center justify-center`}>
+                        <img src={campaign.thumbnail} alt={campaign.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+
+                        {/* Selection Checkmark */}
+                        {isSelectMode && (
+                          <div className="absolute top-3 left-3 z-20">
+                            {isSelected ? (
+                              <div className="w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center shadow-sm">
+                                <Check className="w-4 h-4 text-white" />
+                              </div>
+                            ) : (
+                              <div className="w-6 h-6 bg-white/80 border-2 border-gray-300 rounded-full shadow-sm backdrop-blur-sm" />
+                            )}
+                          </div>
+                        )}
+
+                        {/* Hover Actions - Only show if NOT in select mode */}
+                        {!isSelectMode && (
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                            <button
+                              className="p-2 bg-white text-gray-900 rounded-full hover:bg-gray-100 transition-colors"
+                              title="Preview"
+                              onClick={(e) => { e.stopPropagation(); setPreviewCampaign(campaign); }}
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                            <button
+                              className="p-2 bg-primary-600 text-white rounded-full hover:bg-primary-700 transition-colors"
+                              title="Download"
+                              onClick={(e) => handleDownload(e, campaign.name)}
+                            >
+                              <Download className="w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
+                        {/* Inset circle on the right bottom */}
+                        <div className="absolute bottom-3 right-3 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-sm border border-gray-200 z-10"></div>
+                      </div>
+                      <div className="p-4 flex justify-between items-center relative mt-auto border-t border-gray-100 bg-white">
+                        <div>
+                          <h3 className="font-bold text-gray-900 text-sm">{campaign.name}</h3>
+                          <p className="text-xs text-gray-500 mt-0.5">{getRatioDisplayLabel(campaign.ratioId, campaign.ratioClass)}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">By {user.name || 'User'} • {campaign.date}</p>
+                        </div>
+
+                        {!isSelectMode && (
+                          <button
+                            className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenMenuId(openMenuId === campaign.id ? null : campaign.id);
+                            }}
+                          >
+                            <MoreVertical className="w-5 h-5" />
+                          </button>
+                        )}
+
+                        {/* Dropdown Menu */}
+                        {openMenuId === campaign.id && !isSelectMode && (
+                          <div className="absolute right-4 bottom-12 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-10" onClick={e => e.stopPropagation()}>
+                            <button
+                              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"
+                              onClick={() => handleDelete(campaign.id)}
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" /> Delete campaign
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl border border-dashed border-gray-300 p-12 text-center flex flex-col items-center justify-center">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                  <Clock className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No campaigns found</h3>
+                <p className="text-gray-500 max-w-sm mx-auto mb-6">
+                  {filterLabel ? `You haven't created any ${filterLabel} campaigns yet.` : "You haven't created any promotional materials yet."}
+                </p>
+                <Button onClick={() => user.isNewUser ? onNavigate('gallery') : setActiveTab('templates')}>Browse Templates</Button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       {showSelectLimit && (
         <NoticeModal
@@ -266,7 +312,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
       )}
 
       {/* Floating Action Bar for Bulk Download */}
-      {isSelectMode && selectedCampaignIds.length > 0 && (
+      {(user.isNewUser || activeTab === 'campaigns') && isSelectMode && selectedCampaignIds.length > 0 && (
         <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-4 rounded-full shadow-2xl flex items-center gap-6 z-50">
           <span className="font-medium text-sm whitespace-nowrap">{selectedCampaignIds.length} selected</span>
           {/* Plain button (not the primary variant) so its white bg / dark text isn't overridden by primary colours */}
@@ -497,6 +543,10 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
         >
           <Plus className="w-4 h-4 mr-2" /> Add Another Store
         </Button>
+
+        {stores.length > 0 && (
+          <p className="text-xs text-gray-500 mt-4">* Mandatory fields</p>
+        )}
 
         <div className="mt-8 flex justify-end gap-4">
           <Button variant="ghost" onClick={() => onNavigate('dashboard')}>Cancel</Button>
@@ -763,6 +813,10 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
             <Plus className="w-4 h-4 mr-2" /> Add Another Store
           </Button>
         </div>
+
+        {stores.length > 0 && (
+          <p className="text-xs text-gray-500 mt-4">* Mandatory fields</p>
+        )}
 
         <div className="mt-8 flex justify-end gap-4">
           <Button variant="ghost" onClick={() => onNavigate('dashboard')}>Cancel</Button>

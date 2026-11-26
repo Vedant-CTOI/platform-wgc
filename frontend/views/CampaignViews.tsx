@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
 import { ViewState, Template, CampaignDraft, UserProfile, StoreInfo, PreviewData } from '../types';
-import { MOCK_TEMPLATES, CATEGORIES, ASPECT_RATIOS, MEDIA_GROUPS, MAX_CREATIVES_PER_SESSION, formatAddress } from '../constants';
+import { MOCK_TEMPLATES, CATEGORIES, ASPECT_RATIOS, MEDIA_GROUPS, MAX_CREATIVES_PER_SESSION, formatAddress, getRatioDisplayLabel } from '../constants';
 import { Search, Filter, Download, Share2, Copy, Check, Loader2, Image as ImageIcon, MapPin, Phone, Globe, X, ChevronLeft, ChevronRight, UploadCloud, AlertTriangle, CheckCircle2, Eye } from 'lucide-react';
 
 interface FlowProps {
@@ -13,6 +13,7 @@ interface FlowProps {
   updateDraft?: (updates: Partial<CampaignDraft>) => void;
   user?: UserProfile | null;
   onUpdateUser?: (updates: Partial<UserProfile>) => void;
+  embedded?: boolean;
 }
 
 const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e5e7eb'/%3E%3Cpath d='M50 40a10 10 0 1 0 0-20 10 10 0 0 0 0 20zm-20 30l15-20 10 10 20-25 15 35H30z' fill='%239ca3af'/%3E%3C/svg%3E";
@@ -35,9 +36,9 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
   if (ratioClass === 'aspect-[610/794]') scale = 1.15; // Full Page
   if (ratioClass === 'aspect-[936/709]') scale = 0.8; // Half Page
   if (ratioClass === 'aspect-[468/709]') scale = 1.2; // Quarter Page
-  if (ratioClass === 'aspect-[800/2000]') scale = 1.4; // Vertical Standee
-  if (ratioClass === 'aspect-[1000/1414]') scale = 1.15; // In-store Poster
-  if (ratioClass === 'aspect-[3000/1000]') scale = 0.45; // Landscape Billboard
+  if (ratioClass === 'aspect-[1/2]') scale = 1.35; // Outdoor 1:2 & Standee
+  if (ratioClass === 'aspect-[2/1]') scale = 0.55; // Outdoor 2:1
+  if (ratioClass === 'aspect-[19/14]') scale = 0.85; // Poster (19x14 in)
 
   const displayLogo = data.logoUrl;
 
@@ -114,7 +115,7 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
 };
 
 // --- 1. Gallery View ---
-export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate }) => {
+export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate, embedded = false }) => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeRatioFilter, setActiveRatioFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -138,7 +139,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
   const filteredTemplates = MOCK_TEMPLATES.filter(t => {
     const matchesCat = activeCategory === 'All' || t.category === activeCategory;
     const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRatio = activeRatioFilter === 'All' || t.ratioClass === activeRatioFilter;
+    const matchesRatio = activeRatioFilter === 'All' || t.ratioId === activeRatioFilter;
     return matchesCat && matchesSearch && matchesRatio;
   });
 
@@ -167,7 +168,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
+    <div className={embedded ? 'relative' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative'}>
 
       {/* Selection notification — non-interruptive, top of screen, auto-hides */}
       {selectionNotice !== null && (
@@ -192,15 +193,31 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
         />
       )}
 
-      <div className="flex justify-between items-center mb-2">
-        <PageHeader title="Choose Templates" onBack={() => onNavigate('dashboard')} />
-        {selectedTemplates.length > 0 && (
-          <Button onClick={handleContinue}>
-            Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})
-          </Button>
-        )}
-      </div>
-      <p className="text-sm text-gray-500 -mt-4 sm:-mt-6 mb-6">You can customise up to {MAX_CREATIVES_PER_SESSION} creatives per session.</p>
+      {embedded ? (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Choose Templates</h2>
+            <p className="text-sm text-gray-500 mt-0.5">You can customise up to {MAX_CREATIVES_PER_SESSION} creatives per session.</p>
+          </div>
+          {selectedTemplates.length > 0 && (
+            <Button onClick={handleContinue}>
+              Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})
+            </Button>
+          )}
+        </div>
+      ) : (
+        <>
+          <div className="flex justify-between items-center mb-2">
+            <PageHeader title="Choose Templates" onBack={() => onNavigate('dashboard')} />
+            {selectedTemplates.length > 0 && (
+              <Button onClick={handleContinue}>
+                Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})
+              </Button>
+            )}
+          </div>
+          <p className="text-sm text-gray-500 -mt-4 sm:-mt-6 mb-6">You can customise up to {MAX_CREATIVES_PER_SESSION} creatives per session.</p>
+        </>
+      )}
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div className="flex flex-col sm:flex-row gap-3 w-full">
@@ -223,7 +240,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
             {MEDIA_GROUPS.map(group => (
               <optgroup key={group} label={group}>
                 {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
-                  <option key={r.id} value={r.class}>{r.name}</option>
+                  <option key={r.id} value={r.id}>{r.name}</option>
                 ))}
               </optgroup>
             ))}
@@ -276,7 +293,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate 
                   <div>
                     <span className="text-xs font-semibold text-primary-600 uppercase tracking-wider">{template.category}</span>
                     <h3 className="font-bold text-gray-900 mt-1">{template.name}</h3>
-                    <p className="text-xs text-gray-500 mt-1">{ASPECT_RATIOS.find(r => r.class === template.ratioClass)?.name || 'Social Media'}</p>
+                    <p className="text-xs text-gray-500 mt-1">{getRatioDisplayLabel(template.ratioId, template.ratioClass)}</p>
                   </div>
                   <button
                     onClick={(e) => { e.stopPropagation(); setPreviewTemplate(template); }}
@@ -516,8 +533,8 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
   };
 
   const activeCombo = previewCombinations[previewIndex] || previewCombinations[0];
-  const activeRatioClass = ASPECT_RATIOS.find(r => r.id === activeCombo.size)?.class || 'aspect-square';
-  const activeRatioName = ASPECT_RATIOS.find(r => r.id === activeCombo.size)?.name || 'Social Media';
+  const activeRatioClass = ASPECT_RATIOS.find(r => r.id === activeCombo.size)?.class || activeCombo.template.ratioClass || 'aspect-square';
+  const activeRatioName = getRatioDisplayLabel(activeCombo.size, activeCombo.template.ratioClass);
   const currentData = artworksData[previewIndex] || artworksData[0];
 
   return (
@@ -713,7 +730,8 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
           </div>
 
           {/* Fixed Bottom Bar inside the right panel for desktop, or global for mobile */}
-          <div className="absolute sm:static bottom-0 left-0 right-0 p-2 sm:p-4 border-t border-gray-200 bg-white flex flex-col sm:flex-row justify-end items-center gap-2 z-40">
+          <div className="absolute sm:static bottom-0 left-0 right-0 p-2 sm:p-4 border-t border-gray-200 bg-white flex flex-col sm:flex-row sm:justify-between items-center gap-2 z-40">
+            <p className="text-xs text-gray-500 self-start sm:self-center">* Mandatory fields</p>
             <Button
               onClick={handleGenerate}
               disabled={!isFormValid}
@@ -917,7 +935,7 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {generatedFiles.map((file, idx) => {
-            const ratio = ASPECT_RATIOS.find(r => r.class === file.template.ratioClass);
+            const ratio = ASPECT_RATIOS.find(r => r.id === file.template.ratioId) || ASPECT_RATIOS.find(r => r.class === file.template.ratioClass);
             return (
               <div key={idx} className="border border-gray-200 rounded-xl p-4 flex flex-col items-center group hover:border-primary-300 transition-colors">
                 <div className="w-full bg-gray-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
@@ -926,7 +944,7 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
                 <div className="w-full flex justify-between items-center mt-auto">
                   <div className="overflow-hidden pr-2">
                     <p className="font-medium text-gray-900 text-sm truncate">{file.data.storeName}</p>
-                    <p className="text-xs text-gray-500">{ratio?.name} • {downloadFormat === 'digital' ? 'PNG' : 'PDF'}</p>
+                    <p className="text-xs text-gray-500">{getRatioDisplayLabel(file.template.ratioId, file.template.ratioClass)} • {downloadFormat === 'digital' ? 'PNG' : 'PDF'}</p>
                   </div>
                   <div className="flex space-x-1 flex-shrink-0">
                     <button onClick={() => setPreviewItem(file)} className="p-2 text-gray-500 hover:text-primary-600 hover:bg-primary-50 rounded-full transition-colors flex items-center justify-center" title="Preview">

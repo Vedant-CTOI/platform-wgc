@@ -58,7 +58,7 @@ export const Input: React.FC<InputProps> = ({ label, error, helperText, classNam
 };
 
 // --- In-app Notice Modal (replaces browser alerts) ---
-export const NoticeModal: React.FC<{ title: string; message: string; onClose: () => void; actionLabel?: string }> = ({ title, message, onClose, actionLabel = 'OK' }) => (
+export const NoticeModal: React.FC<{ title: string; message: string; onClose: () => void; actionLabel?: string; onAction?: () => void }> = ({ title, message, onClose, actionLabel = 'OK', onAction }) => (
   <div className="fixed inset-0 bg-black/60 z-[110] flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
     <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl overflow-hidden flex flex-col" onClick={e => e.stopPropagation()}>
       <div className="p-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -69,7 +69,7 @@ export const NoticeModal: React.FC<{ title: string; message: string; onClose: ()
       </div>
       <div className="p-6 text-center">
         <p className="text-gray-700 mb-6">{message}</p>
-        <Button fullWidth onClick={onClose}>{actionLabel}</Button>
+        <Button fullWidth onClick={onAction || onClose}>{actionLabel}</Button>
       </div>
     </div>
   </div>

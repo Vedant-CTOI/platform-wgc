@@ -8,6 +8,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Diwali Mega Sale',
     category: 'Festive',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
       headline: 'FESTIVE MEGA SALE',
@@ -21,6 +22,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Wedding Collection',
     category: 'Wedding',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
       headline: 'WEDDING SPECIAL',
@@ -34,6 +36,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Concert Tickets',
     category: 'Everyday',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '621x621',
     ratioClass: 'aspect-square',
     defaultText: {
       headline: 'LIVE IN CONCERT',
@@ -47,6 +50,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Office Supplies',
     category: 'Minimalist',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
       headline: 'BACK TO OFFICE',
@@ -60,6 +64,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Diwali Gifts',
     category: 'Festive',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '621x621',
     ratioClass: 'aspect-square',
     defaultText: {
       headline: 'PERFECT GIFTS',
@@ -73,6 +78,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Wedding Decor',
     category: 'Wedding',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
       headline: 'DREAM DECOR',
@@ -86,6 +92,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Music Festival',
     category: 'Everyday',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
       headline: 'SUMMER FEST',
@@ -99,6 +106,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Corporate Event',
     category: 'Minimalist',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
       headline: 'ANNUAL MEET',
@@ -112,6 +120,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Diwali Sweets',
     category: 'Festive',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '621x621',
     ratioClass: 'aspect-square',
     defaultText: {
       headline: 'SWEET TREATS',
@@ -125,6 +134,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Bridal Wear',
     category: 'Wedding',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
       headline: 'BRIDAL ELEGANCE',
@@ -138,6 +148,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Rock Concert',
     category: 'Everyday',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
       headline: 'ROCK THE NIGHT',
@@ -151,6 +162,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Office Furniture',
     category: 'Minimalist',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '621x621',
     ratioClass: 'aspect-square',
     defaultText: {
       headline: 'WORKSPACE UPGRADE',
@@ -164,6 +176,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Diwali Crackers',
     category: 'Festive',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
       headline: 'SAFE CELEBRATIONS',
@@ -177,6 +190,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Wedding Photography',
     category: 'Wedding',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
       headline: 'CAPTURE MEMORIES',
@@ -190,6 +204,7 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Festive Quarter Page',
     category: 'Festive',
     thumbnail: GRAY_PLACEHOLDER,
+    ratioId: '468x709',
     ratioClass: 'aspect-[468/709]',
     defaultText: { headline: 'FESTIVE OFFERS', subheadline: 'Celebrate the season with us', offer: 'VISIT TODAY' },
     colorScheme: { bg: 'bg-gray-100', text: 'text-gray-900', accent: 'bg-gray-800' }
@@ -199,7 +214,8 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Bridal Standee',
     category: 'Wedding',
     thumbnail: GRAY_PLACEHOLDER,
-    ratioClass: 'aspect-[800/2000]',
+    ratioId: 'standee-10800x21600',
+    ratioClass: 'aspect-[1/2]',
     defaultText: { headline: 'BRIDAL SEASON', subheadline: 'Walk in and explore the collection', offer: 'IN STORE NOW' },
     colorScheme: { bg: 'bg-gray-200', text: 'text-gray-900', accent: 'bg-gray-900' }
   },
@@ -208,7 +224,8 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'In-store Poster',
     category: 'Everyday',
     thumbnail: GRAY_PLACEHOLDER,
-    ratioClass: 'aspect-[1000/1414]',
+    ratioId: 'poster-5700x4200',
+    ratioClass: 'aspect-[19/14]',
     defaultText: { headline: 'NEW ARRIVALS', subheadline: 'Ask our staff for details', offer: 'SHOP NOW' },
     colorScheme: { bg: 'bg-white', text: 'text-gray-900', accent: 'bg-black' }
   },
@@ -217,27 +234,55 @@ export const MOCK_TEMPLATES: Template[] = [
     name: 'Highway Billboard',
     category: 'Minimalist',
     thumbnail: GRAY_PLACEHOLDER,
-    ratioClass: 'aspect-[3000/1000]',
+    ratioId: 'outdoor-2x1',
+    ratioClass: 'aspect-[2/1]',
     defaultText: { headline: 'PURE GOLD', subheadline: 'Timeless craftsmanship', offer: 'VISIT US' },
     colorScheme: { bg: 'bg-gray-300', text: 'text-gray-900', accent: 'bg-gray-800' }
+  },
+  {
+    id: 't19',
+    name: 'Festive Outdoor Square',
+    category: 'Festive',
+    thumbnail: GRAY_PLACEHOLDER,
+    ratioId: 'outdoor-1x1',
+    ratioClass: 'aspect-square',
+    defaultText: { headline: 'FESTIVE GOLD', subheadline: 'Celebrate the season in style', offer: 'VISIT STORE' },
+    colorScheme: { bg: 'bg-gray-200', text: 'text-gray-900', accent: 'bg-gray-800' }
+  },
+  {
+    id: 't20',
+    name: 'Bridal Outdoor Vertical',
+    category: 'Wedding',
+    thumbnail: GRAY_PLACEHOLDER,
+    ratioId: 'outdoor-1x2',
+    ratioClass: 'aspect-[1/2]',
+    defaultText: { headline: 'WEDDING GOLD', subheadline: 'Crafted for timeless moments', offer: 'EXPLORE NOW' },
+    colorScheme: { bg: 'bg-gray-100', text: 'text-gray-900', accent: 'bg-gray-900' }
   }
 ];
 
 export const CATEGORIES = ['All', 'Wedding', 'Festive', 'Everyday', 'Minimalist'];
 
-// Media formats grouped into categories (gallery tabs + grouped size filter).
-// NOTE: Quarter Page, Standee, Poster and Billboard ratios are placeholders until final specs are shared.
-export const MEDIA_GROUPS = ['Print Ads', 'Social Media', 'Outdoor & Collateral'] as const;
+// Media formats grouped into categories (grouped size filter across gallery + dashboard).
+export const MEDIA_GROUPS = ['Print Ads', 'Social Media', 'Outdoor', 'Collaterals'] as const;
 
 export const ASPECT_RATIOS = [
   { id: '610x794', name: 'Full Page', class: 'aspect-[610/794]', group: 'Print Ads' },
   { id: '936x709', name: 'Half Page', class: 'aspect-[936/709]', group: 'Print Ads' },
   { id: '468x709', name: 'Quarter Page', class: 'aspect-[468/709]', group: 'Print Ads' },
   { id: '621x621', name: '1:1 Square Post', class: 'aspect-square', group: 'Social Media' },
-  { id: '800x2000', name: 'Vertical Standee', class: 'aspect-[800/2000]', group: 'Outdoor & Collateral' },
-  { id: '1000x1414', name: 'In-store Poster', class: 'aspect-[1000/1414]', group: 'Outdoor & Collateral' },
-  { id: '3000x1000', name: 'Landscape Billboard', class: 'aspect-[3000/1000]', group: 'Outdoor & Collateral' },
+  { id: 'outdoor-1x1', name: '1:1', class: 'aspect-square', group: 'Outdoor' },
+  { id: 'outdoor-2x1', name: '2:1', class: 'aspect-[2/1]', group: 'Outdoor' },
+  { id: 'outdoor-1x2', name: '1:2', class: 'aspect-[1/2]', group: 'Outdoor' },
+  { id: 'standee-10800x21600', name: 'Standee (10800 × 21600 px)', class: 'aspect-[1/2]', group: 'Collaterals' },
+  { id: 'poster-5700x4200', name: 'Poster (5700 × 4200 px)', class: 'aspect-[19/14]', group: 'Collaterals' },
 ];
+
+export const getRatioDisplayLabel = (ratioId?: string, fallbackClass?: string) => {
+  const ratio = ASPECT_RATIOS.find(r => (ratioId ? r.id === ratioId : r.class === fallbackClass));
+  if (!ratio) return 'Social Media';
+  return ratio.group === 'Outdoor' ? `Outdoor ${ratio.name}` : ratio.name;
+};
 
 // Max creatives a user can customise in one session.
 export const MAX_CREATIVES_PER_SESSION = 3;
