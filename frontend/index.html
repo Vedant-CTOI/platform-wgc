@@ -160,6 +160,29 @@
         .bh-feature-card:hover .bh-feature-ring-img {
             transform: rotate(18deg);
         }
+        .bh-feature-top-rule {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #F2BE42;
+            transform: scaleX(0);
+            transform-origin: right center;
+            transition: transform 0.55s var(--ease-editorial);
+        }
+        .bh-feature-card:hover .bh-feature-top-rule {
+            transform: scaleX(1);
+            transform-origin: left center;
+        }
+        .bh-showcase-card {
+            transition: transform 0.65s var(--ease-editorial), box-shadow 0.65s var(--ease-editorial), border-color 0.45s var(--ease-editorial);
+        }
+        .bh-showcase-card:hover {
+            transform: translate3d(0, -8px, 0);
+            box-shadow: 0 26px 50px -16px rgba(56, 31, 73, 0.24);
+            border-color: rgba(242, 190, 66, 0.75);
+        }
 
         /* Directional fill-wipe buttons (shared across app) */
         .bh-btn-wipe {
@@ -237,7 +260,7 @@
                 opacity: 1 !important;
                 transform: translate3d(-50%, -50%, 0) rotate(45deg) !important;
             }
-            .bh-btn-wipe::before, .bh-link::after, .bh-accordion-body, .bh-feature-card, .bh-feature-ring-img {
+            .bh-btn-wipe::before, .bh-link::after, .bh-accordion-body, .bh-feature-card, .bh-feature-ring-img, .bh-feature-top-rule, .bh-showcase-card {
                 transition: none !important;
             }
         }

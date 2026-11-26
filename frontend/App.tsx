@@ -47,24 +47,6 @@ function appReducer(state: AppState, action: Action): AppState {
   }
 }
 
-const ResponsiveHelper = () => {
-  const [isVisible, setIsVisible] = useState(true);
-  if (!isVisible) return null;
-  return (
-    <div className="fixed bottom-4 right-4 bg-[#282828] text-white p-4 rounded-xl shadow-2xl border border-[#F2BE42]/40 z-50 max-w-sm flex items-start space-x-3 transition-opacity">
-      <div className="flex-1">
-        <p className="text-sm font-bold mb-1 flex items-center text-[#F2BE42]">
-          <span className="mr-2">📱</span> Responsive Prototype
-        </p>
-        <p className="text-xs text-white/80 leading-relaxed">This wireframe adapts to any screen size. Resize your browser window to switch between Desktop (1440px) and Mobile (375px) layouts.</p>
-      </div>
-      <button onClick={() => setIsVisible(false)} className="text-white/70 hover:text-white p-1 bg-white/10 hover:bg-white/20 rounded-md transition-colors">
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-      </button>
-    </div>
-  );
-};
-
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
@@ -146,7 +128,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white font-sans text-black">
-      <ResponsiveHelper />
       <TopNav 
         isLoggedIn={!!state.user} 
         accountLabel={state.user ? (state.user.isNewUser ? 'First-time user' : 'Repeat user') : undefined}
@@ -160,14 +141,57 @@ export default function App() {
       {/* Remarketing band — homepage for logged-out (landing) and logged-in (dashboard) users */}
       {(state.currentView === 'landing' || (state.currentView === 'dashboard' && state.user)) && <ShareBand />}
       
-      {/* Plum 900 Footer for Landing (per Goldify Visual Identity: footer is plum) */}
+      {/* Grounded Plum 900 Goldify Brand Footer for Landing */}
       {state.currentView === 'landing' && (
-        <footer className="bg-[#381F49] border-t border-[#704287]/40 py-8 mt-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center">
-            <p className="text-white/80 text-sm">© 2024 Goldify. All rights reserved.</p>
-            <div className="flex space-x-6 mt-4 sm:mt-0 text-sm">
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('terms'); }} className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors">Terms</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); navigate('privacy'); }} className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors">Privacy</a>
+        <footer className="bg-[#381F49] border-t border-[#704287]/40 pt-12 pb-8 mt-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8">
+              <button
+                type="button"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2BE42] rounded-lg"
+                aria-label="Goldify — Back to top"
+              >
+                <img
+                  src="/goldify-logo-full.png"
+                  alt="Goldify — Gold the moment"
+                  className="h-14 w-auto object-contain select-none"
+                />
+              </button>
+              <nav className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-semibold" aria-label="Footer navigation">
+                <button
+                  type="button"
+                  onClick={() => navigate(state.user ? 'gallery' : 'login')}
+                  className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
+                >
+                  Choose a Template
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate('faq')}
+                  className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
+                >
+                  FAQs
+                </button>
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); navigate('terms'); }}
+                  className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
+                >
+                  Terms
+                </a>
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); navigate('privacy'); }}
+                  className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
+                >
+                  Privacy
+                </a>
+              </nav>
+            </div>
+            <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+              <p className="text-white/70 text-sm">© 2024 Goldify. All rights reserved.</p>
+              <p className="text-[#F2BE42]/85 text-xs font-bold uppercase tracking-[0.2em]">Gold the moment.</p>
             </div>
           </div>
         </footer>
