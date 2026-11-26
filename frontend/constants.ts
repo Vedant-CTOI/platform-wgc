@@ -4,7 +4,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't1',
     name: 'Diwali Mega Sale',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: '/creatives/full-page-diwali.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
@@ -32,7 +32,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't3',
     name: 'Concert Tickets',
-    category: 'Everyday',
+    category: 'Concert',
     thumbnail: '/creatives/social-media-concert.jpg',
     ratioId: '621x621',
     ratioClass: 'aspect-square',
@@ -46,7 +46,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't4',
     name: 'Office Supplies',
-    category: 'Minimalist',
+    category: 'Office',
     thumbnail: '/creatives/poster-office.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
@@ -60,7 +60,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't5',
     name: 'Diwali Gifts',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: '621x621',
     ratioClass: 'aspect-square',
@@ -88,7 +88,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't7',
     name: 'Music Festival',
-    category: 'Everyday',
+    category: 'Concert',
     thumbnail: '/creatives/full-page-concert.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
@@ -102,7 +102,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't8',
     name: 'Corporate Event',
-    category: 'Minimalist',
+    category: 'Office',
     thumbnail: '/creatives/half-page-office.jpg',
     ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
@@ -116,7 +116,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't9',
     name: 'Diwali Sweets',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: '621x621',
     ratioClass: 'aspect-square',
@@ -144,7 +144,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't11',
     name: 'Rock Concert',
-    category: 'Everyday',
+    category: 'Concert',
     thumbnail: '/creatives/half-page-concert.jpg',
     ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
@@ -158,7 +158,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't12',
     name: 'Office Furniture',
-    category: 'Minimalist',
+    category: 'Office',
     thumbnail: '/creatives/social-media-office.jpg',
     ratioId: '621x621',
     ratioClass: 'aspect-square',
@@ -172,7 +172,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't13',
     name: 'Diwali Crackers',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: '/creatives/poster-diwali.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
@@ -200,7 +200,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't15',
     name: 'Festive Quarter Page',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: '/creatives/full-page-diwali.jpg',
     ratioId: '468x709',
     ratioClass: 'aspect-[468/709]',
@@ -220,7 +220,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't17',
     name: 'In-store Poster',
-    category: 'Everyday',
+    category: 'Concert',
     thumbnail: '/creatives/half-page-concert.jpg',
     ratioId: 'poster-5700x4200',
     ratioClass: 'aspect-[19/14]',
@@ -230,7 +230,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't18',
     name: 'Highway Billboard',
-    category: 'Minimalist',
+    category: 'Office',
     thumbnail: '/creatives/half-page-office.jpg',
     ratioId: 'outdoor-2x1',
     ratioClass: 'aspect-[2/1]',
@@ -240,7 +240,7 @@ export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't19',
     name: 'Festive Outdoor Square',
-    category: 'Festive',
+    category: 'Diwali',
     thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: 'outdoor-1x1',
     ratioClass: 'aspect-square',
@@ -259,14 +259,14 @@ export const MOCK_TEMPLATES: Template[] = [
   }
 ];
 
-export const CATEGORIES = ['All', 'Wedding', 'Festive', 'Everyday', 'Minimalist'];
+export const CATEGORIES = ['All', 'Diwali', 'Concert', 'Wedding', 'Office', 'Option 5', 'Option 6', 'Option 7', 'Option 8'];
 
 // Goldify sparing Category Accents (Sky #8BD6FF, Mint #40DDB1, Teal #00323C, Navy #001E46) — high-contrast pills on white
 export const CATEGORY_BADGE_STYLES: Record<string, string> = {
   Wedding: 'bg-[#001E46]/10 text-[#001E46] border border-[#001E46]/20',
-  Festive: 'bg-[#00323C]/10 text-[#00323C] border border-[#00323C]/20',
-  Everyday: 'bg-[#40DDB1]/20 text-[#00323C] border border-[#40DDB1]/50',
-  Minimalist: 'bg-[#8BD6FF]/25 text-[#001E46] border border-[#8BD6FF]/60',
+  Diwali: 'bg-[#00323C]/10 text-[#00323C] border border-[#00323C]/20',
+  Concert: 'bg-[#40DDB1]/20 text-[#00323C] border border-[#40DDB1]/50',
+  Office: 'bg-[#8BD6FF]/25 text-[#001E46] border border-[#8BD6FF]/60',
 };
 
 // Media formats grouped into categories (grouped size filter across gallery + dashboard).

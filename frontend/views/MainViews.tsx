@@ -3,31 +3,28 @@ import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../compon
 import { ViewState, UserProfile, StoreInfo, Template } from '../types';
 import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye, Sparkles, ChevronDown, ArrowRight } from 'lucide-react';
 import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES, MEDIA_GROUPS, getRatioDisplayLabel } from '../constants';
-import { GalleryView } from './CampaignViews';
 
 interface DashboardProps {
   user: UserProfile;
   onNavigate: (view: ViewState) => void;
   onEditCampaign: (campaign: any) => void;
-  onSelectTemplate: (templates: Template[]) => void;
+  onSelectTemplate?: (templates: Template[]) => void;
 }
 
-export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEditCampaign, onSelectTemplate }) => {
+export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEditCampaign }) => {
   // Mock saved campaigns with official Base Creatives (first-time users start with none)
   const [savedCampaigns, setSavedCampaigns] = useState(user.isNewUser ? [] : [
-    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: '/creatives/full-page-diwali.jpg', category: 'Festive', templateId: 't1', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: '/creatives/full-page-diwali.jpg', category: 'Diwali', templateId: 't1', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
     { id: 'c2', name: 'Wedding Collection', date: 'Oct 22, 2023', thumbnail: '/creatives/half-page-wedding.jpg', category: 'Wedding', templateId: 't2', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
-    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: '/creatives/social-media-concert.jpg', category: 'Everyday', templateId: 't3', ratioId: '621x621', ratioClass: 'aspect-square' },
-    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: '/creatives/poster-office.jpg', category: 'Minimalist', templateId: 't4', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
-    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: '/creatives/social-media-diwali.jpg', category: 'Festive', templateId: 't5', ratioId: '621x621', ratioClass: 'aspect-square' },
+    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: '/creatives/social-media-concert.jpg', category: 'Concert', templateId: 't3', ratioId: '621x621', ratioClass: 'aspect-square' },
+    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: '/creatives/poster-office.jpg', category: 'Office', templateId: 't4', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: '/creatives/social-media-diwali.jpg', category: 'Diwali', templateId: 't5', ratioId: '621x621', ratioClass: 'aspect-square' },
     { id: 'c6', name: 'Wedding Decor', date: 'Oct 01, 2023', thumbnail: '/creatives/half-page-wedding.jpg', category: 'Wedding', templateId: 't6', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
-    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: '/creatives/full-page-concert.jpg', category: 'Everyday', templateId: 't7', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
-    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: '/creatives/half-page-office.jpg', category: 'Minimalist', templateId: 't8', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: '/creatives/full-page-concert.jpg', category: 'Concert', templateId: 't7', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: '/creatives/half-page-office.jpg', category: 'Office', templateId: 't8', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
   ]);
   const hasNoCreatives = savedCampaigns.length === 0;
   const [showSelectLimit, setShowSelectLimit] = useState(false);
-  // Repeat users open directly on the Templates gallery tab, with Your Recent campaigns one click away
-  const [activeTab, setActiveTab] = useState<'templates' | 'campaigns'>('templates');
 
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -92,60 +89,24 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white" onClick={() => setOpenMenuId(null)}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-light text-black">{user.isNewUser ? 'Welcome' : `Welcome back, ${user.businessName}`}</h1>
           <p className="text-[#634B6F] mt-1">Ready to create your next promotion?</p>
         </div>
-        {(user.isNewUser || activeTab === 'campaigns') && (
-          <Button
-            variant="gold"
-            size="lg"
-            onClick={() => user.isNewUser ? onNavigate('gallery') : setActiveTab('templates')}
-            className="group w-full sm:w-auto px-7 shadow-md"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            <span>Create New Campaign</span>
-          </Button>
-        )}
+        <Button
+          variant="gold"
+          size="lg"
+          onClick={() => onNavigate('gallery')}
+          className="group w-full sm:w-auto px-7 shadow-md"
+        >
+          <Plus className="w-5 h-5 mr-2" />
+          <span>Create New Campaign</span>
+        </Button>
       </div>
 
-      {/* Repeat user top tabs: Templates (Gallery, default on login) & Your Recent campaigns */}
-      {!user.isNewUser && (
-        <div className="border-b border-[#E6E9ED] mb-6">
-          <nav className="flex space-x-8" aria-label="Dashboard tabs">
-            <button
-              type="button"
-              onClick={() => setActiveTab('templates')}
-              className={`pb-3.5 text-sm font-semibold border-b-2 transition-colors ${
-                activeTab === 'templates'
-                  ? 'border-[#704287] text-[#381F49]'
-                  : 'border-transparent text-[#634B6F] hover:text-[#381F49] hover:border-[#634B6F]/40'
-              }`}
-            >
-              Templates
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('campaigns')}
-              className={`pb-3.5 text-sm font-semibold border-b-2 transition-colors ${
-                activeTab === 'campaigns'
-                  ? 'border-[#704287] text-[#381F49]'
-                  : 'border-transparent text-[#634B6F] hover:text-[#381F49] hover:border-[#634B6F]/40'
-              }`}
-            >
-              Your Recent campaigns ({savedCampaigns.length})
-            </button>
-          </nav>
-        </div>
-      )}
-
-      {!user.isNewUser && activeTab === 'templates' ? (
-        <GalleryView embedded onNavigate={onNavigate} onSelectTemplate={onSelectTemplate} />
-      ) : (
-        <>
-          {/* Occasion + Size filters (shown to all users) */}
-          <div className="mb-8 flex flex-col sm:flex-row gap-3">
+      {/* Occasion + Size filters (shown to all users) */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-3">
             <div className="relative w-full sm:w-64">
               <select
                 value={activeFilter || 'All'}
@@ -300,12 +261,10 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                 <p className="text-[#634B6F] max-w-sm mx-auto mb-6">
                   {filterLabel ? `You haven't created any ${filterLabel} campaigns yet.` : "You haven't created any promotional materials yet."}
                 </p>
-                <Button onClick={() => user.isNewUser ? onNavigate('gallery') : setActiveTab('templates')}>Browse Templates</Button>
+                <Button onClick={() => onNavigate('gallery')}>Browse Templates</Button>
               </div>
             )}
-          </div>
-        </>
-      )}
+      </div>
 
       {showSelectLimit && (
         <NoticeModal
@@ -316,7 +275,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
       )}
 
       {/* Floating Action Bar for Bulk Download — Plum 900 bar + homepage Gold-on-Plum standout CTA */}
-      {(user.isNewUser || activeTab === 'campaigns') && isSelectMode && selectedCampaignIds.length > 0 && (
+      {isSelectMode && selectedCampaignIds.length > 0 && (
         <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-[#381F49] text-white px-6 py-3.5 rounded-full shadow-2xl border border-[#704287]/60 flex items-center gap-6 z-50">
           <span className="font-semibold text-sm whitespace-nowrap">{selectedCampaignIds.length} selected</span>
           <Button
