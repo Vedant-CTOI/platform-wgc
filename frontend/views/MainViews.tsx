@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo, Template } from '../types';
-import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye, Sparkles } from 'lucide-react';
+import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye, Sparkles, ChevronDown, ArrowRight } from 'lucide-react';
 import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES, MEDIA_GROUPS, getRatioDisplayLabel } from '../constants';
 import { GalleryView } from './CampaignViews';
 
@@ -12,19 +12,17 @@ interface DashboardProps {
   onSelectTemplate: (templates: Template[]) => void;
 }
 
-const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23E6E9ED'/%3E%3Cpath d='M200 220a20 20 0 1 0 0-40 20 20 0 0 0 0 40zm-40 60l30-40 20 20 40-50 30 70H160z' fill='%23634B6F' fill-opacity='0.45'/%3E%3C/svg%3E";
-
 export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEditCampaign, onSelectTemplate }) => {
-  // Mock saved campaigns with dummy data and categories (first-time users start with none)
+  // Mock saved campaigns with official Base Creatives (first-time users start with none)
   const [savedCampaigns, setSavedCampaigns] = useState(user.isNewUser ? [] : [
-    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't1', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
-    { id: 'c2', name: 'Wedding Collection', date: 'Oct 22, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't2', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
-    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't3', ratioId: '621x621', ratioClass: 'aspect-square' },
-    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't4', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
-    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Festive', templateId: 't5', ratioId: '621x621', ratioClass: 'aspect-square' },
-    { id: 'c6', name: 'Wedding Decor', date: 'Oct 01, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Wedding', templateId: 't6', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
-    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Everyday', templateId: 't7', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
-    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: GRAY_PLACEHOLDER, category: 'Minimalist', templateId: 't8', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: '/creatives/full-page-diwali.jpg', category: 'Festive', templateId: 't1', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c2', name: 'Wedding Collection', date: 'Oct 22, 2023', thumbnail: '/creatives/half-page-wedding.jpg', category: 'Wedding', templateId: 't2', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: '/creatives/social-media-concert.jpg', category: 'Everyday', templateId: 't3', ratioId: '621x621', ratioClass: 'aspect-square' },
+    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: '/creatives/poster-office.jpg', category: 'Minimalist', templateId: 't4', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: '/creatives/social-media-diwali.jpg', category: 'Festive', templateId: 't5', ratioId: '621x621', ratioClass: 'aspect-square' },
+    { id: 'c6', name: 'Wedding Decor', date: 'Oct 01, 2023', thumbnail: '/creatives/half-page-wedding.jpg', category: 'Wedding', templateId: 't6', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: '/creatives/full-page-concert.jpg', category: 'Everyday', templateId: 't7', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: '/creatives/half-page-office.jpg', category: 'Minimalist', templateId: 't8', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
   ]);
   const hasNoCreatives = savedCampaigns.length === 0;
   const [showSelectLimit, setShowSelectLimit] = useState(false);
@@ -101,11 +99,13 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
         </div>
         {(user.isNewUser || activeTab === 'campaigns') && (
           <Button
+            variant="gold"
             size="lg"
             onClick={() => user.isNewUser ? onNavigate('gallery') : setActiveTab('templates')}
-            className="w-full sm:w-auto shadow-md"
+            className="group w-full sm:w-auto px-7 shadow-md"
           >
-            <Plus className="w-5 h-5 mr-2" /> Create New Campaign
+            <Plus className="w-5 h-5 mr-2" />
+            <span>Create New Campaign</span>
           </Button>
         )}
       </div>
@@ -146,29 +146,35 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
         <>
           {/* Occasion + Size filters (shown to all users) */}
           <div className="mb-8 flex flex-col sm:flex-row gap-3">
-            <select
-              value={activeFilter || 'All'}
-              onChange={(e) => setActiveFilter(e.target.value === 'All' ? null : e.target.value)}
-              className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm text-black bg-white"
-            >
-              {CATEGORIES.map(cat => (
-                <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
-              ))}
-            </select>
-            <select
-              value={sizeFilter}
-              onChange={(e) => setSizeFilter(e.target.value)}
-              className="w-full sm:w-64 pl-3 pr-8 py-2.5 min-h-[44px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm text-black bg-white"
-            >
-              <option value="All">All Sizes</option>
-              {MEDIA_GROUPS.map(group => (
-                <optgroup key={group} label={group}>
-                  {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
-                    <option key={r.id} value={r.id}>{r.name}</option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
+            <div className="relative w-full sm:w-64">
+              <select
+                value={activeFilter || 'All'}
+                onChange={(e) => setActiveFilter(e.target.value === 'All' ? null : e.target.value)}
+                className="appearance-none w-full pl-4 pr-11 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm font-medium text-black bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
+              >
+                {CATEGORIES.map(cat => (
+                  <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
+                ))}
+              </select>
+              <ChevronDown className="w-4 h-4 text-[#634B6F] pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+            </div>
+            <div className="relative w-full sm:w-64">
+              <select
+                value={sizeFilter}
+                onChange={(e) => setSizeFilter(e.target.value)}
+                className="appearance-none w-full pl-4 pr-11 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm font-medium text-black bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
+              >
+                <option value="All">All Sizes</option>
+                {MEDIA_GROUPS.map(group => (
+                  <optgroup key={group} label={group}>
+                    {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
+                      <option key={r.id} value={r.id}>{r.name}</option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+              <ChevronDown className="w-4 h-4 text-[#634B6F] pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+            </div>
           </div>
 
           <div>
@@ -214,8 +220,8 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                       className={`break-inside-avoid mb-6 bg-white rounded-xl border shadow-sm overflow-hidden group transition-all cursor-pointer flex flex-col ${isSelectMode && isSelected ? 'border-[#704287] ring-2 ring-[#704287]' : 'border-[#E6E9ED] hover:shadow-md hover:border-[#634B6F]/40'}`}
                       onClick={() => handleCardClick(campaign)}
                     >
-                      <div className={`${campaign.ratioClass} bg-[#E6E9ED] relative overflow-hidden flex items-center justify-center`}>
-                        <img src={campaign.thumbnail} alt={campaign.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <div className={`${campaign.ratioClass} bg-[#F6F3F8] relative overflow-hidden flex items-center justify-center`}>
+                        <img src={campaign.thumbnail} alt={campaign.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
 
                         {/* Selection Checkmark */}
                         {isSelectMode && (
@@ -249,8 +255,6 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                             </button>
                           </div>
                         )}
-                        {/* Inset circle on the right bottom */}
-                        <div className="absolute bottom-3 right-3 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-sm border border-[#E6E9ED] z-10"></div>
                       </div>
                       <div className="p-4 flex justify-between items-center relative mt-auto border-t border-[#E6E9ED] bg-white">
                         <div>
@@ -311,16 +315,18 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
         />
       )}
 
-      {/* Floating Action Bar for Bulk Download — Plum 900 bar + Gold 500 standout CTA */}
+      {/* Floating Action Bar for Bulk Download — Plum 900 bar + homepage Gold-on-Plum standout CTA */}
       {(user.isNewUser || activeTab === 'campaigns') && isSelectMode && selectedCampaignIds.length > 0 && (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-[#381F49] text-white px-6 py-4 rounded-full shadow-2xl border border-[#704287]/60 flex items-center gap-6 z-50">
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-[#381F49] text-white px-6 py-3.5 rounded-full shadow-2xl border border-[#704287]/60 flex items-center gap-6 z-50">
           <span className="font-semibold text-sm whitespace-nowrap">{selectedCampaignIds.length} selected</span>
-          <button
+          <Button
+            variant="gold-dark"
+            size="sm"
             onClick={() => setShowDownloadModal(true)}
-            className="inline-flex items-center justify-center rounded-lg font-bold px-4 py-2 text-sm min-h-[36px] whitespace-nowrap bg-[#F2BE42] text-black hover:bg-[#e5b030] transition-colors focus:outline-none focus:ring-2 focus:ring-[#F2BE42] focus:ring-offset-2 focus:ring-offset-[#381F49]"
+            className="whitespace-nowrap px-5"
           >
             <Download className="w-4 h-4 mr-2" /> Download Selected
-          </button>
+          </Button>
         </div>
       )}
 
@@ -375,8 +381,8 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
               </div>
             </div>
             <div className="mt-6 flex space-x-4">
-              <Button variant="secondary" onClick={() => setPreviewCampaign(null)}>Close</Button>
-              <Button onClick={(e) => { handleDownload(e, previewCampaign.name); setPreviewCampaign(null); }}><Download className="w-4 h-4 mr-2" /> Download</Button>
+              <Button variant="outline" onClick={() => setPreviewCampaign(null)}>Close</Button>
+              <Button variant="gold" onClick={(e) => { handleDownload(e, previewCampaign.name); setPreviewCampaign(null); }}><Download className="w-4 h-4 mr-2" /> Download</Button>
             </div>
           </div>
         </div>

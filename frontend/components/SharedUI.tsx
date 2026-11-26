@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home, Globe, Check, Link2, Mail, MessageCircle } from 'lucide-react';
+import { Menu, Bell, User, ChevronLeft, CheckCircle2, AlertCircle, X, Home, Globe, Check, Link2, Mail, MessageCircle, ArrowRight } from 'lucide-react';
 import { ADDRESS_LIMITS } from '../constants';
 
 // --- Play-once viewport reveal hook (Barber Hauler style) ---
@@ -279,7 +279,10 @@ export const ShareBand: React.FC = () => {
           </span>
         </p>
         <div className="bh-fade-up bh-d2 w-full sm:w-auto">
-          <Button size="lg" onClick={handleShare} className="w-full sm:w-auto px-8">Share Now</Button>
+          <Button variant="gold" size="lg" onClick={handleShare} className="group w-full sm:w-auto px-8">
+            <span>Share Now</span>
+            <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
+          </Button>
         </div>
       </div>
 

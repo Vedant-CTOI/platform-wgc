@@ -56,7 +56,7 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void }> = ({ on
       ref={footerReveal.ref}
       className={`relative overflow-hidden bg-[#381F49] border-t border-[#704287]/40 pt-12 pb-8 mt-auto ${footerReveal.inView ? 'is-inview' : ''}`}
     >
-      {/* Subtle silk-plum depth + single quiet 4-strand upper-right gold ribbon (endpoints strictly off-canvas, clear of bottom tagline) */}
+      {/* Subtle silk-plum depth + single quiet 4-strand bottom-right gold ribbon (strictly below nav links & right of copyright, 0 endpoints visible) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden select-none">
         <div
           className="absolute inset-0"
@@ -66,76 +66,76 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void }> = ({ on
           }}
         />
         <svg
-          viewBox="0 0 680 175"
+          viewBox="0 0 600 130"
           fill="none"
           overflow="visible"
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute top-0 right-0 w-[240px] h-[62px] sm:w-[380px] sm:h-[98px] lg:w-[540px] lg:h-[139px] xl:w-[640px] xl:h-[165px] opacity-55 sm:opacity-65 lg:opacity-60"
+          className="absolute bottom-0 right-0 w-[180px] h-[52px] sm:w-[320px] sm:h-[82px] lg:w-[460px] lg:h-[104px] xl:w-[540px] xl:h-[114px] opacity-65 sm:opacity-75"
         >
           <defs>
-            <linearGradient id="goldFootMain" x1="120" y1="-50" x2="770" y2="140" gradientUnits="userSpaceOnUse">
+            <linearGradient id="goldFootMain" x1="180" y1="180" x2="670" y2="25" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#B87212" stopOpacity="0.72" />
               <stop offset="38%" stopColor="#F2BE42" stopOpacity="0.94" />
-              <stop offset="62%" stopColor="#FFF5CC" stopOpacity="1" />
+              <stop offset="64%" stopColor="#FFF5CC" stopOpacity="1" />
               <stop offset="86%" stopColor="#DF9C26" stopOpacity="0.88" />
               <stop offset="100%" stopColor="#A9640E" stopOpacity="0.72" />
             </linearGradient>
-            <linearGradient id="goldFootSheen" x1="160" y1="-45" x2="780" y2="125" gradientUnits="userSpaceOnUse">
+            <linearGradient id="goldFootSheen" x1="210" y1="180" x2="680" y2="35" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#F2BE42" stopOpacity="0.4" />
               <stop offset="52%" stopColor="#FFF9E4" stopOpacity="0.96" />
               <stop offset="78%" stopColor="#F2BE42" stopOpacity="0.76" />
               <stop offset="100%" stopColor="#D6921F" stopOpacity="0.4" />
             </linearGradient>
-            <linearGradient id="goldFootDeep" x1="90" y1="-55" x2="770" y2="155" gradientUnits="userSpaceOnUse">
+            <linearGradient id="goldFootDeep" x1="150" y1="190" x2="670" y2="15" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor="#8F4F08" stopOpacity="0.65" />
               <stop offset="48%" stopColor="#DF9C26" stopOpacity="0.86" />
               <stop offset="82%" stopColor="#C47D14" stopOpacity="0.8" />
               <stop offset="100%" stopColor="#8A4A06" stopOpacity="0.65" />
             </linearGradient>
             <filter id="goldFootGlow" x="-35%" y="-35%" width="170%" height="170%">
-              <feGaussianBlur stdDeviation="7" />
+              <feGaussianBlur stdDeviation="6" />
             </filter>
           </defs>
 
           <path
             className="bh-swirl-glow"
-            d="M 135 -68 C 325 38, 535 92, 775 128"
+            d="M 190 192 C 350 142, 515 92, 685 18"
             stroke="#F2BE42"
-            strokeWidth="10"
+            strokeWidth="9"
             strokeLinecap="round"
             opacity="0.07"
             filter="url(#goldFootGlow)"
           />
 
-          {/* 4 sleek horizontal-sweeping strands — start strictly above top (y < -60), end strictly past right (x > 765), staying clear of bottom bar */}
+          {/* 4 sleek bottom-right strands — start strictly below bottom (y > 185), end strictly past right (x > 670), never touching links or copyright */}
           <path
             pathLength={100}
             className="bh-swirl-strand bh-s1"
-            d="M 100 -72 C 305 46, 525 104, 772 146"
+            d="M 160 194 C 332 146, 502 94, 678 12"
             stroke="url(#goldFootDeep)"
-            strokeWidth="3.4"
+            strokeWidth="3.2"
             strokeLinecap="round"
           />
           <path
             pathLength={100}
             className="bh-swirl-strand bh-s2"
-            d="M 145 -68 C 338 38, 548 92, 778 122"
+            d="M 205 192 C 366 146, 526 98, 684 34"
             stroke="url(#goldFootMain)"
-            strokeWidth="2.3"
+            strokeWidth="2.2"
             strokeLinecap="round"
           />
           <path
             pathLength={100}
             className="bh-swirl-strand bh-s3"
-            d="M 192 -66 C 372 30, 570 78, 782 98"
+            d="M 250 192 C 398 148, 548 106, 688 56"
             stroke="url(#goldFootSheen)"
-            strokeWidth="1.5"
+            strokeWidth="1.45"
             strokeLinecap="round"
           />
           <path
             pathLength={100}
             className="bh-swirl-strand bh-s4"
-            d="M 244 -64 C 410 22, 594 64, 786 72"
+            d="M 298 192 C 432 152, 570 116, 692 80"
             stroke="url(#goldFootDeep)"
             strokeWidth="0.95"
             strokeLinecap="round"
@@ -153,7 +153,7 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void }> = ({ on
           >
             <img
               src="/goldify-logo-full.png"
-              alt="Goldify — Gold the moment"
+              alt="Goldify"
               className="h-14 w-auto object-contain select-none"
             />
           </button>
@@ -181,9 +181,8 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void }> = ({ on
             </a>
           </nav>
         </div>
-        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div className="border-t border-white/10 pt-6 flex items-center justify-start">
           <p className="text-white/70 text-sm">© 2024 Goldify. All rights reserved.</p>
-          <p className="text-[#F2BE42]/85 text-xs font-bold uppercase tracking-[0.2em]">Gold the moment.</p>
         </div>
       </div>
     </footer>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
 import { ViewState, Template, CampaignDraft, UserProfile, StoreInfo, PreviewData } from '../types';
 import { MOCK_TEMPLATES, CATEGORIES, CATEGORY_BADGE_STYLES, ASPECT_RATIOS, MEDIA_GROUPS, MAX_CREATIVES_PER_SESSION, formatAddress, getRatioDisplayLabel } from '../constants';
-import { Search, Filter, Download, Share2, Copy, Check, Loader2, Image as ImageIcon, MapPin, Phone, Globe, X, ChevronLeft, ChevronRight, UploadCloud, AlertTriangle, CheckCircle2, Eye } from 'lucide-react';
+import { Search, Filter, Download, Share2, Copy, Check, Loader2, Image as ImageIcon, MapPin, Phone, Globe, X, ChevronLeft, ChevronRight, ChevronDown, ArrowRight, UploadCloud, AlertTriangle, CheckCircle2, Eye } from 'lucide-react';
 
 interface FlowProps {
   onNavigate: (view: ViewState) => void;
@@ -41,75 +41,83 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
   if (ratioClass === 'aspect-[19/14]') scale = 0.85; // Poster (19x14 in)
 
   const displayLogo = data.logoUrl;
+  const hasFooterInfo = Boolean(data.storeAddress || data.contactNumber || data.retailerUrl);
 
   return (
     <div
-      className={`w-full ${ratioClass} ${isMini ? 'rounded-md' : 'rounded-lg sm:rounded-xl'} shadow-lg overflow-hidden relative flex flex-col ${template.colorScheme.bg}`}
+      className={`w-full ${ratioClass} ${isMini ? 'rounded-md' : 'rounded-lg sm:rounded-xl'} shadow-lg overflow-hidden relative flex flex-col bg-[#381F49]`}
       style={{ containerType: 'inline-size' }}
     >
-      {/* Header / Logo area */}
-      <div className="flex justify-between items-start shrink-0" style={{ padding: `${4 * scale}cqi` }}>
+      {/* Full-bleed official Base Creative background */}
+      <img
+        src={template.thumbnail}
+        alt={template.name}
+        className="absolute inset-0 w-full h-full object-cover object-top"
+      />
+
+      {/* Header / Retailer Logo badge */}
+      <div className="relative z-10 flex justify-between items-start shrink-0" style={{ padding: `${3.5 * scale}cqi` }}>
         {displayLogo ? (
-          <img src={displayLogo} alt="Logo" className="rounded-full bg-white object-cover shadow-sm" style={{ width: `${12 * scale}cqi`, height: `${12 * scale}cqi` }} />
+          <img
+            src={displayLogo}
+            alt="Store Logo"
+            className="rounded-full bg-white/95 object-cover shadow-md border border-white/80"
+            style={{ width: `${12 * scale}cqi`, height: `${12 * scale}cqi` }}
+          />
         ) : (
-          <div className="rounded-full bg-white/50 flex items-center justify-center shadow-sm" style={{ width: `${12 * scale}cqi`, height: `${12 * scale}cqi` }}>
-            <ImageIcon className="text-gray-500" style={{ width: `${5 * scale}cqi`, height: `${5 * scale}cqi` }} />
+          <div
+            className="rounded-full bg-white/85 backdrop-blur-sm flex items-center justify-center shadow-sm border border-[#381F49]/15"
+            style={{ width: `${11 * scale}cqi`, height: `${11 * scale}cqi` }}
+          >
+            <ImageIcon className="text-[#634B6F]" style={{ width: `${4.5 * scale}cqi`, height: `${4.5 * scale}cqi` }} />
           </div>
         )}
       </div>
 
-      {/* Main Content */}
-      <div className="flex-grow flex flex-col items-center justify-center text-center min-h-0 overflow-hidden" style={{ padding: `${4 * scale}cqi` }}>
-        <h2 className={`font-black uppercase tracking-tight ${template.colorScheme.text} leading-tight line-clamp-3`} style={{ fontSize: `${8 * scale}cqi`, marginBottom: `${2 * scale}cqi` }}>
-          {template.defaultText.headline}
-        </h2>
-        <p className={`font-medium ${template.colorScheme.text} opacity-90 leading-snug line-clamp-2`} style={{ fontSize: `${4 * scale}cqi`, marginBottom: `${4 * scale}cqi` }}>
-          {template.defaultText.subheadline}
-        </p>
-        <div className={`rounded-full font-bold text-white shadow-md ${template.colorScheme.accent} truncate max-w-full shrink-0`} style={{ fontSize: `${3.5 * scale}cqi`, padding: `${1.5 * scale}cqi ${4 * scale}cqi` }}>
-          {template.defaultText.offer}
+      {/* Spacer keeps artwork completely unobstructed in the center */}
+      <div className="flex-grow min-h-0" />
+
+      {/* Custom Uploaded Jewelry Inset (only overlays when retailer uploads a piece, otherwise the creative's own inset shines) */}
+      {data.jewelryImageUrl && (
+        <div
+          className="absolute bg-white/95 backdrop-blur-sm rounded-full shadow-lg border-2 border-[#F2BE42] z-10 flex items-center justify-center overflow-hidden"
+          style={{
+            bottom: `${12 * scale}cqi`,
+            right: `${4 * scale}cqi`,
+            width: `${16 * scale}cqi`,
+            height: `${16 * scale}cqi`
+          }}
+        >
+          <img src={data.jewelryImageUrl} alt="Jewelry piece" className="w-full h-full object-cover" />
         </div>
-      </div>
+      )}
 
-      {/* Inset Circle for Jewelry */}
-      <div
-        className="absolute bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-gray-200 z-10 flex items-center justify-center overflow-hidden"
-        style={{
-          bottom: `${12 * scale}cqi`,
-          right: `${4 * scale}cqi`,
-          width: `${14 * scale}cqi`,
-          height: `${14 * scale}cqi`
-        }}
-      >
-        {data.jewelryImageUrl ? (
-          <img src={data.jewelryImageUrl} className="w-full h-full object-cover" />
-        ) : (
-          <ImageIcon className="text-gray-400" style={{ width: `${6 * scale}cqi`, height: `${6 * scale}cqi` }} />
-        )}
-      </div>
-
-      {/* Footer / Contact area */}
-      <div className={`flex flex-col sm:flex-row justify-center items-center font-medium ${template.colorScheme.text} bg-black/5 backdrop-blur-sm shrink-0`} style={{ padding: `${3 * scale}cqi`, gap: `${2 * scale}cqi`, fontSize: `${2.5 * scale}cqi` }}>
-        {data.storeAddress && (
-          <div className="flex items-center truncate max-w-full">
-            <MapPin className="mr-1 flex-shrink-0" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
-            <span className="truncate">{formatAddress(data.storeAddress, data.landmark, data.city)}</span>
-          </div>
-        )}
-        {data.contactNumber && (
-          <div className="flex items-center flex-shrink-0">
-            <Phone className="mr-1" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
-            {data.contactNumber}
-          </div>
-        )}
-        {/* Retailer URL — locked position, hidden when left blank */}
-        {data.retailerUrl && (
-          <div className="flex items-center flex-shrink-0">
-            <Globe className="mr-1" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
-            {data.retailerUrl}
-          </div>
-        )}
-      </div>
+      {/* Footer / Store Contact overlay strip — matches the official creative's clean white retailer footer band */}
+      {hasFooterInfo && (
+        <div
+          className="relative z-10 flex flex-col sm:flex-row justify-center items-center font-semibold text-[#381F49] bg-white/95 backdrop-blur-sm border-t border-[#E6E9ED] shrink-0"
+          style={{ padding: `${2.8 * scale}cqi ${3.5 * scale}cqi`, gap: `${2 * scale}cqi`, fontSize: `${2.5 * scale}cqi` }}
+        >
+          {data.storeAddress && (
+            <div className="flex items-center truncate max-w-full">
+              <MapPin className="mr-1 flex-shrink-0 text-[#704287]" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
+              <span className="truncate">{formatAddress(data.storeAddress, data.landmark, data.city)}</span>
+            </div>
+          )}
+          {data.contactNumber && (
+            <div className="flex items-center flex-shrink-0">
+              <Phone className="mr-1 text-[#704287]" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
+              {data.contactNumber}
+            </div>
+          )}
+          {data.retailerUrl && (
+            <div className="flex items-center flex-shrink-0">
+              <Globe className="mr-1 text-[#704287]" style={{ width: `${3 * scale}cqi`, height: `${3 * scale}cqi` }} />
+              {data.retailerUrl}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -200,8 +208,9 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
             <p className="text-sm text-[#634B6F] mt-0.5">You can customise up to {MAX_CREATIVES_PER_SESSION} creatives per session.</p>
           </div>
           {selectedTemplates.length > 0 && (
-            <Button variant="gold" onClick={handleContinue}>
-              Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})
+            <Button variant="gold" onClick={handleContinue} className="group px-6">
+              <span>Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
+              <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
           )}
         </div>
@@ -210,8 +219,9 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
           <div className="flex justify-between items-center mb-2">
             <PageHeader title="Choose Templates" onBack={() => onNavigate('dashboard')} />
             {selectedTemplates.length > 0 && (
-              <Button variant="gold" onClick={handleContinue}>
-                Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})
+              <Button variant="gold" onClick={handleContinue} className="group px-6">
+                <span>Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
               </Button>
             )}
           </div>
@@ -222,35 +232,41 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
         <div className="flex flex-col sm:flex-row gap-3 w-full">
           {/* Occasion filter */}
-          <select
-            value={activeCategory}
-            onChange={(e) => setActiveCategory(e.target.value)}
-            className="pl-3 pr-8 py-2.5 min-h-[44px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm text-black bg-white"
-          >
-            {CATEGORIES.map(cat => (
-              <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
-            ))}
-          </select>
-          <select
-            value={activeRatioFilter}
-            onChange={(e) => setActiveRatioFilter(e.target.value)}
-            className="pl-3 pr-8 py-2.5 min-h-[44px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm text-black bg-white"
-          >
-            <option value="All">All Sizes</option>
-            {MEDIA_GROUPS.map(group => (
-              <optgroup key={group} label={group}>
-                {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
-                  <option key={r.id} value={r.id}>{r.name}</option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
+          <div className="relative w-full sm:w-56">
+            <select
+              value={activeCategory}
+              onChange={(e) => setActiveCategory(e.target.value)}
+              className="appearance-none w-full pl-4 pr-11 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm font-medium text-black bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
+            >
+              {CATEGORIES.map(cat => (
+                <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 text-[#634B6F] pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+          </div>
+          <div className="relative w-full sm:w-64">
+            <select
+              value={activeRatioFilter}
+              onChange={(e) => setActiveRatioFilter(e.target.value)}
+              className="appearance-none w-full pl-4 pr-11 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm font-medium text-black bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
+            >
+              <option value="All">All Sizes</option>
+              {MEDIA_GROUPS.map(group => (
+                <optgroup key={group} label={group}>
+                  {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 text-[#634B6F] pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+          </div>
           <div className="relative w-full sm:w-64 sm:ml-auto">
-            <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-[#634B6F]" />
+            <Search className="w-5 h-5 absolute left-3.5 top-1/2 transform -translate-y-1/2 text-[#634B6F]" />
             <input
               type="text"
               placeholder="Search templates..."
-              className="w-full pl-10 pr-4 py-2.5 min-h-[44px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-black placeholder:text-[#634B6F]/60 bg-white"
+              className="w-full pl-11 pr-4 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm text-black placeholder:text-[#634B6F]/60 bg-white"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -269,8 +285,12 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
               className={`break-inside-avoid mb-6 group bg-white rounded-xl overflow-hidden border shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col cursor-pointer ${isSelected ? 'border-[#704287] ring-2 ring-[#704287]' : 'border-[#E6E9ED] hover:border-[#634B6F]/40'}`}
               onClick={() => handleTemplateSelect(template)}
             >
-              <div className={`relative ${template.ratioClass} bg-[#E6E9ED] overflow-hidden flex items-center justify-center`}>
-                <img src={template.thumbnail} alt={template.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className={`relative ${template.ratioClass} bg-[#F6F3F8] overflow-hidden flex items-center justify-center`}>
+                <img
+                  src={template.thumbnail}
+                  alt={template.name}
+                  className={`w-full h-full ${template.ratioClass === 'aspect-[1/2]' || template.ratioClass === 'aspect-[2/1]' ? 'object-contain' : 'object-cover object-top'} group-hover:scale-105 transition-transform duration-500`}
+                />
 
                 {/* Selection Checkmark */}
                 <div className="absolute top-3 left-3 z-20">
@@ -286,8 +306,6 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
                 <div className="absolute inset-0 bg-[#381F49]/0 sm:group-hover:bg-[#381F49]/15 transition-colors flex items-center justify-center">
                   {/* Empty overlay for hover effect */}
                 </div>
-                {/* Inset circle on the right bottom */}
-                <div className="absolute bottom-3 right-3 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-sm border border-[#E6E9ED] z-10"></div>
               </div>
               <div className="p-4 flex flex-col flex-grow border-t border-[#E6E9ED] bg-white">
                 <div className="flex justify-between items-start mb-2">
@@ -626,16 +644,19 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 {!isFirstTime && (
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-black mb-2">Select Store</label>
-                  <select
-                    className="w-full rounded-lg border border-[#634B6F]/40 px-4 py-2.5 text-black shadow-sm focus:border-[#704287] focus:ring-2 focus:ring-[#704287] focus:outline-none sm:text-sm bg-white"
-                    value={data.storeId}
-                    onChange={(e) => handleStoreSelect(index, e.target.value)}
-                  >
-                    {user?.stores.map(s => (
-                      <option key={s.id} value={s.id}>{s.name}</option>
-                    ))}
-                    <option value="manual">Enter Manually...</option>
-                  </select>
+                  <div className="relative">
+                    <select
+                      className="appearance-none w-full rounded-lg border border-[#634B6F]/40 pl-4 pr-11 py-3 min-h-[46px] text-black font-medium shadow-sm focus:border-[#704287] focus:ring-2 focus:ring-[#704287] focus:outline-none sm:text-sm bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
+                      value={data.storeId}
+                      onChange={(e) => handleStoreSelect(index, e.target.value)}
+                    >
+                      {user?.stores.map(s => (
+                        <option key={s.id} value={s.id}>{s.name}</option>
+                      ))}
+                      <option value="manual">Enter Manually...</option>
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-[#634B6F] pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
                 )}
 
@@ -734,11 +755,14 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
           <div className="absolute sm:static bottom-0 left-0 right-0 p-2 sm:p-4 border-t border-[#E6E9ED] bg-white flex flex-col sm:flex-row sm:justify-between items-center gap-2 z-40">
             <p className="text-xs text-[#634B6F] self-start sm:self-center">* Mandatory fields</p>
             <Button
+              variant="gold"
+              size="lg"
               onClick={handleGenerate}
               disabled={!isFormValid}
-              className="px-10 py-3 text-base w-full sm:w-auto"
+              className="group px-10 w-full sm:w-auto"
             >
-              Submit Request
+              <span>Submit Request</span>
+              <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
           </div>
         </div>
@@ -931,7 +955,7 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
               </label>
             </div>
           </div>
-          <Button variant="primary" className="w-full sm:w-auto" onClick={handleDownload}><Download className="w-4 h-4 mr-2" /> Download All (ZIP)</Button>
+          <Button variant="gold" size="lg" className="w-full sm:w-auto px-7" onClick={handleDownload}><Download className="w-4 h-4 mr-2" /> Download All (ZIP)</Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -982,8 +1006,8 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
               />
             </div>
             <div className="mt-6 flex space-x-4">
-              <Button variant="secondary" onClick={() => setPreviewItem(null)}>Close</Button>
-              <Button onClick={() => { handleDownload(); setPreviewItem(null); }}><Download className="w-4 h-4 mr-2" /> Download</Button>
+              <Button variant="outline" onClick={() => setPreviewItem(null)}>Close</Button>
+              <Button variant="gold" onClick={() => { handleDownload(); setPreviewItem(null); }}><Download className="w-4 h-4 mr-2" /> Download</Button>
             </div>
           </div>
         </div>

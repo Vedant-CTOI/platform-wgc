@@ -1,13 +1,11 @@
 import { Template } from './types';
 
-const GRAY_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23E6E9ED'/%3E%3Cpath d='M200 220a20 20 0 1 0 0-40 20 20 0 0 0 0 40zm-40 60l30-40 20 20 40-50 30 70H160z' fill='%23634B6F' fill-opacity='0.45'/%3E%3C/svg%3E";
-
 export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't1',
     name: 'Diwali Mega Sale',
     category: 'Festive',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/full-page-diwali.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -21,7 +19,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't2',
     name: 'Wedding Collection',
     category: 'Wedding',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/half-page-wedding.jpg',
     ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
@@ -35,7 +33,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't3',
     name: 'Concert Tickets',
     category: 'Everyday',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/social-media-concert.jpg',
     ratioId: '621x621',
     ratioClass: 'aspect-square',
     defaultText: {
@@ -49,7 +47,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't4',
     name: 'Office Supplies',
     category: 'Minimalist',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/poster-office.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -63,7 +61,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't5',
     name: 'Diwali Gifts',
     category: 'Festive',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: '621x621',
     ratioClass: 'aspect-square',
     defaultText: {
@@ -77,7 +75,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't6',
     name: 'Wedding Decor',
     category: 'Wedding',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/half-page-wedding.jpg',
     ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
@@ -91,7 +89,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't7',
     name: 'Music Festival',
     category: 'Everyday',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/full-page-concert.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -105,7 +103,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't8',
     name: 'Corporate Event',
     category: 'Minimalist',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/half-page-office.jpg',
     ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
@@ -119,7 +117,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't9',
     name: 'Diwali Sweets',
     category: 'Festive',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: '621x621',
     ratioClass: 'aspect-square',
     defaultText: {
@@ -133,7 +131,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't10',
     name: 'Bridal Wear',
     category: 'Wedding',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/full-page-wedding.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -147,7 +145,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't11',
     name: 'Rock Concert',
     category: 'Everyday',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/half-page-concert.jpg',
     ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
@@ -161,7 +159,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't12',
     name: 'Office Furniture',
     category: 'Minimalist',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/social-media-office.jpg',
     ratioId: '621x621',
     ratioClass: 'aspect-square',
     defaultText: {
@@ -175,7 +173,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't13',
     name: 'Diwali Crackers',
     category: 'Festive',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/poster-diwali.jpg',
     ratioId: '610x794',
     ratioClass: 'aspect-[610/794]',
     defaultText: {
@@ -189,7 +187,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't14',
     name: 'Wedding Photography',
     category: 'Wedding',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/half-page-wedding.jpg',
     ratioId: '936x709',
     ratioClass: 'aspect-[936/709]',
     defaultText: {
@@ -203,7 +201,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't15',
     name: 'Festive Quarter Page',
     category: 'Festive',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/full-page-diwali.jpg',
     ratioId: '468x709',
     ratioClass: 'aspect-[468/709]',
     defaultText: { headline: 'FESTIVE OFFERS', subheadline: 'Celebrate the season with us', offer: 'VISIT TODAY' },
@@ -213,7 +211,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't16',
     name: 'Bridal Standee',
     category: 'Wedding',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/poster-wedding.jpg',
     ratioId: 'standee-10800x21600',
     ratioClass: 'aspect-[1/2]',
     defaultText: { headline: 'BRIDAL SEASON', subheadline: 'Walk in and explore the collection', offer: 'IN STORE NOW' },
@@ -223,7 +221,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't17',
     name: 'In-store Poster',
     category: 'Everyday',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/half-page-concert.jpg',
     ratioId: 'poster-5700x4200',
     ratioClass: 'aspect-[19/14]',
     defaultText: { headline: 'NEW ARRIVALS', subheadline: 'Ask our staff for details', offer: 'SHOP NOW' },
@@ -233,7 +231,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't18',
     name: 'Highway Billboard',
     category: 'Minimalist',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/half-page-office.jpg',
     ratioId: 'outdoor-2x1',
     ratioClass: 'aspect-[2/1]',
     defaultText: { headline: 'PURE GOLD', subheadline: 'Timeless craftsmanship', offer: 'VISIT US' },
@@ -243,7 +241,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't19',
     name: 'Festive Outdoor Square',
     category: 'Festive',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: 'outdoor-1x1',
     ratioClass: 'aspect-square',
     defaultText: { headline: 'FESTIVE GOLD', subheadline: 'Celebrate the season in style', offer: 'VISIT STORE' },
@@ -253,7 +251,7 @@ export const MOCK_TEMPLATES: Template[] = [
     id: 't20',
     name: 'Bridal Outdoor Vertical',
     category: 'Wedding',
-    thumbnail: GRAY_PLACEHOLDER,
+    thumbnail: '/creatives/full-page-wedding.jpg',
     ratioId: 'outdoor-1x2',
     ratioClass: 'aspect-[1/2]',
     defaultText: { headline: 'WEDDING GOLD', subheadline: 'Crafted for timeless moments', offer: 'EXPLORE NOW' },

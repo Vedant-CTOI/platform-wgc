@@ -481,6 +481,25 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
   );
 };
 
+/* Full-bleed Plum 900 brand header band for Auth cards (Register, Login, OTP) so the Goldify logo sits grounded inside the card */
+const AuthCardBrandBand: React.FC = () => (
+  <div className="relative overflow-hidden bg-[#381F49] px-6 py-7 flex items-center justify-center border-b-2 border-[#F2BE42]/70">
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0"
+      style={{
+        background:
+          'radial-gradient(ellipse 85% 110% at 50% 45%, rgba(92, 51, 118, 0.52) 0%, rgba(56, 31, 73, 0.94) 64%, rgba(36, 17, 50, 1) 100%)',
+      }}
+    />
+    <img
+      src="/goldify-logo-full.png"
+      alt="Goldify"
+      className="relative z-10 h-16 w-auto object-contain select-none"
+    />
+  </div>
+);
+
 export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -540,18 +559,17 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-md w-full space-y-8 bg-white p-4 sm:p-10 sm:rounded-3xl sm:shadow-sm sm:border border-[#E6E9ED]">
-        <div className="flex flex-col items-center">
-          <div className="bg-[#381F49] px-6 py-4 rounded-xl flex items-center justify-center mb-6 shadow-sm">
-            <img src="/goldify-logo-full.png" alt="Goldify" className="h-16 w-auto object-contain select-none" />
+      <div className="max-w-md w-full bg-white rounded-2xl sm:rounded-3xl shadow-md border border-[#E6E9ED] overflow-hidden">
+        <AuthCardBrandBand />
+        <div className="p-6 sm:p-10 space-y-8">
+          <div className="flex flex-col items-center">
+            <h2 className="text-center text-2xl font-light text-black">Create your account</h2>
+            <p className="mt-2 text-center text-sm text-[#634B6F]">
+              to continue to Goldify
+            </p>
           </div>
-          <h2 className="text-center text-2xl font-light text-black">Create your account</h2>
-          <p className="mt-2 text-center text-sm text-[#634B6F]">
-            to continue to Goldify
-          </p>
-        </div>
 
-        <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
+          <form className="mt-6 space-y-6" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Input
@@ -630,14 +648,16 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
           <p className="text-xs text-[#634B6F]">* Mandatory fields</p>
 
           <div className="pt-2 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
-            <Button type="submit" size="lg" className="w-full sm:w-auto px-8" disabled={!isFormValid}>
-              Send Email OTP
+            <Button type="submit" size="lg" className="group w-full sm:w-auto px-8" disabled={!isFormValid}>
+              <span>Send Email OTP</span>
+              <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
             <button type="button" onClick={() => onNavigate('login')} className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors">
               Sign in instead
             </button>
           </div>
         </form>
+        </div>
       </div>
 
       {showGstPopup && (
@@ -665,39 +685,39 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) =>
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-md w-full space-y-8 bg-white p-4 sm:p-10 sm:rounded-3xl sm:shadow-sm sm:border border-[#E6E9ED]">
-        <div className="flex flex-col items-center">
-          <div className="bg-[#381F49] px-6 py-4 rounded-xl flex items-center justify-center mb-6 shadow-sm">
-            <img src="/goldify-logo-full.png" alt="Goldify" className="h-16 w-auto object-contain select-none" />
+      <div className="max-w-md w-full bg-white rounded-2xl sm:rounded-3xl shadow-md border border-[#E6E9ED] overflow-hidden">
+        <AuthCardBrandBand />
+        <div className="p-6 sm:p-10 space-y-8">
+          <div className="flex flex-col items-center">
+            <h2 className="text-center text-2xl font-light text-black">Sign in</h2>
+            <p className="mt-2 text-center text-sm text-[#634B6F]">
+              to continue to Goldify
+            </p>
           </div>
-          <h2 className="text-center text-2xl font-light text-black">Sign in</h2>
-          <p className="mt-2 text-center text-sm text-[#634B6F]">
-            to continue to Goldify
-          </p>
+
+          <form className="mt-6 space-y-6" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+            <div className="space-y-5">
+              <Input
+                label="Email"
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="pt-4 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
+              <Button type="submit" size="lg" className="group w-full sm:w-auto px-8" disabled={!email}>
+                <span>Send</span>
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
+              </Button>
+              <button type="button" onClick={() => onNavigate('register')} className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors">
+                Create account
+              </button>
+            </div>
+          </form>
         </div>
-
-        <form className="mt-8 space-y-6" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-          <div className="space-y-5">
-            <Input
-              label="Email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="pt-4 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
-            <Button type="submit" size="lg" className="w-full sm:w-auto px-8" disabled={!email}>
-              Send
-            </Button>
-            <button type="button" onClick={() => onNavigate('register')} className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors">
-              Create account
-            </button>
-          </div>
-        </form>
-
       </div>
     </div>
   );
@@ -754,53 +774,54 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = '
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-md w-full space-y-8 bg-white p-4 sm:p-10 sm:rounded-3xl sm:shadow-sm sm:border border-[#E6E9ED]">
-        <div className="flex flex-col items-center">
-          <div className="bg-[#381F49] px-6 py-4 rounded-xl flex items-center justify-center mb-6 shadow-sm">
-            <img src="/goldify-logo-full.png" alt="Goldify" className="h-16 w-auto object-contain select-none" />
-          </div>
-          <h2 className="text-center text-2xl font-light text-black">Verify it's you</h2>
-          <p className="mt-2 text-center text-sm text-[#634B6F]">
-            We've sent a 4-digit code to your email.
-          </p>
-        </div>
-
-        <div className="mt-8 space-y-8">
-          <div className="flex justify-center space-x-4">
-            {otp.map((data, index) => (
-              <input
-                className="w-14 h-14 text-center text-2xl font-semibold text-black border border-[#634B6F]/40 rounded-xl focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none transition-all"
-                type="text"
-                name="otp"
-                maxLength={1}
-                key={index}
-                value={data}
-                onChange={e => handleChange(e.target, index)}
-                onFocus={e => e.target.select()}
-              />
-            ))}
+      <div className="max-w-md w-full bg-white rounded-2xl sm:rounded-3xl shadow-md border border-[#E6E9ED] overflow-hidden">
+        <AuthCardBrandBand />
+        <div className="p-6 sm:p-10 space-y-8">
+          <div className="flex flex-col items-center">
+            <h2 className="text-center text-2xl font-light text-black">Verify it's you</h2>
+            <p className="mt-2 text-center text-sm text-[#634B6F]">
+              We've sent a 4-digit code to your email.
+            </p>
           </div>
 
-          <div className="text-center text-sm">
-            {timer > 0 ? (
-              <span className="text-[#634B6F]">Resend code in 00:{timer.toString().padStart(2, '0')}</span>
-            ) : (
-              <button className="bh-link text-[#704287] font-semibold hover:text-[#381F49]">Resend OTP</button>
-            )}
-          </div>
+          <div className="mt-6 space-y-8">
+            <div className="flex justify-center space-x-4">
+              {otp.map((data, index) => (
+                <input
+                  className="w-14 h-14 text-center text-2xl font-semibold text-black border border-[#634B6F]/40 rounded-xl focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none transition-all"
+                  type="text"
+                  name="otp"
+                  maxLength={1}
+                  key={index}
+                  value={data}
+                  onChange={e => handleChange(e.target, index)}
+                  onFocus={e => e.target.select()}
+                />
+              ))}
+            </div>
 
-          <div className="pt-2 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
-            <Button
-              size="lg"
-              className="w-full sm:w-auto px-8"
-              onClick={handleVerify}
-              disabled={otp.join('').length !== 4 || isLoading}
-            >
-              {isLoading ? 'Verifying...' : 'Verify'}
-            </Button>
-            <button type="button" onClick={() => onNavigate(authMode === 'new' ? 'register' : 'login')} className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors">
-              Back
-            </button>
+            <div className="text-center text-sm">
+              {timer > 0 ? (
+                <span className="text-[#634B6F]">Resend code in 00:{timer.toString().padStart(2, '0')}</span>
+              ) : (
+                <button className="bh-link text-[#704287] font-semibold hover:text-[#381F49]">Resend OTP</button>
+              )}
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
+              <Button
+                size="lg"
+                className="group w-full sm:w-auto px-8"
+                onClick={handleVerify}
+                disabled={otp.join('').length !== 4 || isLoading}
+              >
+                <span>{isLoading ? 'Verifying...' : 'Verify'}</span>
+                {!isLoading && <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />}
+              </Button>
+              <button type="button" onClick={() => onNavigate(authMode === 'new' ? 'register' : 'login')} className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors">
+                Back
+              </button>
+            </div>
           </div>
         </div>
       </div>
