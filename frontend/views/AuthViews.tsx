@@ -27,209 +27,137 @@ const LANDING_FAQS = [
   },
 ];
 
-const GoldHeroSwirls: React.FC<{ drift: number }> = ({ drift }) => (
-  <div
-    aria-hidden="true"
-    className="pointer-events-none absolute inset-0 overflow-hidden select-none"
-  >
-    {/* Subtle silk-plum depth lighting behind the gold calligraphy */}
+const GoldHeroSwirls: React.FC<{ drift: number }> = ({ drift }) => {
+  const renderStrands = (suffix: string) => (
+    <>
+      <defs>
+        <linearGradient id={`goldMain${suffix}`} x1="-40" y1="430" x2="520" y2="-60" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#B87212" stopOpacity="0.82" />
+          <stop offset="32%" stopColor="#F2BE42" stopOpacity="0.96" />
+          <stop offset="54%" stopColor="#FFF5CC" stopOpacity="1" />
+          <stop offset="76%" stopColor="#E6A92E" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#A9640E" stopOpacity="0.82" />
+        </linearGradient>
+        <linearGradient id={`goldSheen${suffix}`} x1="0" y1="410" x2="540" y2="-50" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#F2BE42" stopOpacity="0.45" />
+          <stop offset="46%" stopColor="#FFF9E4" stopOpacity="0.98" />
+          <stop offset="68%" stopColor="#F2BE42" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#D6921F" stopOpacity="0.45" />
+        </linearGradient>
+        <linearGradient id={`goldDeep${suffix}`} x1="-60" y1="450" x2="490" y2="-80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#8F4F08" stopOpacity="0.7" />
+          <stop offset="45%" stopColor="#DF9C26" stopOpacity="0.92" />
+          <stop offset="75%" stopColor="#C47D14" stopOpacity="0.88" />
+          <stop offset="100%" stopColor="#8A4A06" stopOpacity="0.7" />
+        </linearGradient>
+        <filter id={`goldSoftGlow${suffix}`} x="-35%" y="-35%" width="170%" height="170%">
+          <feGaussianBlur stdDeviation="8" />
+        </filter>
+      </defs>
+
+      {/* Subtle warm metallic wash along the visible mid-arc */}
+      <path
+        className="bh-swirl-glow"
+        d="M -110 430 C 125 365, 345 185, 495 -95"
+        stroke="#F2BE42"
+        strokeWidth="14"
+        strokeLinecap="round"
+        opacity="0.09"
+        filter={`url(#goldSoftGlow${suffix})`}
+      />
+
+      {/* 6 calligraphic parallel gold strands — every start (x < -90) and end (y < -85) lies strictly off-canvas */}
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s1"
+        d="M -125 462 C 150 400, 385 205, 535 -105"
+        stroke={`url(#goldDeep${suffix})`}
+        strokeWidth="4.6"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s2"
+        d="M -115 440 C 138 380, 362 192, 510 -98"
+        stroke={`url(#goldMain${suffix})`}
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s3"
+        d="M -108 420 C 126 360, 342 180, 488 -92"
+        stroke={`url(#goldSheen${suffix})`}
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s4"
+        d="M -100 398 C 110 342, 322 166, 464 -88"
+        stroke={`url(#goldMain${suffix})`}
+        strokeWidth="1.65"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s5"
+        d="M -95 372 C 94 320, 298 150, 434 -88"
+        stroke={`url(#goldSheen${suffix})`}
+        strokeWidth="1.15"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s6"
+        d="M -90 344 C 78 296, 272 132, 402 -90"
+        stroke={`url(#goldDeep${suffix})`}
+        strokeWidth="0.9"
+        strokeLinecap="round"
+      />
+    </>
+  );
+
+  return (
     <div
-      className="absolute inset-0"
-      style={{
-        background:
-          'radial-gradient(ellipse 85% 90% at 50% 45%, rgba(92, 51, 118, 0.48) 0%, rgba(56, 31, 73, 0.92) 58%, rgba(36, 17, 50, 1) 100%)',
-      }}
-    />
-
-    {/* Left sweeping multi-strand calligraphic gold crescent */}
-    <svg
-      viewBox="0 0 640 620"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="absolute -left-52 sm:-left-44 md:-left-36 lg:-left-20 xl:-left-4 top-1/2 -translate-y-1/2 h-[96%] sm:h-[106%] lg:h-[112%] w-auto max-w-none opacity-55 sm:opacity-80 lg:opacity-95"
-      style={{ transform: `translate3d(0, calc(-50% + ${Math.round(drift * 0.28)}px), 0)` }}
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden select-none"
     >
-      <defs>
-        <linearGradient id="goldMainL" x1="280" y1="50" x2="480" y2="575" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#D6921F" stopOpacity="0.85" />
-          <stop offset="28%" stopColor="#FFF2C2" stopOpacity="1" />
-          <stop offset="56%" stopColor="#F2BE42" stopOpacity="0.98" />
-          <stop offset="82%" stopColor="#C98316" stopOpacity="0.88" />
-          <stop offset="100%" stopColor="#F2BE42" stopOpacity="0.12" />
-        </linearGradient>
-        <linearGradient id="goldSheenL" x1="250" y1="60" x2="460" y2="560" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFF7DB" stopOpacity="0.4" />
-          <stop offset="38%" stopColor="#FFF8E2" stopOpacity="0.98" />
-          <stop offset="72%" stopColor="#F2BE42" stopOpacity="0.72" />
-          <stop offset="100%" stopColor="#F2BE42" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="goldDeepL" x1="220" y1="90" x2="410" y2="565" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#A9640E" stopOpacity="0.5" />
-          <stop offset="45%" stopColor="#DF9C26" stopOpacity="0.92" />
-          <stop offset="85%" stopColor="#A55E0B" stopOpacity="0.8" />
-          <stop offset="100%" stopColor="#8C4B06" stopOpacity="0" />
-        </linearGradient>
-        <filter id="goldSoftGlowL" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="7" />
-        </filter>
-      </defs>
-
-      {/* Subtle warm metallic wash along the arc (gold leaf sheen, not heavy neon) */}
-      <path
-        className="bh-swirl-glow"
-        d="M 332 58 C 122 144, 72 418, 368 548"
-        stroke="#F2BE42"
-        strokeWidth="12"
-        strokeLinecap="round"
-        opacity="0.09"
-        filter="url(#goldSoftGlowL)"
+      {/* Subtle silk-plum depth lighting behind the corner gold ribbons */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 85% 90% at 50% 45%, rgba(92, 51, 118, 0.48) 0%, rgba(56, 31, 73, 0.92) 58%, rgba(36, 17, 50, 1) 100%)',
+        }}
       />
 
-      {/* Calligraphic multi-strand parallel ribbons (outer burnished gold -> core sheen -> fine inner filaments) */}
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s1"
-        d="M 314 60 C 96 154, 52 442, 344 556"
-        stroke="url(#goldDeepL)"
-        strokeWidth="4.8"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s2"
-        d="M 326 56 C 110 148, 66 434, 396 558"
-        stroke="url(#goldMainL)"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s3"
-        d="M 336 62 C 124 152, 82 426, 444 560"
-        stroke="url(#goldSheenL)"
-        strokeWidth="2.1"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s4"
-        d="M 346 68 C 140 158, 98 418, 476 558"
-        stroke="url(#goldMainL)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s5"
-        d="M 354 76 C 158 164, 118 412, 412 544"
-        stroke="url(#goldSheenL)"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s6"
-        d="M 364 84 C 176 172, 138 406, 360 524"
-        stroke="url(#goldDeepL)"
-        strokeWidth="0.85"
-        strokeLinecap="round"
-      />
-    </svg>
+      {/* Top-left corner sweep: enters off left edge, exits off top edge — only mid-arc visible */}
+      <svg
+        viewBox="0 0 640 480"
+        fill="none"
+        overflow="visible"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute top-0 left-0 w-[195px] h-[146px] sm:w-[295px] sm:h-[222px] lg:w-[460px] lg:h-[345px] xl:w-[600px] xl:h-[450px] opacity-80 sm:opacity-90 lg:opacity-95"
+        style={{ transform: `translate3d(0, ${Math.round(drift * 0.22)}px, 0)` }}
+      >
+        {renderStrands('TL')}
+      </svg>
 
-    {/* Right sweeping multi-strand calligraphic gold crescent (counter-balancing interlocking arc) */}
-    <svg
-      viewBox="0 0 640 620"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="absolute -right-52 sm:-right-44 md:-right-36 lg:-right-20 xl:-right-4 top-1/2 -translate-y-1/2 h-[96%] sm:h-[106%] lg:h-[112%] w-auto max-w-none opacity-55 sm:opacity-80 lg:opacity-95"
-      style={{ transform: `translate3d(0, calc(-50% - ${Math.round(drift * 0.24)}px), 0) rotate(180deg)` }}
-    >
-      <defs>
-        <linearGradient id="goldMainR" x1="280" y1="50" x2="480" y2="575" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#D6921F" stopOpacity="0.85" />
-          <stop offset="28%" stopColor="#FFF2C2" stopOpacity="1" />
-          <stop offset="56%" stopColor="#F2BE42" stopOpacity="0.98" />
-          <stop offset="82%" stopColor="#C98316" stopOpacity="0.88" />
-          <stop offset="100%" stopColor="#F2BE42" stopOpacity="0.12" />
-        </linearGradient>
-        <linearGradient id="goldSheenR" x1="250" y1="60" x2="460" y2="560" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#FFF7DB" stopOpacity="0.4" />
-          <stop offset="38%" stopColor="#FFF8E2" stopOpacity="0.98" />
-          <stop offset="72%" stopColor="#F2BE42" stopOpacity="0.72" />
-          <stop offset="100%" stopColor="#F2BE42" stopOpacity="0" />
-        </linearGradient>
-        <linearGradient id="goldDeepR" x1="220" y1="90" x2="410" y2="565" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#A9640E" stopOpacity="0.5" />
-          <stop offset="45%" stopColor="#DF9C26" stopOpacity="0.92" />
-          <stop offset="85%" stopColor="#A55E0B" stopOpacity="0.8" />
-          <stop offset="100%" stopColor="#8C4B06" stopOpacity="0" />
-        </linearGradient>
-        <filter id="goldSoftGlowR" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="7" />
-        </filter>
-      </defs>
-
-      <path
-        className="bh-swirl-glow"
-        d="M 332 58 C 122 144, 72 418, 368 548"
-        stroke="#F2BE42"
-        strokeWidth="12"
-        strokeLinecap="round"
-        opacity="0.09"
-        filter="url(#goldSoftGlowR)"
-      />
-
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s1"
-        d="M 314 60 C 96 154, 52 442, 344 556"
-        stroke="url(#goldDeepR)"
-        strokeWidth="4.8"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s2"
-        d="M 326 56 C 110 148, 66 434, 396 558"
-        stroke="url(#goldMainR)"
-        strokeWidth="3.2"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s3"
-        d="M 336 62 C 124 152, 82 426, 444 560"
-        stroke="url(#goldSheenR)"
-        strokeWidth="2.1"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s4"
-        d="M 346 68 C 140 158, 98 418, 476 558"
-        stroke="url(#goldMainR)"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s5"
-        d="M 354 76 C 158 164, 118 412, 412 544"
-        stroke="url(#goldSheenR)"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-      />
-      <path
-        pathLength={100}
-        className="bh-swirl-strand bh-s6"
-        d="M 364 84 C 176 172, 138 406, 360 524"
-        stroke="url(#goldDeepR)"
-        strokeWidth="0.85"
-        strokeLinecap="round"
-      />
-    </svg>
-  </div>
-);
+      {/* Bottom-right corner sweep: enters off right edge, exits off bottom edge — only mid-arc visible */}
+      <svg
+        viewBox="0 0 640 480"
+        fill="none"
+        overflow="visible"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute bottom-0 right-0 w-[195px] h-[146px] sm:w-[295px] sm:h-[222px] lg:w-[460px] lg:h-[345px] xl:w-[600px] xl:h-[450px] opacity-80 sm:opacity-90 lg:opacity-95"
+        style={{ transform: `translate3d(0, ${-Math.round(drift * 0.22)}px, 0) rotate(180deg)` }}
+      >
+        {renderStrands('BR')}
+      </svg>
+    </div>
+  );
+};
 
 export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
   const hero = useInViewOnce(true);
