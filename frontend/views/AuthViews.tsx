@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Input, PageHeader, NoticeModal, useInViewOnce, RevealItem } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo } from '../types';
-import { RETURNING_USER_STORES, DEMO_ACCOUNTS, DEMO_OTP, CATEGORY_BADGE_STYLES } from '../constants';
+import { RETURNING_USER_STORES, DEMO_ACCOUNTS, DEMO_OTP } from '../constants';
 import { Store, Image as ImageIcon, MapPin, Phone, CheckCircle2, UploadCloud, AlertTriangle, X, Loader2, Plus, Trash2, Mail, Send, ArrowRight } from 'lucide-react';
 
 interface AuthProps {
@@ -46,11 +46,11 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-white">
-      {/* Hero Section — White bg, concentric gold/plum arcs, compact height with non-clickable flanking creatives */}
+      {/* Hero Section — White bg, concentric gold/plum arcs, clean centered editorial copy */}
       <section
         ref={hero.ref}
         data-hero="true"
-        className={`relative overflow-hidden flex items-center justify-center px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-28 bg-white ${hero.inView ? 'is-inview' : ''}`}
+        className={`relative overflow-hidden flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-20 sm:py-32 bg-white ${hero.inView ? 'is-inview' : ''}`}
       >
         {/* Subtle counter-rotating concentric hairline arcs framing the hero copy */}
         <div
@@ -59,109 +59,54 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
           style={{ transform: `translate3d(0, ${heroDrift}px, 0)` }}
         >
           <span
-            className="bh-arc-outer w-[500px] h-[500px] sm:w-[680px] sm:h-[680px]"
+            className="bh-arc-outer w-[500px] h-[500px] sm:w-[700px] sm:h-[700px]"
             style={{ borderTopColor: 'rgba(216, 172, 77, 0.34)', borderRightColor: 'rgba(216, 172, 77, 0.34)' }}
           />
           <span
-            className="bh-arc-inner w-[310px] h-[310px] sm:w-[430px] sm:h-[430px]"
+            className="bh-arc-inner w-[310px] h-[310px] sm:w-[440px] sm:h-[440px]"
             style={{ borderTopColor: 'rgba(112, 66, 135, 0.18)', borderRightColor: 'rgba(112, 66, 135, 0.18)' }}
           />
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto flex items-center justify-between gap-4 sm:gap-5 lg:gap-10">
-          {/* Left decorative non-clickable creative */}
-          <div
-            aria-hidden="true"
-            className="hidden sm:block flex-shrink-0 w-[124px] md:w-[156px] lg:w-[205px] xl:w-[230px] pointer-events-none select-none"
-          >
-            <div className="bh-fade-up bh-d2">
-              <div style={{ transform: `translate3d(0, ${Math.round(heroDrift * 0.24)}px, 0) rotate(-2deg)` }}>
-                <div className="bg-white rounded-xl lg:rounded-2xl overflow-hidden border border-[#F2BE42]/55 shadow-xl">
-                  <div className="w-full aspect-[632/1000] bg-[#ECE9ED] overflow-hidden">
-                    <img
-                      src="/showcase/wedding-print.jpg"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="px-2.5 py-2 lg:px-3.5 lg:py-2.5 bg-white border-t border-[#E6E9ED] flex items-center justify-center md:justify-between gap-1">
-                    <span className={`inline-block text-[9px] lg:text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${CATEGORY_BADGE_STYLES.Wedding}`}>
-                      Wedding
-                    </span>
-                    <span className="hidden md:inline text-[10px] lg:text-[11px] font-medium text-[#634B6F] whitespace-nowrap">Full Page</span>
-                  </div>
-                </div>
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-6xl font-light text-black tracking-tight mb-6 leading-[1.12]">
+            <span className="bh-line-mask">
+              <span className="bh-line-inner">Lorem ipsum dolor sit amet</span>
+            </span>
+            <span className="bh-line-mask">
+              <span className="bh-line-inner bh-d1 text-[#704287] font-semibold">consectetur.</span>
+            </span>
+          </h1>
+          <p className="bh-fade-up bh-d2 text-lg sm:text-xl text-[#634B6F] mb-10 max-w-2xl mx-auto">
+            Choose a template, add your store details once, and generate professional marketing materials for all your social channels instantly.
+          </p>
+          <div className="bh-fade-up bh-d3 flex flex-col items-center space-y-4">
+            <Button
+              variant="gold"
+              size="lg"
+              onClick={() => onNavigate(user ? 'gallery' : 'login')}
+              className="group w-full sm:w-auto px-8"
+            >
+              <span>Choose a Template</span>
+              <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
+            </Button>
+            {!user && (
+              <div className="bh-fade-up bh-d4 flex items-center space-x-4">
+                <button
+                  onClick={() => onNavigate('register')}
+                  className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors"
+                >
+                  Create Account
+                </button>
+                <span className="text-[#E6E9ED]">|</span>
+                <button
+                  onClick={() => onNavigate('login')}
+                  className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors"
+                >
+                  Sign In
+                </button>
               </div>
-            </div>
-          </div>
-
-          {/* Center Hero Copy & CTA */}
-          <div className="flex-1 min-w-0 max-w-2xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-black tracking-tight mb-6 leading-[1.12]">
-              <span className="bh-line-mask">
-                <span className="bh-line-inner">Lorem ipsum dolor sit amet</span>
-              </span>
-              <span className="bh-line-mask">
-                <span className="bh-line-inner bh-d1 text-[#704287] font-semibold">consectetur.</span>
-              </span>
-            </h1>
-            <p className="bh-fade-up bh-d2 text-base sm:text-lg lg:text-xl text-[#634B6F] mb-9 max-w-xl mx-auto">
-              Choose a template, add your store details once, and generate professional marketing materials for all your social channels instantly.
-            </p>
-            <div className="bh-fade-up bh-d3 flex flex-col items-center space-y-4">
-              <Button
-                variant="gold"
-                size="lg"
-                onClick={() => onNavigate(user ? 'gallery' : 'login')}
-                className="group w-full sm:w-auto px-8"
-              >
-                <span>Choose a Template</span>
-                <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
-              </Button>
-              {!user && (
-                <div className="bh-fade-up bh-d4 flex items-center space-x-4">
-                  <button
-                    onClick={() => onNavigate('register')}
-                    className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors"
-                  >
-                    Create Account
-                  </button>
-                  <span className="text-[#E6E9ED]">|</span>
-                  <button
-                    onClick={() => onNavigate('login')}
-                    className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors"
-                  >
-                    Sign In
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right decorative non-clickable creative */}
-          <div
-            aria-hidden="true"
-            className="hidden sm:block flex-shrink-0 w-[128px] md:w-[162px] lg:w-[215px] xl:w-[240px] pointer-events-none select-none"
-          >
-            <div className="bh-fade-up bh-d3">
-              <div style={{ transform: `translate3d(0, ${Math.round(-heroDrift * 0.22)}px, 0) rotate(2deg)` }}>
-                <div className="bg-white rounded-xl lg:rounded-2xl overflow-hidden border border-[#F2BE42]/55 shadow-xl">
-                  <div className="w-full aspect-square bg-[#ECE9ED] overflow-hidden">
-                    <img
-                      src="/showcase/diwali-social.jpg"
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="px-2.5 py-2 lg:px-3.5 lg:py-2.5 bg-white border-t border-[#E6E9ED] flex items-center justify-center md:justify-between gap-1">
-                    <span className={`inline-block text-[9px] lg:text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ${CATEGORY_BADGE_STYLES.Festive}`}>
-                      Festive
-                    </span>
-                    <span className="hidden md:inline text-[10px] lg:text-[11px] font-medium text-[#634B6F] whitespace-nowrap">1:1 Post</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
