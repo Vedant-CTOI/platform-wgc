@@ -5,7 +5,7 @@ import { LandingView, RegisterView, LoginView, OTPView } from './views/AuthViews
 import { ProfileView } from './views/MainViews';
 import { DashboardView, StoreManagementView } from './views/MainViews';
 import { GalleryView, EditorView, GeneratingView, DownloadView } from './views/CampaignViews';
-import { TermsView, PrivacyView, FaqView } from './views/MiscViews';
+import { TermsView, PrivacyView, FaqView, LegalModal } from './views/MiscViews';
 import { MOCK_TEMPLATES, ASPECT_RATIOS } from './constants';
 
 const initialState: AppState = {
@@ -48,7 +48,7 @@ function appReducer(state: AppState, action: Action): AppState {
 }
 
 /* Grounded Plum 900 Goldify Footer with a single quiet 4-strand bottom-right calligraphic gold ribbon */
-const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void }> = ({ onNavigate }) => {
+const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void; onOpenLegal: () => void }> = ({ onNavigate, onOpenLegal }) => {
   const footerReveal = useInViewOnce<HTMLElement>(false, '0px 0px -6% 0px');
 
   return (
@@ -165,20 +165,13 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void }> = ({ on
             >
               FAQs
             </button>
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); onNavigate('terms'); }}
+            <button
+              type="button"
+              onClick={onOpenLegal}
               className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
             >
-              Terms
-            </a>
-            <a
-              href="#"
-              onClick={(e) => { e.preventDefault(); onNavigate('privacy'); }}
-              className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
-            >
-              Privacy
-            </a>
+              Terms &amp; Privacy Policy
+            </button>
           </nav>
         </div>
         <div className="border-t border-white/10 pt-6 flex items-center justify-start">
@@ -191,6 +184,7 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void }> = ({ on
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialState);
+  const [showLegalModal, setShowLegalModal] = useState(false);
 
   // Helper functions to pass to views
   const navigate = (view: ViewState) => dispatch({ type: 'NAVIGATE', payload: view });
@@ -285,7 +279,11 @@ export default function App() {
       {(state.currentView === 'landing' || (state.currentView === 'dashboard' && state.user)) && <ShareBand />}
       
       {/* Grounded Plum 900 Goldify Brand Footer for Landing */}
-      {state.currentView === 'landing' && <LandingFooter onNavigate={navigate} />}
+      {state.currentView === 'landing' && (
+        <LandingFooter onNavigate={navigate} onOpenLegal={() => setShowLegalModal(true)} />
+      )}
+
+      {showLegalModal && <LegalModal onClose={() => setShowLegalModal(false)} />}
     </div>
   );
 }

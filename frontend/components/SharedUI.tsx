@@ -405,8 +405,7 @@ export const TopNav: React.FC<{
                       
                       <div className="border-t border-[#E6E9ED] my-1"></div>
                       
-                      <button onClick={() => handleNav('terms')} className="block w-full text-left px-4 py-2.5 text-sm text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">Terms & Conditions</button>
-                      <button onClick={() => handleNav('privacy')} className="block w-full text-left px-4 py-2.5 text-sm text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">Privacy Policy</button>
+                      <button onClick={() => handleNav('terms')} className="block w-full text-left px-4 py-2.5 text-sm text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">Terms &amp; Privacy Policy</button>
                       
                       <div className="border-t border-[#E6E9ED] my-1"></div>
                       <button onClick={() => { setIsMenuOpen(false); onLogout(); }} className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors font-semibold">Sign out</button>

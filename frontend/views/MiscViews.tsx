@@ -1,5 +1,6 @@
-import React from 'react';
-import { PageHeader } from '../components/SharedUI';
+import React, { useState, useEffect, useRef } from 'react';
+import { X } from 'lucide-react';
+import { PageHeader, Button } from '../components/SharedUI';
 
 interface MiscViewProps {
   onBack: () => void;
@@ -66,43 +67,168 @@ export const FaqView: React.FC<MiscViewProps> = ({ onBack }) => {
   );
 };
 
+const CombinedLegalContent: React.FC = () => (
+  <>
+    <p className="text-xs text-[#634B6F]">Last updated: October 2023</p>
+
+    <h4 className="text-base font-semibold text-[#381F49] mt-4 mb-2">Terms &amp; Conditions</h4>
+
+    <h5 className="text-black font-semibold mt-4 mb-1.5">1. Acceptance of Terms</h5>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.</p>
+
+    <h5 className="text-black font-semibold mt-4 mb-1.5">2. User License</h5>
+    <p>Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis.</p>
+
+    <h5 className="text-black font-semibold mt-4 mb-1.5">3. Disclaimer</h5>
+    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. Aenean nec lorem. In porttitor. Donec laoreet nonummy augue. Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc.</p>
+
+    <div className="border-t border-[#E6E9ED] my-6" />
+
+    <h4 className="text-base font-semibold text-[#381F49] mb-2">Privacy Policy</h4>
+
+    <h5 className="text-black font-semibold mt-4 mb-1.5">1. Information We Collect</h5>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.</p>
+
+    <h5 className="text-black font-semibold mt-4 mb-1.5">2. How We Use Your Information</h5>
+    <p>Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante.</p>
+
+    <h5 className="text-black font-semibold mt-4 mb-1.5">3. Data Security</h5>
+    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. Aenean nec lorem. In porttitor. Donec laoreet nonummy augue.</p>
+  </>
+);
+
 export const TermsView: React.FC<MiscViewProps> = ({ onBack }) => {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <PageHeader title="Terms & Conditions" onBack={onBack} />
+      <PageHeader title="Terms & Privacy Policy" onBack={onBack} />
       
-      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-[#E6E9ED] prose prose-sm sm:prose-base max-w-none text-[#634B6F]">
-        <p>Last updated: October 2023</p>
-        
-        <h3 className="text-black font-semibold mt-6 mb-2">1. Acceptance of Terms</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.</p>
-        
-        <h3 className="text-black font-semibold mt-6 mb-2">2. User License</h3>
-        <p>Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis.</p>
-        
-        <h3 className="text-black font-semibold mt-6 mb-2">3. Disclaimer</h3>
-        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. Aenean nec lorem. In porttitor. Donec laoreet nonummy augue. Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc.</p>
+      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-[#E6E9ED] text-sm sm:text-base leading-relaxed text-[#634B6F]">
+        <CombinedLegalContent />
       </div>
     </div>
   );
 };
 
 export const PrivacyView: React.FC<MiscViewProps> = ({ onBack }) => {
+  return <TermsView onBack={onBack} />;
+};
+
+export interface LegalModalProps {
+  onClose: () => void;
+  requireConsent?: boolean;
+  onAccept?: () => void;
+}
+
+export const LegalModal: React.FC<LegalModalProps> = ({
+  onClose,
+  requireConsent = false,
+  onAccept,
+}) => {
+  const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    el.scrollTop = 0;
+    if (!requireConsent) return;
+    const checkScrollable = () => {
+      if (el.scrollHeight <= el.clientHeight + 8) {
+        setHasScrolledToBottom(true);
+      }
+    };
+    const frame = requestAnimationFrame(checkScrollable);
+    return () => cancelAnimationFrame(frame);
+  }, [requireConsent]);
+
+  const handleScroll = () => {
+    const el = scrollContainerRef.current;
+    if (!el || hasScrolledToBottom) return;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 12) {
+      setHasScrolledToBottom(true);
+    }
+  };
+
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <PageHeader title="Privacy Policy" onBack={onBack} />
-      
-      <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-[#E6E9ED] prose prose-sm sm:prose-base max-w-none text-[#634B6F]">
-        <p>Last updated: October 2023</p>
-        
-        <h3 className="text-black font-semibold mt-6 mb-2">1. Information We Collect</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.</p>
-        
-        <h3 className="text-black font-semibold mt-6 mb-2">2. How We Use Your Information</h3>
-        <p>Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante.</p>
-        
-        <h3 className="text-black font-semibold mt-6 mb-2">3. Data Security</h3>
-        <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. Aenean nec lorem. In porttitor. Donec laoreet nonummy augue.</p>
+    <div
+      className="fixed inset-0 bg-black/60 z-[110] flex items-center justify-center p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="legal-modal-title"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-[#E6E9ED] overflow-hidden flex flex-col max-h-[85vh]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header — Goldify Plum 900 band with Gold seam */}
+        <div className="px-6 py-4 bg-[#381F49] border-b-2 border-[#F2BE42]/70 flex justify-between items-center shrink-0">
+          <h3 id="legal-modal-title" className="font-semibold text-white text-lg">
+            Terms &amp; Privacy Policy
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="p-1.5 text-white/80 hover:text-white rounded-full hover:bg-white/10 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Single Combined Scrollable Content */}
+        <div
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="px-6 py-5 overflow-y-auto max-h-72 sm:max-h-80 text-sm text-[#634B6F] leading-relaxed"
+        >
+          <CombinedLegalContent />
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4 border-t border-[#E6E9ED] bg-[#ECE9ED]/60 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0">
+          {requireConsent ? (
+            <>
+              {!hasScrolledToBottom ? (
+                <p className="text-xs text-[#634B6F]">Please scroll to the bottom to accept</p>
+              ) : (
+                <div />
+              )}
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <Button type="button" variant="outline" size="sm" onClick={onClose}>
+                  Decline
+                </Button>
+                <Button
+                  type="button"
+                  variant="gold"
+                  size="sm"
+                  disabled={!hasScrolledToBottom}
+                  onClick={() => {
+                    onAccept?.();
+                    onClose();
+                  }}
+                >
+                  I Agree &amp; Accept
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="text-xs text-[#634B6F]">Please review carefully before using Goldify.</p>
+              <Button type="button" size="sm" onClick={onClose} className="w-full sm:w-auto">
+                Close
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
