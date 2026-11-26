@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import { AppState, Action, ViewState, UserProfile, Template, CampaignDraft } from './types';
-import { TopNav, ShareBand } from './components/SharedUI';
+import { TopNav, ShareBand, useInViewOnce } from './components/SharedUI';
 import { LandingView, RegisterView, LoginView, OTPView } from './views/AuthViews';
 import { ProfileView } from './views/MainViews';
 import { DashboardView, StoreManagementView } from './views/MainViews';
@@ -46,6 +46,149 @@ function appReducer(state: AppState, action: Action): AppState {
       return state;
   }
 }
+
+/* Grounded Plum 900 Goldify Footer with a single quiet 4-strand bottom-right calligraphic gold ribbon */
+const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void }> = ({ onNavigate }) => {
+  const footerReveal = useInViewOnce<HTMLElement>(false, '0px 0px -6% 0px');
+
+  return (
+    <footer
+      ref={footerReveal.ref}
+      className={`relative overflow-hidden bg-[#381F49] border-t border-[#704287]/40 pt-12 pb-8 mt-auto ${footerReveal.inView ? 'is-inview' : ''}`}
+    >
+      {/* Subtle silk-plum depth + single quiet 4-strand upper-right gold ribbon (endpoints strictly off-canvas, clear of bottom tagline) */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden select-none">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 75% 110% at 35% 40%, rgba(92, 51, 118, 0.36) 0%, rgba(56, 31, 73, 0.94) 62%, rgba(36, 17, 50, 1) 100%)',
+          }}
+        />
+        <svg
+          viewBox="0 0 680 175"
+          fill="none"
+          overflow="visible"
+          xmlns="http://www.w3.org/2000/svg"
+          className="absolute top-0 right-0 w-[240px] h-[62px] sm:w-[380px] sm:h-[98px] lg:w-[540px] lg:h-[139px] xl:w-[640px] xl:h-[165px] opacity-55 sm:opacity-65 lg:opacity-60"
+        >
+          <defs>
+            <linearGradient id="goldFootMain" x1="120" y1="-50" x2="770" y2="140" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#B87212" stopOpacity="0.72" />
+              <stop offset="38%" stopColor="#F2BE42" stopOpacity="0.94" />
+              <stop offset="62%" stopColor="#FFF5CC" stopOpacity="1" />
+              <stop offset="86%" stopColor="#DF9C26" stopOpacity="0.88" />
+              <stop offset="100%" stopColor="#A9640E" stopOpacity="0.72" />
+            </linearGradient>
+            <linearGradient id="goldFootSheen" x1="160" y1="-45" x2="780" y2="125" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#F2BE42" stopOpacity="0.4" />
+              <stop offset="52%" stopColor="#FFF9E4" stopOpacity="0.96" />
+              <stop offset="78%" stopColor="#F2BE42" stopOpacity="0.76" />
+              <stop offset="100%" stopColor="#D6921F" stopOpacity="0.4" />
+            </linearGradient>
+            <linearGradient id="goldFootDeep" x1="90" y1="-55" x2="770" y2="155" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#8F4F08" stopOpacity="0.65" />
+              <stop offset="48%" stopColor="#DF9C26" stopOpacity="0.86" />
+              <stop offset="82%" stopColor="#C47D14" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#8A4A06" stopOpacity="0.65" />
+            </linearGradient>
+            <filter id="goldFootGlow" x="-35%" y="-35%" width="170%" height="170%">
+              <feGaussianBlur stdDeviation="7" />
+            </filter>
+          </defs>
+
+          <path
+            className="bh-swirl-glow"
+            d="M 135 -68 C 325 38, 535 92, 775 128"
+            stroke="#F2BE42"
+            strokeWidth="10"
+            strokeLinecap="round"
+            opacity="0.07"
+            filter="url(#goldFootGlow)"
+          />
+
+          {/* 4 sleek horizontal-sweeping strands — start strictly above top (y < -60), end strictly past right (x > 765), staying clear of bottom bar */}
+          <path
+            pathLength={100}
+            className="bh-swirl-strand bh-s1"
+            d="M 100 -72 C 305 46, 525 104, 772 146"
+            stroke="url(#goldFootDeep)"
+            strokeWidth="3.4"
+            strokeLinecap="round"
+          />
+          <path
+            pathLength={100}
+            className="bh-swirl-strand bh-s2"
+            d="M 145 -68 C 338 38, 548 92, 778 122"
+            stroke="url(#goldFootMain)"
+            strokeWidth="2.3"
+            strokeLinecap="round"
+          />
+          <path
+            pathLength={100}
+            className="bh-swirl-strand bh-s3"
+            d="M 192 -66 C 372 30, 570 78, 782 98"
+            stroke="url(#goldFootSheen)"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            pathLength={100}
+            className="bh-swirl-strand bh-s4"
+            d="M 244 -64 C 410 22, 594 64, 786 72"
+            stroke="url(#goldFootDeep)"
+            strokeWidth="0.95"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8">
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2BE42] rounded-lg"
+            aria-label="Goldify — Back to top"
+          >
+            <img
+              src="/goldify-logo-full.png"
+              alt="Goldify — Gold the moment"
+              className="h-14 w-auto object-contain select-none"
+            />
+          </button>
+          <nav className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-semibold" aria-label="Footer navigation">
+            <button
+              type="button"
+              onClick={() => onNavigate('faq')}
+              className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
+            >
+              FAQs
+            </button>
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); onNavigate('terms'); }}
+              className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
+            >
+              Terms
+            </a>
+            <a
+              href="#"
+              onClick={(e) => { e.preventDefault(); onNavigate('privacy'); }}
+              className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
+            >
+              Privacy
+            </a>
+          </nav>
+        </div>
+        <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-white/70 text-sm">© 2024 Goldify. All rights reserved.</p>
+          <p className="text-[#F2BE42]/85 text-xs font-bold uppercase tracking-[0.2em]">Gold the moment.</p>
+        </div>
+      </div>
+    </footer>
+  );
+};
 
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -143,53 +286,7 @@ export default function App() {
       {(state.currentView === 'landing' || (state.currentView === 'dashboard' && state.user)) && <ShareBand />}
       
       {/* Grounded Plum 900 Goldify Brand Footer for Landing */}
-      {state.currentView === 'landing' && (
-        <footer className="bg-[#381F49] border-t border-[#704287]/40 pt-12 pb-8 mt-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pb-8">
-              <button
-                type="button"
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F2BE42] rounded-lg"
-                aria-label="Goldify — Back to top"
-              >
-                <img
-                  src="/goldify-logo-full.png"
-                  alt="Goldify — Gold the moment"
-                  className="h-14 w-auto object-contain select-none"
-                />
-              </button>
-              <nav className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-semibold" aria-label="Footer navigation">
-                <button
-                  type="button"
-                  onClick={() => navigate('faq')}
-                  className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
-                >
-                  FAQs
-                </button>
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); navigate('terms'); }}
-                  className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
-                >
-                  Terms
-                </a>
-                <a
-                  href="#"
-                  onClick={(e) => { e.preventDefault(); navigate('privacy'); }}
-                  className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
-                >
-                  Privacy
-                </a>
-              </nav>
-            </div>
-            <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-              <p className="text-white/70 text-sm">© 2024 Goldify. All rights reserved.</p>
-              <p className="text-[#F2BE42]/85 text-xs font-bold uppercase tracking-[0.2em]">Gold the moment.</p>
-            </div>
-          </div>
-        </footer>
-      )}
+      {state.currentView === 'landing' && <LandingFooter onNavigate={navigate} />}
     </div>
   );
 }

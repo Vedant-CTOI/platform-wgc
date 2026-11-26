@@ -5,8 +5,8 @@ import { ADDRESS_LIMITS } from '../constants';
 // --- Play-once viewport reveal hook (Barber Hauler style) ---
 // Waits until an element genuinely enters the user's sightline (default 30% up from viewport bottom),
 // with a bottom-of-page fallback so elements near the footer always reveal cleanly.
-export const useInViewOnce = (immediate = false, rootMargin = '0px 0px -30% 0px') => {
-  const ref = useRef<HTMLDivElement | null>(null);
+export const useInViewOnce = <T extends HTMLElement = HTMLDivElement>(immediate = false, rootMargin = '0px 0px -30% 0px') => {
+  const ref = useRef<T | null>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {

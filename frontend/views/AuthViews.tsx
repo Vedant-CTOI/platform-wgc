@@ -159,10 +159,110 @@ const GoldHeroSwirls: React.FC<{ drift: number }> = ({ drift }) => {
   );
 };
 
+/* Single wider, shallower Top-Right 5-strand calligraphic ribbon for Features (distinct geometry from Hero) */
+const GoldFeaturesRibbon: React.FC = () => (
+  <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden select-none">
+    {/* Matching silk-plum ambient depth */}
+    <div
+      className="absolute inset-0"
+      style={{
+        background:
+          'radial-gradient(ellipse 80% 85% at 50% 35%, rgba(92, 51, 118, 0.42) 0%, rgba(56, 31, 73, 0.94) 60%, rgba(36, 17, 50, 1) 100%)',
+      }}
+    />
+
+    {/* Single top-right flowing wave-arc: enters strictly above top edge (y < -85), exits strictly past right edge (x > 840) */}
+    <svg
+      viewBox="0 0 760 440"
+      fill="none"
+      overflow="visible"
+      xmlns="http://www.w3.org/2000/svg"
+      className="absolute top-0 right-0 w-[230px] h-[133px] sm:w-[340px] sm:h-[197px] lg:w-[540px] lg:h-[312px] xl:w-[680px] xl:h-[394px] opacity-75 sm:opacity-85 lg:opacity-90"
+    >
+      <defs>
+        <linearGradient id="goldFeatMain" x1="120" y1="-60" x2="820" y2="340" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#B87212" stopOpacity="0.8" />
+          <stop offset="34%" stopColor="#F2BE42" stopOpacity="0.96" />
+          <stop offset="56%" stopColor="#FFF5CC" stopOpacity="1" />
+          <stop offset="80%" stopColor="#E2A428" stopOpacity="0.92" />
+          <stop offset="100%" stopColor="#A9640E" stopOpacity="0.8" />
+        </linearGradient>
+        <linearGradient id="goldFeatSheen" x1="150" y1="-50" x2="830" y2="310" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#F2BE42" stopOpacity="0.45" />
+          <stop offset="48%" stopColor="#FFF9E4" stopOpacity="0.98" />
+          <stop offset="74%" stopColor="#F2BE42" stopOpacity="0.82" />
+          <stop offset="100%" stopColor="#D6921F" stopOpacity="0.4" />
+        </linearGradient>
+        <linearGradient id="goldFeatDeep" x1="90" y1="-70" x2="840" y2="370" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#8F4F08" stopOpacity="0.7" />
+          <stop offset="46%" stopColor="#DF9C26" stopOpacity="0.92" />
+          <stop offset="78%" stopColor="#C47D14" stopOpacity="0.86" />
+          <stop offset="100%" stopColor="#8A4A06" stopOpacity="0.7" />
+        </linearGradient>
+        <filter id="goldFeatGlow" x="-35%" y="-35%" width="170%" height="170%">
+          <feGaussianBlur stdDeviation="8" />
+        </filter>
+      </defs>
+
+      <path
+        className="bh-swirl-glow"
+        d="M 120 -95 C 235 125, 495 205, 865 320"
+        stroke="#F2BE42"
+        strokeWidth="13"
+        strokeLinecap="round"
+        opacity="0.08"
+        filter="url(#goldFeatGlow)"
+      />
+
+      {/* 5 fanned calligraphic strands — slightly tighter over the crest, fanning gracefully outward toward the right border */}
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s1"
+        d="M 85 -102 C 205 148, 480 232, 878 358"
+        stroke="url(#goldFeatDeep)"
+        strokeWidth="4.4"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s2"
+        d="M 118 -96 C 232 132, 502 212, 872 326"
+        stroke="url(#goldFeatMain)"
+        strokeWidth="3.0"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s3"
+        d="M 148 -92 C 258 116, 520 194, 868 292"
+        stroke="url(#goldFeatSheen)"
+        strokeWidth="1.95"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s4"
+        d="M 182 -90 C 288 100, 540 174, 864 256"
+        stroke="url(#goldFeatMain)"
+        strokeWidth="1.45"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s5"
+        d="M 222 -90 C 322 86, 565 152, 860 216"
+        stroke="url(#goldFeatDeep)"
+        strokeWidth="0.95"
+        strokeLinecap="round"
+      />
+    </svg>
+  </div>
+);
+
 export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
-  const hero = useInViewOnce(true);
+  const hero = useInViewOnce<HTMLElement>(true);
   const about = useInViewOnce();
-  const features = useInViewOnce();
+  const features = useInViewOnce<HTMLElement>();
   const faqs = useInViewOnce();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [heroDrift, setHeroDrift] = useState(0);
@@ -255,19 +355,10 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
         </div>
       </section>
 
-      {/* Features — Plum 900 section, Lilac eyebrow, editorial white cards with Gold top wipe rule & Goldify 1, 2, 3 rings */}
-      <section className="relative overflow-hidden py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#381F49]">
-        <div ref={features.ref} className={features.inView ? 'is-inview' : ''}>
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-            <span
-              className="bh-arc-outer w-[560px] h-[560px] sm:w-[820px] sm:h-[820px]"
-              style={{ borderTopColor: 'rgba(242, 190, 66, 0.28)', borderRightColor: 'rgba(242, 190, 66, 0.28)' }}
-            />
-            <span
-              className="bh-arc-inner w-[360px] h-[360px] sm:w-[500px] sm:h-[500px]"
-              style={{ borderTopColor: 'rgba(229, 169, 255, 0.22)', borderRightColor: 'rgba(229, 169, 255, 0.22)' }}
-            />
-          </div>
+      {/* Features — Plum 900 section, single top-right calligraphic gold ribbon, editorial white cards with Gold top wipe rule & Goldify 1, 2, 3 rings */}
+      <section ref={features.ref} className="relative overflow-hidden py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#381F49]">
+        <div className={features.inView ? 'is-inview' : ''}>
+          <GoldFeaturesRibbon />
 
           <div className="relative z-10 max-w-7xl mx-auto text-center mb-14">
             <p className="bh-fade-up text-xs font-bold uppercase tracking-[0.18em] text-[#E5A9FF] mb-3">
