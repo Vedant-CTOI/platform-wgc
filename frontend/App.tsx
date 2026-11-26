@@ -130,6 +130,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-white font-sans text-black">
       <TopNav 
         isLoggedIn={!!state.user} 
+        isLanding={state.currentView === 'landing'}
         accountLabel={state.user ? (state.user.isNewUser ? 'First-time user' : 'Repeat user') : undefined}
         onNavigate={navigate} 
         onLogout={logout} 

@@ -74,7 +74,7 @@ export const RevealItem: React.FC<{
 
 // --- Buttons ---
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gold';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'gold' | 'gold-dark';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
 }
@@ -89,7 +89,8 @@ export const Button: React.FC<ButtonProps> = ({
     secondary: "bg-[#ECE9ED] text-[#381F49] hover:bg-[#e1dce5] focus:ring-[#704287]",
     outline: "bh-btn-wipe bh-btn-outline border border-[#634B6F] bg-white text-[#381F49] focus:ring-[#704287]",
     ghost: "bg-transparent text-[#634B6F] hover:bg-[#ECE9ED] hover:text-[#381F49] focus:ring-[#704287]",
-    gold: "bh-btn-wipe bh-btn-gold bg-[#F2BE42] text-black focus:ring-[#F2BE42] shadow-sm"
+    gold: "bh-btn-wipe bh-btn-gold bg-[#F2BE42] text-black focus:ring-[#F2BE42] shadow-sm",
+    'gold-dark': "bh-btn-wipe bh-btn-gold-dark bg-[#F2BE42] text-black focus:ring-[#F2BE42] focus:ring-offset-[#381F49] shadow-md"
   };
 
   const sizes = {
@@ -313,10 +314,11 @@ export const ShareBand: React.FC = () => {
 // --- Layout Components ---
 export const TopNav: React.FC<{ 
   isLoggedIn: boolean; 
+  isLanding?: boolean;
   onNavigate: (view: any) => void;
   onLogout: () => void;
   accountLabel?: string;
-}> = ({ isLoggedIn, onNavigate, onLogout, accountLabel }) => {
+}> = ({ isLoggedIn, isLanding = false, onNavigate, onLogout, accountLabel }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleNav = (view: string) => {
@@ -330,33 +332,48 @@ export const TopNav: React.FC<{
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center relative">
             
-            {/* Left: Home Icon (if logged in) */}
-            <div className="flex-1 flex items-center">
-              {isLoggedIn && (
-                <button 
-                  onClick={() => onNavigate('dashboard')}
-                  className="p-2 text-white hover:bg-[#704287] rounded-md transition-colors"
-                  title="Home"
-                >
-                  <Home className="w-6 h-6" />
-                </button>
-              )}
-            </div>
+            {/* Left: Logo on Homepage, or Home Icon (if logged in) on inner pages */}
+            {isLanding ? (
+              <div 
+                className="flex items-center cursor-pointer" 
+                onClick={() => onNavigate(isLoggedIn ? 'dashboard' : 'landing')}
+              >
+                <img
+                  src="/goldify-logo-nav.png"
+                  alt="Goldify"
+                  className="h-11 w-auto object-contain select-none"
+                />
+              </div>
+            ) : (
+              <>
+                <div className="flex-1 flex items-center">
+                  {isLoggedIn && (
+                    <button 
+                      onClick={() => onNavigate('dashboard')}
+                      className="p-2 text-white hover:bg-[#704287] rounded-md transition-colors"
+                      title="Home"
+                    >
+                      <Home className="w-6 h-6" />
+                    </button>
+                  )}
+                </div>
 
-            {/* Center: Goldify Logo (gold on plum) */}
-            <div 
-              className="flex items-center justify-center cursor-pointer flex-1" 
-              onClick={() => onNavigate(isLoggedIn ? 'dashboard' : 'landing')}
-            >
-              <img
-                src="/goldify-logo-nav.png"
-                alt="Goldify"
-                className="h-11 w-auto object-contain select-none"
-              />
-            </div>
+                {/* Center: Goldify Logo (gold on plum) on all non-homepage views */}
+                <div 
+                  className="flex items-center justify-center cursor-pointer flex-1" 
+                  onClick={() => onNavigate(isLoggedIn ? 'dashboard' : 'landing')}
+                >
+                  <img
+                    src="/goldify-logo-nav.png"
+                    alt="Goldify"
+                    className="h-11 w-auto object-contain select-none"
+                  />
+                </div>
+              </>
+            )}
             
             {/* Right: Language + Hamburger Menu */}
-            <div className="flex-1 flex justify-end items-center gap-1">
+            <div className={`${isLanding ? '' : 'flex-1 '}flex justify-end items-center gap-1`}>
               <LanguageSelector />
               {isLoggedIn && (
                 <div className="relative">
