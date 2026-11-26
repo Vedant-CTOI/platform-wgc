@@ -64,27 +64,39 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-light text-white mb-12 text-center">Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-white/10 text-center flex flex-col items-center">
-              <div className="w-14 h-14 bg-[#381F49] text-[#F2BE42] rounded-full flex items-center justify-center mb-6">
-                <Zap className="w-7 h-7" />
+            {[
+              {
+                num: '1',
+                title: 'Lightning Fast',
+                desc: 'Generate campaigns in seconds. No more waiting for designers or struggling with complex software.',
+              },
+              {
+                num: '2',
+                title: 'On-Brand Always',
+                desc: 'Your logo, your address, your contact info—automatically applied to every template perfectly.',
+              },
+              {
+                num: '3',
+                title: 'Reliable & Secure',
+                desc: 'Your data and assets are stored securely, ensuring your business information is always protected.',
+              },
+            ].map((item) => (
+              <div key={item.num} className="bg-white p-8 rounded-2xl shadow-lg border border-white/10 text-center flex flex-col items-center">
+                <div className="relative w-[68px] h-[68px] mb-6 select-none">
+                  <img
+                    src="/goldify-ring.png"
+                    alt=""
+                    aria-hidden="true"
+                    className="w-full h-full object-contain"
+                  />
+                  <span className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 text-xl font-semibold text-[#381F49] leading-none">
+                    {item.num}
+                  </span>
+                </div>
+                <h3 className="text-xl font-light text-black mb-3">{item.title}</h3>
+                <p className="text-[#634B6F]">{item.desc}</p>
               </div>
-              <h3 className="text-xl font-light text-black mb-3">Lightning Fast</h3>
-              <p className="text-[#634B6F]">Generate campaigns in seconds. No more waiting for designers or struggling with complex software.</p>
-            </div>
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-white/10 text-center flex flex-col items-center">
-              <div className="w-14 h-14 bg-[#381F49] text-[#F2BE42] rounded-full flex items-center justify-center mb-6">
-                <Palette className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-light text-black mb-3">On-Brand Always</h3>
-              <p className="text-[#634B6F]">Your logo, your address, your contact info—automatically applied to every template perfectly.</p>
-            </div>
-            <div className="bg-white p-8 rounded-2xl shadow-lg border border-white/10 text-center flex flex-col items-center">
-              <div className="w-14 h-14 bg-[#381F49] text-[#F2BE42] rounded-full flex items-center justify-center mb-6">
-                <Shield className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-light text-black mb-3">Reliable & Secure</h3>
-              <p className="text-[#634B6F]">Your data and assets are stored securely, ensuring your business information is always protected.</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
