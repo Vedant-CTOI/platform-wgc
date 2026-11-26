@@ -27,6 +27,210 @@ const LANDING_FAQS = [
   },
 ];
 
+const GoldHeroSwirls: React.FC<{ drift: number }> = ({ drift }) => (
+  <div
+    aria-hidden="true"
+    className="pointer-events-none absolute inset-0 overflow-hidden select-none"
+  >
+    {/* Subtle silk-plum depth lighting behind the gold calligraphy */}
+    <div
+      className="absolute inset-0"
+      style={{
+        background:
+          'radial-gradient(ellipse 85% 90% at 50% 45%, rgba(92, 51, 118, 0.48) 0%, rgba(56, 31, 73, 0.92) 58%, rgba(36, 17, 50, 1) 100%)',
+      }}
+    />
+
+    {/* Left sweeping multi-strand calligraphic gold crescent */}
+    <svg
+      viewBox="0 0 640 620"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="absolute -left-52 sm:-left-44 md:-left-36 lg:-left-20 xl:-left-4 top-1/2 -translate-y-1/2 h-[96%] sm:h-[106%] lg:h-[112%] w-auto max-w-none opacity-55 sm:opacity-80 lg:opacity-95"
+      style={{ transform: `translate3d(0, calc(-50% + ${Math.round(drift * 0.28)}px), 0)` }}
+    >
+      <defs>
+        <linearGradient id="goldMainL" x1="280" y1="50" x2="480" y2="575" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#D6921F" stopOpacity="0.85" />
+          <stop offset="28%" stopColor="#FFF2C2" stopOpacity="1" />
+          <stop offset="56%" stopColor="#F2BE42" stopOpacity="0.98" />
+          <stop offset="82%" stopColor="#C98316" stopOpacity="0.88" />
+          <stop offset="100%" stopColor="#F2BE42" stopOpacity="0.12" />
+        </linearGradient>
+        <linearGradient id="goldSheenL" x1="250" y1="60" x2="460" y2="560" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFF7DB" stopOpacity="0.4" />
+          <stop offset="38%" stopColor="#FFF8E2" stopOpacity="0.98" />
+          <stop offset="72%" stopColor="#F2BE42" stopOpacity="0.72" />
+          <stop offset="100%" stopColor="#F2BE42" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="goldDeepL" x1="220" y1="90" x2="410" y2="565" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#A9640E" stopOpacity="0.5" />
+          <stop offset="45%" stopColor="#DF9C26" stopOpacity="0.92" />
+          <stop offset="85%" stopColor="#A55E0B" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#8C4B06" stopOpacity="0" />
+        </linearGradient>
+        <filter id="goldSoftGlowL" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="7" />
+        </filter>
+      </defs>
+
+      {/* Subtle warm metallic wash along the arc (gold leaf sheen, not heavy neon) */}
+      <path
+        className="bh-swirl-glow"
+        d="M 332 58 C 122 144, 72 418, 368 548"
+        stroke="#F2BE42"
+        strokeWidth="12"
+        strokeLinecap="round"
+        opacity="0.09"
+        filter="url(#goldSoftGlowL)"
+      />
+
+      {/* Calligraphic multi-strand parallel ribbons (outer burnished gold -> core sheen -> fine inner filaments) */}
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s1"
+        d="M 314 60 C 96 154, 52 442, 344 556"
+        stroke="url(#goldDeepL)"
+        strokeWidth="4.8"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s2"
+        d="M 326 56 C 110 148, 66 434, 396 558"
+        stroke="url(#goldMainL)"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s3"
+        d="M 336 62 C 124 152, 82 426, 444 560"
+        stroke="url(#goldSheenL)"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s4"
+        d="M 346 68 C 140 158, 98 418, 476 558"
+        stroke="url(#goldMainL)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s5"
+        d="M 354 76 C 158 164, 118 412, 412 544"
+        stroke="url(#goldSheenL)"
+        strokeWidth="1.1"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s6"
+        d="M 364 84 C 176 172, 138 406, 360 524"
+        stroke="url(#goldDeepL)"
+        strokeWidth="0.85"
+        strokeLinecap="round"
+      />
+    </svg>
+
+    {/* Right sweeping multi-strand calligraphic gold crescent (counter-balancing interlocking arc) */}
+    <svg
+      viewBox="0 0 640 620"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="absolute -right-52 sm:-right-44 md:-right-36 lg:-right-20 xl:-right-4 top-1/2 -translate-y-1/2 h-[96%] sm:h-[106%] lg:h-[112%] w-auto max-w-none opacity-55 sm:opacity-80 lg:opacity-95"
+      style={{ transform: `translate3d(0, calc(-50% - ${Math.round(drift * 0.24)}px), 0) rotate(180deg)` }}
+    >
+      <defs>
+        <linearGradient id="goldMainR" x1="280" y1="50" x2="480" y2="575" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#D6921F" stopOpacity="0.85" />
+          <stop offset="28%" stopColor="#FFF2C2" stopOpacity="1" />
+          <stop offset="56%" stopColor="#F2BE42" stopOpacity="0.98" />
+          <stop offset="82%" stopColor="#C98316" stopOpacity="0.88" />
+          <stop offset="100%" stopColor="#F2BE42" stopOpacity="0.12" />
+        </linearGradient>
+        <linearGradient id="goldSheenR" x1="250" y1="60" x2="460" y2="560" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFF7DB" stopOpacity="0.4" />
+          <stop offset="38%" stopColor="#FFF8E2" stopOpacity="0.98" />
+          <stop offset="72%" stopColor="#F2BE42" stopOpacity="0.72" />
+          <stop offset="100%" stopColor="#F2BE42" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient id="goldDeepR" x1="220" y1="90" x2="410" y2="565" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#A9640E" stopOpacity="0.5" />
+          <stop offset="45%" stopColor="#DF9C26" stopOpacity="0.92" />
+          <stop offset="85%" stopColor="#A55E0B" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#8C4B06" stopOpacity="0" />
+        </linearGradient>
+        <filter id="goldSoftGlowR" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="7" />
+        </filter>
+      </defs>
+
+      <path
+        className="bh-swirl-glow"
+        d="M 332 58 C 122 144, 72 418, 368 548"
+        stroke="#F2BE42"
+        strokeWidth="12"
+        strokeLinecap="round"
+        opacity="0.09"
+        filter="url(#goldSoftGlowR)"
+      />
+
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s1"
+        d="M 314 60 C 96 154, 52 442, 344 556"
+        stroke="url(#goldDeepR)"
+        strokeWidth="4.8"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s2"
+        d="M 326 56 C 110 148, 66 434, 396 558"
+        stroke="url(#goldMainR)"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s3"
+        d="M 336 62 C 124 152, 82 426, 444 560"
+        stroke="url(#goldSheenR)"
+        strokeWidth="2.1"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s4"
+        d="M 346 68 C 140 158, 98 418, 476 558"
+        stroke="url(#goldMainR)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s5"
+        d="M 354 76 C 158 164, 118 412, 412 544"
+        stroke="url(#goldSheenR)"
+        strokeWidth="1.1"
+        strokeLinecap="round"
+      />
+      <path
+        pathLength={100}
+        className="bh-swirl-strand bh-s6"
+        d="M 364 84 C 176 172, 138 406, 360 524"
+        stroke="url(#goldDeepR)"
+        strokeWidth="0.85"
+        strokeLinecap="round"
+      />
+    </svg>
+  </div>
+);
+
 export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
   const hero = useInViewOnce(true);
   const about = useInViewOnce();
@@ -46,43 +250,13 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-white">
-      {/* Hero Section — Full-bleed pure gold jewellery photography under 75% Plum 900 opacity overlay */}
+      {/* Hero Section — Deep Plum 900 silk backdrop framed by dual calligraphic gold ribbon swirls */}
       <section
         ref={hero.ref}
         data-hero="true"
         className={`relative overflow-hidden flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-24 sm:py-32 bg-[#381F49] ${hero.inView ? 'is-inview' : ''}`}
       >
-        {/* Background gold jewellery photo with gentle scroll parallax */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 overflow-hidden"
-        >
-          <img
-            src="/goldify-hero-jewellery.jpg"
-            alt=""
-            className="w-full h-full object-cover object-center scale-105"
-            style={{ transform: `translate3d(0, ${Math.round(heroDrift * 0.35)}px, 0) scale(1.06)` }}
-          />
-          {/* 75% Plum 900 (#381F49) opacity layer + subtle depth vignette for effortless contrast */}
-          <div className="absolute inset-0 bg-[#381F49]/75" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#381F49]/30 via-transparent to-[#381F49]/45" />
-        </div>
-
-        {/* Counter-rotating concentric gold & lilac hairline arcs over the plum veil */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 overflow-hidden"
-          style={{ transform: `translate3d(0, ${heroDrift}px, 0)` }}
-        >
-          <span
-            className="bh-arc-outer w-[500px] h-[500px] sm:w-[700px] sm:h-[700px]"
-            style={{ borderTopColor: 'rgba(242, 190, 66, 0.30)', borderRightColor: 'rgba(242, 190, 66, 0.30)' }}
-          />
-          <span
-            className="bh-arc-inner w-[310px] h-[310px] sm:w-[440px] sm:h-[440px]"
-            style={{ borderTopColor: 'rgba(229, 169, 255, 0.22)', borderRightColor: 'rgba(229, 169, 255, 0.22)' }}
-          />
-        </div>
+        <GoldHeroSwirls drift={heroDrift} />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h1 className="text-4xl sm:text-6xl font-light text-white tracking-tight mb-6 leading-[1.12]">

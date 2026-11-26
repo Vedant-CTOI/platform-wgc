@@ -139,6 +139,30 @@
             animation: bhArcInner 1.9s var(--ease-arch) 0.22s 1 normal forwards;
         }
 
+        /* Calligraphic multi-strand gold swirl draw (Hero) */
+        .bh-swirl-strand {
+            stroke-dasharray: 102;
+            stroke-dashoffset: 102;
+            transition: stroke-dashoffset 1.85s var(--ease-arch), opacity 0.8s var(--ease-editorial);
+            will-change: stroke-dashoffset;
+        }
+        .is-inview .bh-swirl-strand {
+            stroke-dashoffset: 0;
+        }
+        .bh-swirl-glow {
+            opacity: 0;
+            transition: opacity 1.4s var(--ease-arch) 0.35s;
+        }
+        .is-inview .bh-swirl-glow {
+            opacity: 1;
+        }
+        .bh-s1 { transition-delay: 0.05s; }
+        .bh-s2 { transition-delay: 0.14s; }
+        .bh-s3 { transition-delay: 0.24s; }
+        .bh-s4 { transition-delay: 0.34s; }
+        .bh-s5 { transition-delay: 0.44s; }
+        .bh-s6 { transition-delay: 0.54s; }
+
         /* Feature cards & Goldify 1-2-3 ring reveal + hover */
         .bh-feature-card {
             transition: transform 0.95s var(--ease-editorial), box-shadow 0.55s var(--ease-editorial), opacity 0.8s var(--ease-editorial);
@@ -254,6 +278,14 @@
                 animation: none !important;
                 opacity: 1 !important;
                 transform: translate3d(-50%, -50%, 0) rotate(45deg) !important;
+            }
+            .bh-swirl-strand {
+                stroke-dashoffset: 0 !important;
+                transition: none !important;
+            }
+            .bh-swirl-glow {
+                opacity: 1 !important;
+                transition: none !important;
             }
             .bh-btn-wipe::before, .bh-link::after, .bh-accordion-body, .bh-feature-card, .bh-feature-ring-img, .bh-feature-top-rule {
                 transition: none !important;
