@@ -195,7 +195,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
       {/* Limit modal */}
       {showLimitAlert && (
         <NoticeModal
-          title="Creative limit reached"
+          title="Creative Limit Reached"
           message={`You can only select up to ${MAX_CREATIVES_PER_SESSION} templates. Please deselect one to add another.`}
           onClose={() => setShowLimitAlert(false)}
         />
@@ -204,12 +204,12 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
       {embedded ? (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-3">
           <div>
-            <h2 className="text-xl font-semibold text-black">Choose templates</h2>
+            <h2 className="text-xl font-semibold text-black">Choose Templates</h2>
             <p className="text-sm font-normal text-[#634B6F] mt-0.5">You can customise up to {MAX_CREATIVES_PER_SESSION} creatives per session.</p>
           </div>
           {selectedTemplates.length > 0 && (
             <Button variant="gold" onClick={handleContinue} className="group px-6">
-              <span>Customize selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
+              <span>Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
               <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
           )}
@@ -217,10 +217,10 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
       ) : (
         <>
           <div className="flex justify-between items-center mb-2">
-            <PageHeader title="Choose templates" onBack={() => onNavigate('dashboard')} />
+            <PageHeader title="Choose Templates" onBack={() => onNavigate('dashboard')} />
             {selectedTemplates.length > 0 && (
               <Button variant="gold" onClick={handleContinue} className="group px-6">
-                <span>Customize selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
+                <span>Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
               </Button>
             )}
@@ -239,7 +239,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
               className="appearance-none w-full pl-4 pr-11 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm font-medium text-black bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
             >
               {CATEGORIES.map(cat => (
-                <option key={cat} value={cat}>{cat === 'All' ? 'All occasions' : cat}</option>
+                <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
               ))}
             </select>
             <ChevronDown className="w-4 h-4 text-[#634B6F] pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
@@ -250,7 +250,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
               onChange={(e) => setActiveRatioFilter(e.target.value)}
               className="appearance-none w-full pl-4 pr-11 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm font-medium text-black bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
             >
-              <option value="All">All sizes</option>
+              <option value="All">All Sizes</option>
               {MEDIA_GROUPS.map(group => (
                 <optgroup key={group} label={group}>
                   {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
@@ -354,10 +354,10 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
                   handleTemplateSelect(previewTemplate);
                   setPreviewTemplate(null);
                 }}>
-                  {selectedTemplates.some(t => t.id === previewTemplate.id) ? 'Deselect template' : 'Select template'}
+                  {selectedTemplates.some(t => t.id === previewTemplate.id) ? 'Deselect Template' : 'Select Template'}
                 </Button>
                 <Button variant="outline" size="lg" fullWidth onClick={() => setPreviewTemplate(null)}>
-                  Close preview
+                  Close Preview
                 </Button>
               </div>
             </div>
@@ -559,7 +559,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 flex flex-col h-[calc(100vh-4rem)] bg-white">
       <div className="px-2 sm:px-0">
-        <PageHeader title="Add your details" onBack={() => onNavigate('gallery')} />
+        <PageHeader title="Add Your Details" onBack={() => onNavigate('gallery')} />
         <p className="text-[#634B6F] font-normal mb-6">Provide the information to personalize your selected creatives.</p>
       </div>
 
@@ -570,7 +570,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
         <div className="w-1/2 flex flex-col items-center justify-center bg-[#ECE9ED] rounded-xl sm:rounded-2xl p-2 sm:p-8 overflow-y-auto relative border border-[#E6E9ED]">
 
           <div className="flex justify-between items-center mb-2 shrink-0 gap-3">
-            <span className="text-xs font-medium text-[#381F49] tracking-wide">Selected designs</span>
+            <span className="text-xs font-medium text-[#381F49] tracking-wide">Selected Designs</span>
             <span className="text-xs bg-white px-3 py-1 rounded-full text-[#381F49] font-medium shadow-sm border border-[#E6E9ED]">{previewIndex + 1} of {previewCombinations.length}</span>
           </div>
 
@@ -643,7 +643,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
 
                 {!isFirstTime && (
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-black mb-2">Select store</label>
+                  <label className="block text-sm font-medium text-black mb-2">Select Store</label>
                   <div className="relative">
                     <select
                       className="appearance-none w-full rounded-lg border border-[#634B6F]/40 pl-4 pr-11 py-3 min-h-[46px] text-black font-medium shadow-sm focus:border-[#704287] focus:ring-2 focus:ring-[#704287] focus:outline-none sm:text-sm bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
@@ -653,7 +653,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                       {user?.stores.map(s => (
                         <option key={s.id} value={s.id}>{s.name}</option>
                       ))}
-                      <option value="manual">Enter manually...</option>
+                      <option value="manual">Enter Manually...</option>
                     </select>
                     <ChevronDown className="w-4 h-4 text-[#634B6F] pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
                   </div>
@@ -662,14 +662,14 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                   <Input
-                    label="Store name *"
+                    label="Store Name *"
                     placeholder="e.g. Royal Jewellers"
                     value={data.storeName}
                     onChange={(e) => handleFieldChange(index, 'storeName', e.target.value)}
                     maxLength={50}
                   />
                   <div>
-                    <label className="block text-sm font-medium text-black mb-1">Store logo</label>
+                    <label className="block text-sm font-medium text-black mb-1">Store Logo</label>
                     <div
                       onClick={() => openUpload(index, 'logo')}
                       className="border border-dashed border-[#634B6F]/50 rounded-lg h-[44px] flex items-center justify-center text-sm font-normal text-[#634B6F] cursor-pointer hover:bg-[#ECE9ED]/50 transition-colors overflow-hidden relative"
@@ -688,7 +688,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
 
                 <div className="space-y-6 mb-6">
                   <Input
-                    label="Contact number"
+                    label="Contact Number"
                     placeholder="+1 (555) 000-0000"
                     value={data.contactNumber}
                     onChange={(e) => handleFieldChange(index, 'contactNumber', e.target.value)}
@@ -703,7 +703,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     />
                   </div>
                   <Input
-                    label="Retailer URL (optional)"
+                    label="Retailer URL (Optional)"
                     placeholder="e.g. www.yourstore.com"
                     value={data.retailerUrl || ''}
                     onChange={(e) => handleFieldChange(index, 'retailerUrl', e.target.value)}
@@ -712,7 +712,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 </div>
 
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-black mb-2">Jewelry piece for insert *</label>
+                  <label className="block text-sm font-medium text-black mb-2">Jewelry Piece for Insert *</label>
                   <div
                     onClick={() => openUpload(index, 'jewelry')}
                     className="border-2 border-dashed border-[#634B6F]/45 rounded-xl p-6 flex flex-col items-center justify-center text-sm text-[#634B6F] cursor-pointer hover:bg-[#ECE9ED]/50 transition-colors relative overflow-hidden min-h-[120px]"
@@ -727,7 +727,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     )}
                   </div>
                   <p className="text-xs font-light text-[#634B6F] mt-2 leading-relaxed">
-                    Best practices: Use a high-resolution image with a clean, solid background (preferably white or transparent) for best results.
+                    Best Practices: Use a high-resolution image with a clean, solid background (preferably white or transparent) for best results.
                   </p>
                   <p className="text-xs font-light text-[#634B6F] mt-1 leading-relaxed">
                     Only gold jewellery is permitted. Diamond-centric pieces and large-stone Kundan pieces will be rejected; minor enamel accents or tiny embedded stones are fine.
@@ -761,7 +761,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
               disabled={!isFormValid}
               className="group px-10 w-full sm:w-auto"
             >
-              <span>Submit request</span>
+              <span>Submit Request</span>
               <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
           </div>
@@ -773,7 +773,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-[#E6E9ED] overflow-hidden flex flex-col">
             <div className="p-4 border-b border-[#E6E9ED] flex justify-between items-center bg-[#ECE9ED]">
-              <h3 className="font-semibold text-[#381F49]">Upload {uploadType === 'logo' ? 'store logo' : 'jewelry piece'}</h3>
+              <h3 className="font-semibold text-[#381F49]">Upload {uploadType === 'logo' ? 'Store Logo' : 'Jewelry Piece'}</h3>
               <button onClick={closeModal} className="p-1 text-[#634B6F] hover:text-[#381F49] rounded-full hover:bg-black/5 transition-colors">
                 <X className="w-5 h-5" />
               </button>
@@ -794,7 +794,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     onChange={handleFileChange}
                   />
                   <Button onClick={() => fileInputRef.current?.click()} fullWidth>
-                    Choose from gallery
+                    Choose from Gallery
                   </Button>
                 </>
               ) : (
@@ -820,7 +820,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     {profanityResult === 'passed' && (
                       <div className="text-[#00323C] flex flex-col items-center bg-[#40DDB1]/20 w-full p-3 rounded-lg border border-[#40DDB1]/50">
                         <CheckCircle2 className="w-6 h-6 mb-1" />
-                        <p className="font-semibold text-sm">Image approved!</p>
+                        <p className="font-semibold text-sm">Image Approved!</p>
                         <p className="text-xs font-normal text-[#00323C]/90 mt-0.5">Looks great and meets our guidelines.</p>
                       </div>
                     )}
@@ -828,7 +828,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                     {profanityResult === 'failed' && (
                       <div className="text-red-600 flex flex-col items-center bg-red-50 w-full p-3 rounded-lg border border-red-100">
                         <AlertTriangle className="w-6 h-6 mb-1" />
-                        <p className="font-semibold text-sm">{uploadType === 'jewelry' ? 'Only gold jewellery is permitted on this platform.' : 'Image rejected'}</p>
+                        <p className="font-semibold text-sm">{uploadType === 'jewelry' ? 'Only gold jewellery is permitted on this platform.' : 'Image Rejected'}</p>
                         <p className="text-xs font-normal text-red-700 mt-0.5">{uploadType === 'jewelry'
                           ? "Pieces that are mainly diamond or large-stone Kundan can't be used. Minor enamel accents or tiny embedded stones are fine."
                           : 'Image does not match the profanity check so please upload another one.'}</p>
@@ -842,14 +842,14 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                       setProfanityResult('idle');
                       if (fileInputRef.current) fileInputRef.current.value = '';
                     }}>
-                      Try another
+                      Try Another
                     </Button>
                     <Button
                       className="flex-1"
                       disabled={profanityResult !== 'passed'}
                       onClick={confirmUpload}
                     >
-                      Use image
+                      Use Image
                     </Button>
                   </div>
                 </div>
@@ -881,7 +881,7 @@ export const GeneratingView: React.FC<FlowProps> = ({ onNavigate }) => {
           <ImageIcon className="w-8 h-8 text-[#381F49] animate-pulse" />
         </div>
       </div>
-      <h2 className="text-2xl font-bold text-black mb-2">Crafting your campaign...</h2>
+      <h2 className="text-2xl font-bold text-black mb-2">Crafting Your Campaign...</h2>
       <p className="text-[#634B6F] font-normal max-w-md">Applying your brand details and generating high-quality images in all selected sizes.</p>
 
       {/* Skeleton mockups */}
@@ -936,26 +936,26 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
         <div className="w-16 h-16 bg-[#381F49] text-[#F2BE42] rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
           <Check className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-bold text-black mb-2">Campaign ready!</h1>
+        <h1 className="text-3xl font-bold text-black mb-2">Campaign Ready!</h1>
         <p className="text-[#634B6F] font-normal">Your designs have been generated successfully.</p>
       </div>
 
       <div className="bg-white rounded-2xl border border-[#E6E9ED] shadow-sm p-6 sm:p-8 mb-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-6 border-b border-[#E6E9ED] gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-black">Generated files</h2>
+            <h2 className="text-xl font-semibold text-black">Generated Files</h2>
             <div className="flex items-center mt-3 space-x-4">
               <label className="flex items-center cursor-pointer">
                 <input type="radio" name="format" checked={downloadFormat === 'digital'} onChange={() => setDownloadFormat('digital')} className="text-[#381F49] focus:ring-[#704287] h-4 w-4" />
-                <span className="ml-2 text-sm text-black font-medium">Digital use (PNG)</span>
+                <span className="ml-2 text-sm text-black font-medium">Digital Use (PNG)</span>
               </label>
               <label className="flex items-center cursor-pointer">
                 <input type="radio" name="format" checked={downloadFormat === 'print'} onChange={() => setDownloadFormat('print')} className="text-[#381F49] focus:ring-[#704287] h-4 w-4" />
-                <span className="ml-2 text-sm text-black font-medium">Print ready (PDF)</span>
+                <span className="ml-2 text-sm text-black font-medium">Print Ready (PDF)</span>
               </label>
             </div>
           </div>
-          <Button variant="gold" size="lg" className="w-full sm:w-auto px-7" onClick={handleDownload}><Download className="w-4 h-4 mr-2" /> Download all (ZIP)</Button>
+          <Button variant="gold" size="lg" className="w-full sm:w-auto px-7" onClick={handleDownload}><Download className="w-4 h-4 mr-2" /> Download All (ZIP)</Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -987,8 +987,8 @@ export const DownloadView: React.FC<FlowProps> = ({ onNavigate, draft, selectedT
       </div>
 
       <div className="flex flex-col sm:flex-row justify-center gap-4">
-        <Button variant="outline" onClick={() => onNavigate('dashboard')}>Back to dashboard</Button>
-        <Button variant="outline" onClick={() => onNavigate('gallery')}>Create another</Button>
+        <Button variant="outline" onClick={() => onNavigate('dashboard')}>Back to Dashboard</Button>
+        <Button variant="outline" onClick={() => onNavigate('gallery')}>Create Another</Button>
       </div>
 
       {/* Full Size Preview Modal */}

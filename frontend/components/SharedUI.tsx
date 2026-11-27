@@ -170,7 +170,7 @@ export const AddressFields: React.FC<{
   return (
     <>
       <Input
-        label="Address line 1 *"
+        label="Address Line 1 *"
         placeholder="e.g. 12 MG Road"
         value={line1}
         onChange={(e) => handle('line1', ADDRESS_LIMITS.line1, e.target.value)}
@@ -178,20 +178,20 @@ export const AddressFields: React.FC<{
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
         <Input
-          label="Landmark (optional)"
+          label="Landmark (Optional)"
           placeholder="e.g. Near City Mall"
           value={landmark}
           onChange={(e) => handle('landmark', ADDRESS_LIMITS.landmark, e.target.value)}
         />
         <Input
-          label="City (optional)"
+          label="City (Optional)"
           placeholder="e.g. Mumbai"
           value={city}
           onChange={(e) => handle('city', ADDRESS_LIMITS.city, e.target.value)}
         />
       </div>
       {showLimitModal && (
-        <NoticeModal title="Character limit" message={CHAR_LIMIT_MESSAGE} onClose={() => setShowLimitModal(false)} />
+        <NoticeModal title="Character Limit" message={CHAR_LIMIT_MESSAGE} onClose={() => setShowLimitModal(false)} />
       )}
     </>
   );
@@ -280,7 +280,7 @@ export const ShareBand: React.FC = () => {
         </p>
         <div className="bh-fade-up bh-d2 w-full sm:w-auto">
           <Button variant="gold" size="lg" onClick={handleShare} className="group w-full sm:w-auto px-8">
-            <span>Share now</span>
+            <span>Share Now</span>
             <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
           </Button>
         </div>
@@ -298,7 +298,7 @@ export const ShareBand: React.FC = () => {
             <div className="p-6 space-y-3">
               <button onClick={copyLink} className={optionClass}>
                 {copied ? <Check className="w-5 h-5 mr-3 text-[#00323C]" /> : <Link2 className="w-5 h-5 mr-3 text-[#704287]" />}
-                {copied ? 'Link copied' : 'Copy link'}
+                {copied ? 'Link Copied' : 'Copy Link'}
               </button>
               <a href={`https://wa.me/?text=${enc(shareText + ' ' + shareUrl)}`} target="_blank" rel="noopener noreferrer" className={optionClass}>
                 <MessageCircle className="w-5 h-5 mr-3 text-[#704287]" /> WhatsApp
@@ -400,15 +400,15 @@ export const TopNav: React.FC<{
                           <div className="border-t border-[#E6E9ED] my-1"></div>
                         </>
                       )}
-                      <button onClick={() => handleNav('profile_setup')} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">My account</button>
+                      <button onClick={() => handleNav('profile_setup')} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">My Account</button>
                       <button onClick={() => handleNav('faq')} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">FAQs</button>
                       
                       <div className="border-t border-[#E6E9ED] my-1"></div>
                       
-                      <button onClick={() => handleNav('terms')} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">Terms &amp; privacy policy</button>
+                      <button onClick={() => handleNav('terms')} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">Terms &amp; Privacy Policy</button>
                       
                       <div className="border-t border-[#E6E9ED] my-1"></div>
-                      <button onClick={() => { setIsMenuOpen(false); onLogout(); }} className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium">Sign out</button>
+                      <button onClick={() => { setIsMenuOpen(false); onLogout(); }} className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium">Sign Out</button>
                     </div>
                   )}
                 </div>

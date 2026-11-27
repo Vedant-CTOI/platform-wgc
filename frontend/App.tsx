@@ -170,7 +170,7 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void; onOpenLeg
               onClick={onOpenLegal}
               className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
             >
-              Terms &amp; privacy policy
+              Terms &amp; Privacy Policy
             </button>
           </nav>
         </div>
@@ -267,7 +267,7 @@ export default function App() {
       <TopNav 
         isLoggedIn={!!state.user} 
         isLanding={state.currentView === 'landing'}
-        accountLabel={state.user ? (state.user.isNewUser ? 'First-time user' : 'Repeat user') : undefined}
+        accountLabel={state.user ? (state.user.isNewUser ? 'First-Time User' : 'Repeat User') : undefined}
         onNavigate={navigate} 
         onLogout={logout} 
       />

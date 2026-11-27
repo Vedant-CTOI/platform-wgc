@@ -16,7 +16,7 @@ interface AuthProps {
 const LANDING_FAQS = [
   {
     q: 'How do I get started?',
-    a: 'Simply click on "Choose a template" or "Create account" to begin your journey.',
+    a: 'Simply click on "Choose a Template" or "Create Account" to begin your journey.',
   },
   {
     q: 'Is it free to use?',
@@ -306,7 +306,7 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
               onClick={() => onNavigate(user ? 'gallery' : 'login')}
               className="group w-full sm:w-auto px-8"
             >
-              <span>Choose a template</span>
+              <span>Choose a Template</span>
               <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
             {!user && (
@@ -315,14 +315,14 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
                   onClick={() => onNavigate('register')}
                   className="bh-link text-[#E5A9FF] font-medium hover:text-[#F2BE42] text-sm transition-colors"
                 >
-                  Create account
+                  Create Account
                 </button>
                 <span className="text-white/30">|</span>
                 <button
                   onClick={() => onNavigate('login')}
                   className="bh-link text-[#E5A9FF] font-medium hover:text-[#F2BE42] text-sm transition-colors"
                 >
-                  Sign in
+                  Sign In
                 </button>
               </div>
             )}
@@ -339,7 +339,7 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           <div className="lg:col-span-5">
             <p className="bh-fade-up text-xs font-medium tracking-wide text-[#704287] mb-3">
-              Gold the moment
+              Gold the Moment
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-black leading-tight">
               <span className="bh-line-mask">
@@ -380,19 +380,19 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
               {
                 num: '1',
                 stagger: 'bh-card-d1',
-                title: 'Lightning fast',
+                title: 'Lightning Fast',
                 desc: 'Generate campaigns in seconds. No more waiting for designers or struggling with complex software.',
               },
               {
                 num: '2',
                 stagger: 'bh-card-d2',
-                title: 'On-brand always',
+                title: 'On-Brand Always',
                 desc: 'Your logo, your address, your contact info—automatically applied to every template perfectly.',
               },
               {
                 num: '3',
                 stagger: 'bh-card-d3',
-                title: 'Reliable & secure',
+                title: 'Reliable & Secure',
                 desc: 'Your data and assets are stored securely, ensuring your business information is always protected.',
               },
             ].map((item) => (
@@ -430,15 +430,15 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-black leading-tight mb-6">
               <span className="bh-line-mask">
-                <span className="bh-line-inner bh-d1">Frequently asked</span>
+                <span className="bh-line-inner bh-d1">Frequently Asked</span>
               </span>
               <span className="bh-line-mask">
-                <span className="bh-line-inner bh-d2">questions</span>
+                <span className="bh-line-inner bh-d2">Questions</span>
               </span>
             </h2>
             <div className="bh-fade-up bh-d3">
               <Button variant="outline" onClick={() => onNavigate('faq')}>
-                View all FAQs
+                View All FAQs
               </Button>
             </div>
           </div>
@@ -535,8 +535,8 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
     setGstStatus('verifying');
     setTimeout(() => {
       setGstStatus('verified');
-      setStoreName('Auto-populated store name');
-      setStoreAddress('123 Auto-populated address, city');
+      setStoreName('Auto-Populated Store Name');
+      setStoreAddress('123 Auto-Populated Address, City');
       setStoreContactNumber('9876543210');
     }, 1500);
   };
@@ -580,7 +580,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
         <AuthCardBrandBand />
         <div className="p-6 sm:p-10 space-y-8">
           <div className="flex flex-col items-center">
-            <h2 className="text-center text-2xl font-bold text-black">Create your account</h2>
+            <h2 className="text-center text-2xl font-bold text-black">Create Your Account</h2>
             <p className="mt-2 text-center text-sm font-light text-[#634B6F]">
               to continue to Goldify
             </p>
@@ -590,15 +590,15 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Input
-                label="First name *"
-                placeholder="First name"
+                label="First Name *"
+                placeholder="First Name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
               />
               <Input
-                label="Last name *"
-                placeholder="Last name"
+                label="Last Name *"
+                placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
@@ -618,7 +618,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
                 <div className="flex-grow">
                   <Input
                     id="register-gst-input"
-                    label="GST number *"
+                    label="GST Number *"
                     placeholder="e.g. 22AAAAA0000A1Z5"
                     value={gstNumber}
                     maxLength={15}
@@ -647,23 +647,23 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
 
               {gstStatus === 'verified' && (
                 <div className="p-4 sm:p-5 bg-[#ECE9ED]/60 rounded-xl border border-[#E6E9ED] mt-4 space-y-3">
-                  <h4 className="text-xs font-semibold text-[#704287] tracking-wide">Store details</h4>
+                  <h4 className="text-xs font-semibold text-[#704287] tracking-wide">Store Details</h4>
                   <Input
-                    label="Store name"
+                    label="Store Name"
                     value={storeName}
                     readOnly
                     disabled
                     className="bg-[#ECE9ED] text-[#634B6F] cursor-not-allowed"
                   />
                   <Input
-                    label="Store address"
+                    label="Store Address"
                     value={storeAddress}
                     readOnly
                     disabled
                     className="bg-[#ECE9ED] text-[#634B6F] cursor-not-allowed"
                   />
                   <Input
-                    label="Store contact number"
+                    label="Store Contact Number"
                     value={storeContactNumber}
                     readOnly
                     disabled
@@ -697,7 +697,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
                 }}
                 className="bh-link text-[#704287] hover:text-[#381F49] font-medium"
               >
-                Terms &amp; privacy policy
+                Terms &amp; Privacy Policy
               </button>
             </label>
           </div>
@@ -706,11 +706,11 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
 
           <div className="pt-2 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
             <Button type="submit" size="lg" className="group w-full sm:w-auto px-8" disabled={!isFormValid}>
-              <span>Send email OTP</span>
+              <span>Send Email OTP</span>
               <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
             <button type="button" onClick={() => onNavigate('login')} className="bh-link text-[#704287] font-medium hover:text-[#381F49] text-sm transition-colors">
-              Sign in instead
+              Sign In Instead
             </button>
           </div>
         </form>
@@ -719,8 +719,8 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
 
       {showGstPopup && (
         <NoticeModal
-          title="GST verification required"
-          message="Please verify your GST number before agreeing to the Terms & privacy policy."
+          title="GST Verification Required"
+          message="Please verify your GST number before agreeing to the Terms & Privacy Policy."
           actionLabel="Verify GST"
           onAction={handleGstPopupAction}
           onClose={() => setShowGstPopup(false)}
@@ -754,7 +754,7 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) =>
         <AuthCardBrandBand />
         <div className="p-6 sm:p-10 space-y-8">
           <div className="flex flex-col items-center">
-            <h2 className="text-center text-2xl font-bold text-black">Sign in</h2>
+            <h2 className="text-center text-2xl font-bold text-black">Sign In</h2>
             <p className="mt-2 text-center text-sm font-light text-[#634B6F]">
               to continue to Goldify
             </p>
@@ -778,7 +778,7 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) =>
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
               </Button>
               <button type="button" onClick={() => onNavigate('register')} className="bh-link text-[#704287] font-medium hover:text-[#381F49] text-sm transition-colors">
-                Create account
+                Create Account
               </button>
             </div>
           </form>
@@ -843,7 +843,7 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = '
         <AuthCardBrandBand />
         <div className="p-6 sm:p-10 space-y-8">
           <div className="flex flex-col items-center">
-            <h2 className="text-center text-2xl font-bold text-black">Verify it's you</h2>
+            <h2 className="text-center text-2xl font-bold text-black">Verify It's You</h2>
             <p className="mt-2 text-center text-sm font-light text-[#634B6F]">
               We've sent a 4-digit code to your email.
             </p>

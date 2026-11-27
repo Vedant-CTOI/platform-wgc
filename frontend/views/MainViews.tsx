@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, PageHeader, Input, AddressFields, NoticeModal } from '../components/SharedUI';
 import { ViewState, UserProfile, StoreInfo, Template } from '../types';
 import { Plus, Image as ImageIcon, Clock, MoreVertical, Download, Heart, Trash2, Edit2, UploadCloud, AlertTriangle, CheckCircle2, X, Loader2, Check, Eye, Sparkles, ChevronDown, ArrowRight } from 'lucide-react';
-import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES, MEDIA_GROUPS, getRatioDisplayLabel } from '../constants';
+import { ASPECT_RATIOS, MAX_CREATIVES_PER_SESSION, CATEGORIES, CATEGORY_BADGE_STYLES, MEDIA_GROUPS, getRatioDisplayLabel } from '../constants';
 
 interface DashboardProps {
   user: UserProfile;
@@ -14,14 +14,14 @@ interface DashboardProps {
 export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEditCampaign }) => {
   // Mock saved campaigns with official Base Creatives (first-time users start with none)
   const [savedCampaigns, setSavedCampaigns] = useState(user.isNewUser ? [] : [
-    { id: 'c1', name: 'Diwali special', date: 'Oct 24, 2023', thumbnail: '/creatives/full-page-diwali.jpg', category: 'Diwali', templateId: 't1', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
-    { id: 'c2', name: 'Wedding collection', date: 'Oct 22, 2023', thumbnail: '/creatives/half-page-wedding.jpg', category: 'Wedding', templateId: 't2', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
-    { id: 'c3', name: 'Concert tickets', date: 'Oct 15, 2023', thumbnail: '/creatives/social-media-concert.jpg', category: 'Concert', templateId: 't3', ratioId: '621x621', ratioClass: 'aspect-square' },
-    { id: 'c4', name: 'Office supplies', date: 'Oct 10, 2023', thumbnail: '/creatives/poster-office.jpg', category: 'Office', templateId: 't4', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
-    { id: 'c5', name: 'Diwali gifts', date: 'Oct 05, 2023', thumbnail: '/creatives/social-media-diwali.jpg', category: 'Diwali', templateId: 't5', ratioId: '621x621', ratioClass: 'aspect-square' },
-    { id: 'c6', name: 'Wedding decor', date: 'Oct 01, 2023', thumbnail: '/creatives/half-page-wedding.jpg', category: 'Wedding', templateId: 't6', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
-    { id: 'c7', name: 'Music festival', date: 'Sep 28, 2023', thumbnail: '/creatives/full-page-concert.jpg', category: 'Concert', templateId: 't7', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
-    { id: 'c8', name: 'Corporate event', date: 'Sep 25, 2023', thumbnail: '/creatives/half-page-office.jpg', category: 'Office', templateId: 't8', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c1', name: 'Diwali Special', date: 'Oct 24, 2023', thumbnail: '/creatives/full-page-diwali.jpg', category: 'Diwali', templateId: 't1', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c2', name: 'Wedding Collection', date: 'Oct 22, 2023', thumbnail: '/creatives/half-page-wedding.jpg', category: 'Wedding', templateId: 't2', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c3', name: 'Concert Tickets', date: 'Oct 15, 2023', thumbnail: '/creatives/social-media-concert.jpg', category: 'Concert', templateId: 't3', ratioId: '621x621', ratioClass: 'aspect-square' },
+    { id: 'c4', name: 'Office Supplies', date: 'Oct 10, 2023', thumbnail: '/creatives/poster-office.jpg', category: 'Office', templateId: 't4', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c5', name: 'Diwali Gifts', date: 'Oct 05, 2023', thumbnail: '/creatives/social-media-diwali.jpg', category: 'Diwali', templateId: 't5', ratioId: '621x621', ratioClass: 'aspect-square' },
+    { id: 'c6', name: 'Wedding Decor', date: 'Oct 01, 2023', thumbnail: '/creatives/half-page-wedding.jpg', category: 'Wedding', templateId: 't6', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
+    { id: 'c7', name: 'Music Festival', date: 'Sep 28, 2023', thumbnail: '/creatives/full-page-concert.jpg', category: 'Concert', templateId: 't7', ratioId: '610x794', ratioClass: 'aspect-[610/794]' },
+    { id: 'c8', name: 'Corporate Event', date: 'Sep 25, 2023', thumbnail: '/creatives/half-page-office.jpg', category: 'Office', templateId: 't8', ratioId: '936x709', ratioClass: 'aspect-[936/709]' },
   ]);
   const hasNoCreatives = savedCampaigns.length === 0;
   const [showSelectLimit, setShowSelectLimit] = useState(false);
@@ -91,7 +91,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white" onClick={() => setOpenMenuId(null)}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-black">{user.isNewUser ? 'Welcome' : `Welcome back, ${user.businessName}`}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-black">{user.isNewUser ? 'Welcome' : `Welcome Back, ${user.businessName}`}</h1>
           <p className="text-[#634B6F] font-normal mt-1">Ready to create your next promotion?</p>
         </div>
         <Button
@@ -101,7 +101,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
           className="group w-full sm:w-auto px-7 shadow-md"
         >
           <Plus className="w-5 h-5 mr-2" />
-          <span>Create new campaign</span>
+          <span>Create New Campaign</span>
         </Button>
       </div>
 
@@ -114,7 +114,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                 className="appearance-none w-full pl-4 pr-11 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm font-medium text-black bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
               >
                 {CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat === 'All' ? 'All occasions' : cat}</option>
+                  <option key={cat} value={cat}>{cat === 'All' ? 'All Occasions' : cat}</option>
                 ))}
               </select>
               <ChevronDown className="w-4 h-4 text-[#634B6F] pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2" />
@@ -125,7 +125,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                 onChange={(e) => setSizeFilter(e.target.value)}
                 className="appearance-none w-full pl-4 pr-11 py-3 min-h-[46px] border border-[#634B6F]/40 rounded-lg focus:ring-2 focus:ring-[#704287] focus:border-[#704287] outline-none text-sm font-medium text-black bg-white cursor-pointer hover:border-[#704287]/70 transition-colors"
               >
-                <option value="All">All sizes</option>
+                <option value="All">All Sizes</option>
                 {MEDIA_GROUPS.map(group => (
                   <optgroup key={group} label={group}>
                     {ASPECT_RATIOS.filter(r => r.group === group).map(r => (
@@ -141,17 +141,17 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-black">
-                Your recent campaigns {filterLabel && <span className="text-[#704287] font-medium text-lg ml-2">({filterLabel})</span>}
+                Your Recent Campaigns {filterLabel && <span className="text-[#704287] font-medium text-lg ml-2">({filterLabel})</span>}
               </h2>
               <div className="flex items-center gap-3">
                 {filterLabel && (
                   <button onClick={() => { setActiveFilter(null); setSizeFilter('All'); }} className="bh-link text-sm font-medium text-[#704287] hover:text-[#381F49]">
-                    Clear filter
+                    Clear Filter
                   </button>
                 )}
                 {filteredCampaigns.length > 0 && (
                   <Button variant={isSelectMode ? "secondary" : "outline"} size="sm" onClick={toggleSelectMode}>
-                    {isSelectMode ? 'Cancel selection' : 'Select'}
+                    {isSelectMode ? 'Cancel Selection' : 'Select'}
                   </Button>
                 )}
               </div>
@@ -163,18 +163,19 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                 <div className="w-16 h-16 bg-[#381F49] text-[#F2BE42] rounded-full flex items-center justify-center mb-5 shadow-sm">
                   <Sparkles className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-semibold text-black mb-2">Create your first creative</h3>
+                <h3 className="text-xl sm:text-2xl font-semibold text-black mb-2">Create Your First Creative</h3>
                 <p className="text-[#634B6F] font-normal max-w-md mx-auto mb-8">
                   Pick a template, add your store details and generate ready-to-use creatives in minutes.
                 </p>
                 <Button variant="gold" size="lg" onClick={() => onNavigate('gallery')} className="px-8 shadow-md">
-                  <Plus className="w-5 h-5 mr-2" /> Create new campaign
+                  <Plus className="w-5 h-5 mr-2" /> Create New Campaign
                 </Button>
               </div>
             ) : filteredCampaigns.length > 0 ? (
               <div className="columns-1 sm:columns-2 lg:columns-4 gap-6">
                 {filteredCampaigns.map((campaign) => {
                   const isSelected = selectedCampaignIds.includes(campaign.id);
+                  const badgeStyle = CATEGORY_BADGE_STYLES[campaign.category] || 'bg-[#ECE9ED] text-[#381F49]';
                   return (
                     <div
                       key={campaign.id}
@@ -217,9 +218,10 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                           </div>
                         )}
                       </div>
-                      <div className="p-4 flex justify-between items-center relative mt-auto border-t border-[#E6E9ED] bg-white">
+                      <div className="p-4 flex justify-between items-start relative mt-auto border-t border-[#E6E9ED] bg-white">
                         <div>
-                          <h3 className="font-semibold text-black text-sm">{campaign.name}</h3>
+                          <span className={`inline-block text-[11px] font-medium px-2 py-0.5 rounded-full ${badgeStyle}`}>{campaign.category}</span>
+                          <h3 className="font-semibold text-black text-sm mt-1.5 leading-snug">{campaign.name}</h3>
                           <p className="text-xs font-normal text-[#634B6F] mt-0.5">{getRatioDisplayLabel(campaign.ratioId, campaign.ratioClass)}</p>
                           <p className="text-xs font-light text-[#634B6F]/70 mt-0.5">By {user.name || 'User'} • {campaign.date}</p>
                         </div>
@@ -243,7 +245,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                               className="w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 flex items-center"
                               onClick={() => handleDelete(campaign.id)}
                             >
-                              <Trash2 className="w-4 h-4 mr-2" /> Delete campaign
+                              <Trash2 className="w-4 h-4 mr-2" /> Delete Campaign
                             </button>
                           </div>
                         )}
@@ -257,18 +259,18 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                 <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 border border-[#E6E9ED]">
                   <Clock className="w-8 h-8 text-[#704287]" />
                 </div>
-                <h3 className="text-lg font-semibold text-black mb-2">No campaigns found</h3>
+                <h3 className="text-lg font-semibold text-black mb-2">No Campaigns Found</h3>
                 <p className="text-[#634B6F] font-normal max-w-sm mx-auto mb-6">
                   {filterLabel ? `You haven't created any ${filterLabel} campaigns yet.` : "You haven't created any promotional materials yet."}
                 </p>
-                <Button onClick={() => onNavigate('gallery')}>Browse templates</Button>
+                <Button onClick={() => onNavigate('gallery')}>Browse Templates</Button>
               </div>
             )}
       </div>
 
       {showSelectLimit && (
         <NoticeModal
-          title="Selection limit"
+          title="Selection Limit"
           message={`Only ${MAX_CREATIVES_PER_SESSION} can be selected. Please deselect to add more.`}
           onClose={() => setShowSelectLimit(false)}
         />
@@ -284,7 +286,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
             onClick={() => setShowDownloadModal(true)}
             className="whitespace-nowrap px-5"
           >
-            <Download className="w-4 h-4 mr-2" /> Download selected
+            <Download className="w-4 h-4 mr-2" /> Download Selected
           </Button>
         </div>
       )}
@@ -294,7 +296,7 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
         <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-[#E6E9ED] overflow-hidden flex flex-col">
             <div className="p-4 border-b border-[#E6E9ED] flex justify-between items-center bg-[#ECE9ED]">
-              <h3 className="font-semibold text-[#381F49]">Download campaigns</h3>
+              <h3 className="font-semibold text-[#381F49]">Download Campaigns</h3>
               <button onClick={() => setShowDownloadModal(false)} className="p-1 text-[#634B6F] hover:text-[#381F49] rounded-full hover:bg-black/5 transition-colors">
                 <X className="w-5 h-5" />
               </button>
@@ -306,14 +308,14 @@ export const DashboardView: React.FC<DashboardProps> = ({ user, onNavigate, onEd
                 <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${downloadFormat === 'digital' ? 'border-[#704287] bg-[#ECE9ED]/70' : 'border-[#E6E9ED] hover:bg-[#ECE9ED]/40'}`}>
                   <input type="radio" name="bulkFormat" checked={downloadFormat === 'digital'} onChange={() => setDownloadFormat('digital')} className="text-[#381F49] focus:ring-[#704287] h-4 w-4" />
                   <div className="ml-3">
-                    <span className="block text-sm font-semibold text-black">Digital use (PNG)</span>
+                    <span className="block text-sm font-semibold text-black">Digital Use (PNG)</span>
                     <span className="block text-xs font-light text-[#634B6F] mt-0.5">Best for social media and web</span>
                   </div>
                 </label>
                 <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${downloadFormat === 'print' ? 'border-[#704287] bg-[#ECE9ED]/70' : 'border-[#E6E9ED] hover:bg-[#ECE9ED]/40'}`}>
                   <input type="radio" name="bulkFormat" checked={downloadFormat === 'print'} onChange={() => setDownloadFormat('print')} className="text-[#381F49] focus:ring-[#704287] h-4 w-4" />
                   <div className="ml-3">
-                    <span className="block text-sm font-semibold text-black">Print ready (PDF)</span>
+                    <span className="block text-sm font-semibold text-black">Print Ready (PDF)</span>
                     <span className="block text-xs font-light text-[#634B6F] mt-0.5">High resolution for physical printing</span>
                   </div>
                 </label>
@@ -427,7 +429,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
-      <PageHeader title="Store management" onBack={() => onNavigate('dashboard')} />
+      <PageHeader title="Store Management" onBack={() => onNavigate('dashboard')} />
 
       <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-[#E6E9ED]">
         <p className="text-[#634B6F] font-normal mb-6">Manage the store details that will be available to auto-fill in your campaigns.</p>
@@ -452,23 +454,23 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
               <h4 className="text-xs font-semibold text-[#704287] tracking-wide mb-3">Store {index + 1}</h4>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium text-black mb-2">Store logo</label>
+                <label className="block text-sm font-medium text-black mb-2">Store Logo</label>
                 <div className="flex items-center gap-4">
                   {store.logoUrl ? (
-                    <img src={store.logoUrl} alt="Store logo" className="h-16 w-16 object-cover rounded-full shadow-sm border border-[#E6E9ED]" />
+                    <img src={store.logoUrl} alt="Store Logo" className="h-16 w-16 object-cover rounded-full shadow-sm border border-[#E6E9ED]" />
                   ) : (
                     <div className="h-16 w-16 rounded-full bg-white border border-[#E6E9ED] flex items-center justify-center shadow-sm">
                       <ImageIcon className="w-6 h-6 text-[#634B6F]" />
                     </div>
                   )}
                   <Button variant="outline" size="sm" onClick={() => { setActiveLogoStoreId(store.id); setIsModalOpen(true); }}>
-                    {store.logoUrl ? 'Change logo' : 'Upload logo'}
+                    {store.logoUrl ? 'Change Logo' : 'Upload Logo'}
                   </Button>
                 </div>
               </div>
 
               <Input
-                label="Store name"
+                label="Store Name"
                 placeholder="e.g. Sharma Electronics"
                 value={store.name}
                 onChange={(e) => handleStoreChange(store.id, 'name', e.target.value)}
@@ -481,14 +483,14 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                 onChange={(f, v) => handleStoreChange(store.id, f === 'line1' ? 'address' : f, v)}
               />
               <Input
-                label="Store contact number"
+                label="Store Contact Number"
                 placeholder="e.g. 98765 43210"
                 value={store.contactNumber}
                 onChange={(e) => handleStoreChange(store.id, 'contactNumber', e.target.value)}
                 required
               />
               <Input
-                label="Retailer URL (optional)"
+                label="Retailer URL (Optional)"
                 placeholder="e.g. www.yourstore.com"
                 value={store.retailerUrl || ''}
                 onChange={(e) => handleStoreChange(store.id, 'retailerUrl', e.target.value)}
@@ -505,7 +507,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
           className="mt-6 border-dashed"
           onClick={handleAddStore}
         >
-          <Plus className="w-4 h-4 mr-2" /> Add another store
+          <Plus className="w-4 h-4 mr-2" /> Add Another Store
         </Button>
 
         {stores.length > 0 && (
@@ -514,7 +516,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
 
         <div className="mt-8 flex justify-end gap-4">
           <Button variant="ghost" onClick={() => onNavigate('dashboard')}>Cancel</Button>
-          <Button onClick={handleSave}>Save changes</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </div>
       </div>
 
@@ -523,7 +525,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-[#E6E9ED] overflow-hidden flex flex-col">
             <div className="p-4 border-b border-[#E6E9ED] flex justify-between items-center bg-[#ECE9ED]">
-              <h3 className="font-semibold text-[#381F49]">Upload store logo</h3>
+              <h3 className="font-semibold text-[#381F49]">Upload Store Logo</h3>
               <button onClick={closeModal} className="p-1 text-[#634B6F] hover:text-[#381F49] rounded-full hover:bg-black/5 transition-colors">
                 <X className="w-5 h-5" />
               </button>
@@ -544,7 +546,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                     onChange={handleFileChange}
                   />
                   <Button onClick={() => fileInputRef.current?.click()} fullWidth>
-                    Choose from gallery
+                    Choose from Gallery
                   </Button>
                 </>
               ) : (
@@ -570,7 +572,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                     {profanityResult === 'passed' && (
                       <div className="text-[#00323C] flex flex-col items-center bg-[#40DDB1]/20 w-full p-3 rounded-lg border border-[#40DDB1]/50">
                         <CheckCircle2 className="w-6 h-6 mb-1" />
-                        <p className="font-semibold text-sm">Image approved!</p>
+                        <p className="font-semibold text-sm">Image Approved!</p>
                         <p className="text-xs font-normal text-[#00323C]/90 mt-0.5">Looks great and meets our guidelines.</p>
                       </div>
                     )}
@@ -578,7 +580,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                     {profanityResult === 'failed' && (
                       <div className="text-red-600 flex flex-col items-center bg-red-50 w-full p-3 rounded-lg border border-red-100">
                         <AlertTriangle className="w-6 h-6 mb-1" />
-                        <p className="font-semibold text-sm">Image rejected</p>
+                        <p className="font-semibold text-sm">Image Rejected</p>
                         <p className="text-xs font-normal text-red-700 mt-0.5">This image violates our content guidelines. Please choose another.</p>
                       </div>
                     )}
@@ -590,14 +592,14 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                       setProfanityResult('idle');
                       if (fileInputRef.current) fileInputRef.current.value = '';
                     }}>
-                      Try another
+                      Try Another
                     </Button>
                     <Button
                       className="flex-1"
                       disabled={profanityResult !== 'passed'}
                       onClick={confirmUpload}
                     >
-                      Use image
+                      Use Image
                     </Button>
                   </div>
                 </div>
@@ -690,19 +692,19 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
-      <PageHeader title="My account" onBack={() => onNavigate('dashboard')} />
+      <PageHeader title="My Account" onBack={() => onNavigate('dashboard')} />
 
       <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-[#E6E9ED]">
-        <h3 className="text-xs font-semibold text-[#381F49] tracking-wide mb-4">Your details</h3>
+        <h3 className="text-xs font-semibold text-[#381F49] tracking-wide mb-4">Your Details</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
-          <Input label="Full name" value={name} onChange={(e) => setName(e.target.value)} />
+          <Input label="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
           <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <Input label="GST number" value={gst} onChange={(e) => setGst(e.target.value)} />
-          <Input label="Business name" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
+          <Input label="GST Number" value={gst} onChange={(e) => setGst(e.target.value)} />
+          <Input label="Business Name" value={businessName} onChange={(e) => setBusinessName(e.target.value)} />
         </div>
 
         <div className="border-t border-[#E6E9ED] pt-6 mt-6">
-          <h3 className="text-xs font-semibold text-[#381F49] tracking-wide mb-4">Store details</h3>
+          <h3 className="text-xs font-semibold text-[#381F49] tracking-wide mb-4">Store Details</h3>
           <div className="space-y-6">
             {stores.length === 0 && (
               <div className="p-6 bg-[#ECE9ED]/55 rounded-xl border border-[#E6E9ED] text-center text-sm font-light text-[#634B6F]">
@@ -723,23 +725,23 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
                 <h4 className="text-xs font-semibold text-[#704287] tracking-wide mb-4">Store {index + 1}</h4>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-black mb-2">Store logo</label>
+                  <label className="block text-sm font-medium text-black mb-2">Store Logo</label>
                   <div className="flex items-center gap-4">
                     {store.logoUrl ? (
-                      <img src={store.logoUrl} alt="Store logo" className="h-16 w-16 object-cover rounded-full shadow-sm border border-[#E6E9ED]" />
+                      <img src={store.logoUrl} alt="Store Logo" className="h-16 w-16 object-cover rounded-full shadow-sm border border-[#E6E9ED]" />
                     ) : (
                       <div className="h-16 w-16 rounded-full bg-white border border-[#E6E9ED] flex items-center justify-center shadow-sm">
                         <ImageIcon className="w-6 h-6 text-[#634B6F]" />
                       </div>
                     )}
                     <Button variant="outline" size="sm" onClick={() => { setActiveLogoStoreId(store.id); setIsModalOpen(true); }}>
-                      {store.logoUrl ? 'Change logo' : 'Upload logo'}
+                      {store.logoUrl ? 'Change Logo' : 'Upload Logo'}
                     </Button>
                   </div>
                 </div>
 
                 <Input
-                  label="Store name"
+                  label="Store Name"
                   placeholder="e.g. Sharma Electronics"
                   value={store.name}
                   onChange={(e) => handleStoreChange(store.id, 'name', e.target.value)}
@@ -751,13 +753,13 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
                   onChange={(f, v) => handleStoreChange(store.id, f === 'line1' ? 'address' : f, v)}
                 />
                 <Input
-                  label="Store contact number"
+                  label="Store Contact Number"
                   placeholder="e.g. 98765 43210"
                   value={store.contactNumber}
                   onChange={(e) => handleStoreChange(store.id, 'contactNumber', e.target.value)}
                 />
                 <Input
-                  label="Retailer URL (optional)"
+                  label="Retailer URL (Optional)"
                   placeholder="e.g. www.yourstore.com"
                   value={store.retailerUrl || ''}
                   onChange={(e) => handleStoreChange(store.id, 'retailerUrl', e.target.value)}
@@ -774,7 +776,7 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
             className="mt-6 border-dashed"
             onClick={handleAddStore}
           >
-            <Plus className="w-4 h-4 mr-2" /> Add another store
+            <Plus className="w-4 h-4 mr-2" /> Add Another Store
           </Button>
         </div>
 
@@ -784,7 +786,7 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
 
         <div className="mt-8 flex justify-end gap-4">
           <Button variant="ghost" onClick={() => onNavigate('dashboard')}>Cancel</Button>
-          <Button onClick={handleSave}>Save changes</Button>
+          <Button onClick={handleSave}>Save Changes</Button>
         </div>
       </div>
 
@@ -793,7 +795,7 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-[#E6E9ED] overflow-hidden flex flex-col">
             <div className="p-4 border-b border-[#E6E9ED] flex justify-between items-center bg-[#ECE9ED]">
-              <h3 className="font-semibold text-[#381F49]">Upload store logo</h3>
+              <h3 className="font-semibold text-[#381F49]">Upload Store Logo</h3>
               <button onClick={closeModal} className="p-1 text-[#634B6F] hover:text-[#381F49] rounded-full hover:bg-black/5 transition-colors">
                 <X className="w-5 h-5" />
               </button>
@@ -814,7 +816,7 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
                     onChange={handleFileChange}
                   />
                   <Button onClick={() => fileInputRef.current?.click()} fullWidth>
-                    Choose from gallery
+                    Choose from Gallery
                   </Button>
                 </>
               ) : (
@@ -842,10 +844,10 @@ export const ProfileView: React.FC<ProfileProps> = ({ user, onNavigate, onUpdate
                   )}
                   <div className="flex gap-3 w-full">
                     <Button variant="outline" fullWidth onClick={() => { setTempImage(null); setProfanityResult('idle'); if (fileInputRef.current) fileInputRef.current.value = ''; }}>
-                      Choose different
+                      Choose Different
                     </Button>
                     <Button fullWidth onClick={confirmUpload} disabled={profanityResult !== 'passed'}>
-                      Use this logo
+                      Use This Logo
                     </Button>
                   </div>
                 </div>
