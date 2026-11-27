@@ -16,7 +16,7 @@ interface AuthProps {
 const LANDING_FAQS = [
   {
     q: 'How do I get started?',
-    a: 'Simply click on "Choose a Template" or "Create Account" to begin your journey.',
+    a: 'Simply click on "Choose a template" or "Create account" to begin your journey.',
   },
   {
     q: 'Is it free to use?',
@@ -288,15 +288,15 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
         <GoldHeroSwirls drift={heroDrift} />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl sm:text-6xl font-light text-white tracking-tight mb-6 leading-[1.12]">
+          <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-tight mb-6 leading-[1.12]">
             <span className="bh-line-mask">
               <span className="bh-line-inner">Lorem ipsum dolor sit amet</span>
             </span>
             <span className="bh-line-mask">
-              <span className="bh-line-inner bh-d1 text-[#F2BE42] font-semibold">consectetur.</span>
+              <span className="bh-line-inner bh-d1 text-[#F2BE42] font-bold">consectetur.</span>
             </span>
           </h1>
-          <p className="bh-fade-up bh-d2 text-lg sm:text-xl text-white/85 mb-10 max-w-2xl mx-auto">
+          <p className="bh-fade-up bh-d2 text-lg sm:text-xl font-normal text-white/85 mb-10 max-w-2xl mx-auto">
             Choose a template, add your store details once, and generate professional marketing materials for all your social channels instantly.
           </p>
           <div className="bh-fade-up bh-d3 flex flex-col items-center space-y-4">
@@ -306,23 +306,23 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
               onClick={() => onNavigate(user ? 'gallery' : 'login')}
               className="group w-full sm:w-auto px-8"
             >
-              <span>Choose a Template</span>
+              <span>Choose a template</span>
               <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
             {!user && (
               <div className="bh-fade-up bh-d4 flex items-center space-x-4">
                 <button
                   onClick={() => onNavigate('register')}
-                  className="bh-link text-[#E5A9FF] font-semibold hover:text-[#F2BE42] text-sm transition-colors"
+                  className="bh-link text-[#E5A9FF] font-medium hover:text-[#F2BE42] text-sm transition-colors"
                 >
-                  Create Account
+                  Create account
                 </button>
                 <span className="text-white/30">|</span>
                 <button
                   onClick={() => onNavigate('login')}
-                  className="bh-link text-[#E5A9FF] font-semibold hover:text-[#F2BE42] text-sm transition-colors"
+                  className="bh-link text-[#E5A9FF] font-medium hover:text-[#F2BE42] text-sm transition-colors"
                 >
-                  Sign In
+                  Sign in
                 </button>
               </div>
             )}
@@ -338,10 +338,10 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
         <div aria-hidden="true" className="bh-border-draw absolute top-0 inset-x-0 h-px bg-[#E6E9ED]" />
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           <div className="lg:col-span-5">
-            <p className="bh-fade-up text-xs font-bold uppercase tracking-[0.18em] text-[#704287] mb-3">
-              Gold the Moment
+            <p className="bh-fade-up text-xs font-medium tracking-wide text-[#704287] mb-3">
+              Gold the moment
             </p>
-            <h2 className="text-3xl sm:text-4xl font-light text-black leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold text-black leading-tight">
               <span className="bh-line-mask">
                 <span className="bh-line-inner bh-d1">About Goldify</span>
               </span>
@@ -349,7 +349,7 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
             <div aria-hidden="true" className="bh-border-draw bh-d2 mt-5 h-px w-12 bg-[#F2BE42] origin-left" />
           </div>
           <div className="lg:col-span-7">
-            <p className="bh-fade-up bh-d2 text-lg text-[#634B6F] leading-relaxed">
+            <p className="bh-fade-up bh-d2 text-lg font-normal text-[#634B6F] leading-relaxed">
               Goldify is designed specifically for small and medium businesses to effortlessly create high-quality, branded promotional content. We bridge the gap between complex design tools and the fast-paced needs of retail marketing, allowing you to focus on what you do best: running your business.
             </p>
           </div>
@@ -362,10 +362,10 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
           <GoldFeaturesRibbon />
 
           <div className="relative z-10 max-w-7xl mx-auto text-center mb-14">
-            <p className="bh-fade-up text-xs font-bold uppercase tracking-[0.18em] text-[#E5A9FF] mb-3">
+            <p className="bh-fade-up text-xs font-medium tracking-wide text-[#E5A9FF] mb-3">
               Why Goldify
             </p>
-            <h2 className="text-3xl sm:text-4xl font-light text-white">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">
               <span className="bh-line-mask">
                 <span className="bh-line-inner bh-d1">Features</span>
               </span>
@@ -380,19 +380,19 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
               {
                 num: '1',
                 stagger: 'bh-card-d1',
-                title: 'Lightning Fast',
+                title: 'Lightning fast',
                 desc: 'Generate campaigns in seconds. No more waiting for designers or struggling with complex software.',
               },
               {
                 num: '2',
                 stagger: 'bh-card-d2',
-                title: 'On-Brand Always',
+                title: 'On-brand always',
                 desc: 'Your logo, your address, your contact info—automatically applied to every template perfectly.',
               },
               {
                 num: '3',
                 stagger: 'bh-card-d3',
-                title: 'Reliable & Secure',
+                title: 'Reliable & secure',
                 desc: 'Your data and assets are stored securely, ensuring your business information is always protected.',
               },
             ].map((item) => (
@@ -408,12 +408,12 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
                       aria-hidden="true"
                       className="bh-feature-ring-img w-full h-full object-contain"
                     />
-                    <span className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 text-xl font-semibold text-[#381F49] leading-none">
+                    <span className="absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 text-xl font-bold text-[#381F49] leading-none">
                       {item.num}
                     </span>
                   </div>
-                  <h3 className="text-xl font-light text-black mb-3">{item.title}</h3>
-                  <p className="text-[#634B6F] leading-relaxed">{item.desc}</p>
+                  <h3 className="text-xl font-semibold text-black mb-3">{item.title}</h3>
+                  <p className="font-normal text-[#634B6F] leading-relaxed">{item.desc}</p>
                 </div>
               </RevealItem>
             ))}
@@ -425,20 +425,20 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
       <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
           <div ref={faqs.ref} className={`lg:col-span-5 lg:sticky lg:top-28 ${faqs.inView ? 'is-inview' : ''}`}>
-            <p className="bh-fade-up text-xs font-bold uppercase tracking-[0.18em] text-[#704287] mb-3">
+            <p className="bh-fade-up text-xs font-medium tracking-wide text-[#704287] mb-3">
               FAQs
             </p>
-            <h2 className="text-3xl sm:text-4xl font-light text-black leading-tight mb-6">
+            <h2 className="text-3xl sm:text-4xl font-bold text-black leading-tight mb-6">
               <span className="bh-line-mask">
-                <span className="bh-line-inner bh-d1">Frequently Asked</span>
+                <span className="bh-line-inner bh-d1">Frequently asked</span>
               </span>
               <span className="bh-line-mask">
-                <span className="bh-line-inner bh-d2">Questions</span>
+                <span className="bh-line-inner bh-d2">questions</span>
               </span>
             </h2>
             <div className="bh-fade-up bh-d3">
               <Button variant="outline" onClick={() => onNavigate('faq')}>
-                View All FAQs
+                View all FAQs
               </Button>
             </div>
           </div>
@@ -467,7 +467,7 @@ export const LandingView: React.FC<AuthProps> = ({ onNavigate, user }) => {
                     </button>
                     <div className="bh-accordion-body" data-open={isOpen ? 'true' : 'false'}>
                       <div className="bh-accordion-inner">
-                        <p className="text-[#634B6F] px-6 pb-6 -mt-1 leading-relaxed">{faq.a}</p>
+                        <p className="font-normal text-[#634B6F] px-6 pb-6 -mt-1 leading-relaxed">{faq.a}</p>
                       </div>
                     </div>
                   </div>
@@ -535,8 +535,8 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
     setGstStatus('verifying');
     setTimeout(() => {
       setGstStatus('verified');
-      setStoreName('Auto-populated Store Name');
-      setStoreAddress('123 Auto-populated Address, City');
+      setStoreName('Auto-populated store name');
+      setStoreAddress('123 Auto-populated address, city');
       setStoreContactNumber('9876543210');
     }, 1500);
   };
@@ -580,8 +580,8 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
         <AuthCardBrandBand />
         <div className="p-6 sm:p-10 space-y-8">
           <div className="flex flex-col items-center">
-            <h2 className="text-center text-2xl font-light text-black">Create your account</h2>
-            <p className="mt-2 text-center text-sm text-[#634B6F]">
+            <h2 className="text-center text-2xl font-bold text-black">Create your account</h2>
+            <p className="mt-2 text-center text-sm font-light text-[#634B6F]">
               to continue to Goldify
             </p>
           </div>
@@ -590,15 +590,15 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <Input
-                label="First Name *"
-                placeholder="First Name"
+                label="First name *"
+                placeholder="First name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
               />
               <Input
-                label="Last Name *"
-                placeholder="Last Name"
+                label="Last name *"
+                placeholder="Last name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
@@ -618,7 +618,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
                 <div className="flex-grow">
                   <Input
                     id="register-gst-input"
-                    label="GST Number *"
+                    label="GST number *"
                     placeholder="e.g. 22AAAAA0000A1Z5"
                     value={gstNumber}
                     maxLength={15}
@@ -636,7 +636,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
                   {gstStatus === 'verifying' ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Verify'}
                 </Button>
               </div>
-              <p className={`text-sm mt-1 flex items-center ${gstStatus === 'verified' ? 'text-[#00323C] font-semibold' : 'text-[#634B6F]'}`}>
+              <p className={`text-sm mt-1 flex items-center ${gstStatus === 'verified' ? 'text-[#00323C] font-medium' : 'font-light text-[#634B6F]'}`}>
                 {gstStatus === 'verified' && <CheckCircle2 className="w-4 h-4 mr-1 text-[#00323C]" />}
                 {gstStatus === 'verifying'
                   ? 'Verifying GSTIN...'
@@ -647,23 +647,23 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
 
               {gstStatus === 'verified' && (
                 <div className="p-4 sm:p-5 bg-[#ECE9ED]/60 rounded-xl border border-[#E6E9ED] mt-4 space-y-3">
-                  <h4 className="text-xs font-bold text-[#704287] uppercase tracking-[0.14em]">Store Details</h4>
+                  <h4 className="text-xs font-semibold text-[#704287] tracking-wide">Store details</h4>
                   <Input
-                    label="Store Name"
+                    label="Store name"
                     value={storeName}
                     readOnly
                     disabled
                     className="bg-[#ECE9ED] text-[#634B6F] cursor-not-allowed"
                   />
                   <Input
-                    label="Store Address"
+                    label="Store address"
                     value={storeAddress}
                     readOnly
                     disabled
                     className="bg-[#ECE9ED] text-[#634B6F] cursor-not-allowed"
                   />
                   <Input
-                    label="Store Contact Number"
+                    label="Store contact number"
                     value={storeContactNumber}
                     readOnly
                     disabled
@@ -684,7 +684,7 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
               required
               className="h-4 w-4 text-[#381F49] focus:ring-[#704287] border-[#634B6F]/50 rounded cursor-pointer"
             />
-            <label htmlFor="terms" className="ml-2 block text-sm text-black">
+            <label htmlFor="terms" className="ml-2 block text-sm font-normal text-black">
               I agree to the{' '}
               <button
                 type="button"
@@ -695,21 +695,21 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
                     setShowLegalModal(true);
                   }
                 }}
-                className="bh-link text-[#704287] hover:text-[#381F49] font-semibold"
+                className="bh-link text-[#704287] hover:text-[#381F49] font-medium"
               >
-                Terms &amp; Privacy Policy
+                Terms &amp; privacy policy
               </button>
             </label>
           </div>
 
-          <p className="text-xs text-[#634B6F]">* Mandatory fields</p>
+          <p className="text-xs font-light text-[#634B6F]">* Mandatory fields</p>
 
           <div className="pt-2 flex flex-col sm:flex-row-reverse items-center justify-between gap-4">
             <Button type="submit" size="lg" className="group w-full sm:w-auto px-8" disabled={!isFormValid}>
-              <span>Send Email OTP</span>
+              <span>Send email OTP</span>
               <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
-            <button type="button" onClick={() => onNavigate('login')} className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors">
+            <button type="button" onClick={() => onNavigate('login')} className="bh-link text-[#704287] font-medium hover:text-[#381F49] text-sm transition-colors">
               Sign in instead
             </button>
           </div>
@@ -719,8 +719,8 @@ export const RegisterView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode })
 
       {showGstPopup && (
         <NoticeModal
-          title="GST Verification Required"
-          message="Please verify your GST Number before agreeing to the Terms & Privacy Policy."
+          title="GST verification required"
+          message="Please verify your GST number before agreeing to the Terms & privacy policy."
           actionLabel="Verify GST"
           onAction={handleGstPopupAction}
           onClose={() => setShowGstPopup(false)}
@@ -754,8 +754,8 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) =>
         <AuthCardBrandBand />
         <div className="p-6 sm:p-10 space-y-8">
           <div className="flex flex-col items-center">
-            <h2 className="text-center text-2xl font-light text-black">Sign in</h2>
-            <p className="mt-2 text-center text-sm text-[#634B6F]">
+            <h2 className="text-center text-2xl font-bold text-black">Sign in</h2>
+            <p className="mt-2 text-center text-sm font-light text-[#634B6F]">
               to continue to Goldify
             </p>
           </div>
@@ -777,7 +777,7 @@ export const LoginView: React.FC<AuthProps> = ({ onNavigate, onSetAuthMode }) =>
                 <span>Send</span>
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
               </Button>
-              <button type="button" onClick={() => onNavigate('register')} className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors">
+              <button type="button" onClick={() => onNavigate('register')} className="bh-link text-[#704287] font-medium hover:text-[#381F49] text-sm transition-colors">
                 Create account
               </button>
             </div>
@@ -843,8 +843,8 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = '
         <AuthCardBrandBand />
         <div className="p-6 sm:p-10 space-y-8">
           <div className="flex flex-col items-center">
-            <h2 className="text-center text-2xl font-light text-black">Verify it's you</h2>
-            <p className="mt-2 text-center text-sm text-[#634B6F]">
+            <h2 className="text-center text-2xl font-bold text-black">Verify it's you</h2>
+            <p className="mt-2 text-center text-sm font-light text-[#634B6F]">
               We've sent a 4-digit code to your email.
             </p>
           </div>
@@ -867,9 +867,9 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = '
 
             <div className="text-center text-sm">
               {timer > 0 ? (
-                <span className="text-[#634B6F]">Resend code in 00:{timer.toString().padStart(2, '0')}</span>
+                <span className="font-light text-[#634B6F]">Resend code in 00:{timer.toString().padStart(2, '0')}</span>
               ) : (
-                <button className="bh-link text-[#704287] font-semibold hover:text-[#381F49]">Resend OTP</button>
+                <button className="bh-link text-[#704287] font-medium hover:text-[#381F49]">Resend OTP</button>
               )}
             </div>
 
@@ -883,7 +883,7 @@ export const OTPView: React.FC<AuthProps> = ({ onNavigate, onLogin, authMode = '
                 <span>{isLoading ? 'Verifying...' : 'Verify'}</span>
                 {!isLoading && <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />}
               </Button>
-              <button type="button" onClick={() => onNavigate(authMode === 'new' ? 'register' : 'login')} className="bh-link text-[#704287] font-semibold hover:text-[#381F49] text-sm transition-colors">
+              <button type="button" onClick={() => onNavigate(authMode === 'new' ? 'register' : 'login')} className="bh-link text-[#704287] font-medium hover:text-[#381F49] text-sm transition-colors">
                 Back
               </button>
             </div>

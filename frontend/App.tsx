@@ -157,7 +157,7 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void; onOpenLeg
               className="h-14 w-auto object-contain select-none"
             />
           </button>
-          <nav className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-semibold" aria-label="Footer navigation">
+          <nav className="flex flex-wrap items-center gap-x-8 gap-y-3 text-sm font-medium" aria-label="Footer navigation">
             <button
               type="button"
               onClick={() => onNavigate('faq')}
@@ -170,12 +170,12 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void; onOpenLeg
               onClick={onOpenLegal}
               className="bh-link text-[#E5A9FF] hover:text-[#F2BE42] transition-colors"
             >
-              Terms &amp; Privacy Policy
+              Terms &amp; privacy policy
             </button>
           </nav>
         </div>
         <div className="border-t border-white/10 pt-6 flex items-center justify-start">
-          <p className="text-white/70 text-sm">© 2024 Goldify. All rights reserved.</p>
+          <p className="text-white/70 text-sm font-light">© 2024 Goldify. All rights reserved.</p>
         </div>
       </div>
     </footer>

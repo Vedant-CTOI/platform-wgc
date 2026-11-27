@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goldify</title>
     <meta name="theme-color" content="#381F49">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -40,19 +43,22 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['Noto Sans', 'Roboto', 'Arial', 'Helvetica', 'sans-serif'],
+                        sans: ['Noto Sans', 'sans-serif'],
+                        serif: ['Noto Sans', 'sans-serif'],
+                        mono: ['Noto Sans', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&display=swap');
         :root {
             --ease-editorial: cubic-bezier(0.215, 0.61, 0.355, 1);
             --ease-arch: cubic-bezier(0.645, 0.045, 0.355, 1);
         }
-        body { font-family: 'Noto Sans', Roboto, Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased; background-color: #FFFFFF; color: #000000; }
+        *, *::before, *::after { font-family: 'Noto Sans', sans-serif; }
+        html, body, button, input, select, textarea { font-family: 'Noto Sans', sans-serif; }
+        body { font-weight: 400; -webkit-font-smoothing: antialiased; background-color: #FFFFFF; color: #000000; }
         input[type="checkbox"], input[type="radio"] { accent-color: #381F49; }
         /* Hide scrollbar for horizontal scrolling areas but keep functionality */
         .no-scrollbar::-webkit-scrollbar { display: none; }

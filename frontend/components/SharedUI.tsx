@@ -82,7 +82,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button: React.FC<ButtonProps> = ({ 
   children, variant = 'primary', size = 'md', fullWidth, className = '', ...props 
 }) => {
-  const baseStyle = "inline-flex items-center justify-center rounded-lg font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseStyle = "inline-flex items-center justify-center rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
   
   const variants = {
     primary: "bh-btn-wipe bh-btn-primary bg-[#381F49] text-white focus:ring-[#704287] shadow-sm",
@@ -118,13 +118,13 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input: React.FC<InputProps> = ({ label, error, helperText, className = '', ...props }) => {
   return (
     <div className="w-full mb-4">
-      {label && <label className="block text-sm font-semibold text-black mb-1">{label}</label>}
+      {label && <label className="block text-sm font-medium text-black mb-1">{label}</label>}
       <input 
-        className={`block w-full rounded-lg border ${error ? 'border-red-500 focus:ring-red-500' : 'border-[#634B6F]/40 focus:ring-[#704287] focus:border-[#704287]'} bg-white px-4 py-2.5 min-h-[44px] text-black placeholder:text-[#634B6F]/60 shadow-sm focus:outline-none sm:text-sm transition-colors ${className}`}
+        className={`block w-full rounded-lg border ${error ? 'border-red-500 focus:ring-red-500' : 'border-[#634B6F]/40 focus:ring-[#704287] focus:border-[#704287]'} bg-white px-4 py-2.5 min-h-[44px] text-black font-normal placeholder:text-[#634B6F]/60 shadow-sm focus:outline-none sm:text-sm transition-colors ${className}`}
         {...props}
       />
-      {error && <p className="mt-1 text-sm text-red-600 flex items-center"><AlertCircle className="w-4 h-4 mr-1"/>{error}</p>}
-      {helperText && !error && <p className="mt-1 text-sm text-[#634B6F]">{helperText}</p>}
+      {error && <p className="mt-1 text-sm font-medium text-red-600 flex items-center"><AlertCircle className="w-4 h-4 mr-1"/>{error}</p>}
+      {helperText && !error && <p className="mt-1 text-sm font-light text-[#634B6F]">{helperText}</p>}
     </div>
   );
 };
@@ -140,7 +140,7 @@ export const NoticeModal: React.FC<{ title: string; message: string; onClose: ()
         </button>
       </div>
       <div className="p-6 text-center">
-        <p className="text-black mb-6">{message}</p>
+        <p className="text-black font-normal mb-6">{message}</p>
         <Button fullWidth onClick={onAction || onClose}>{actionLabel}</Button>
       </div>
     </div>
@@ -170,7 +170,7 @@ export const AddressFields: React.FC<{
   return (
     <>
       <Input
-        label="Address Line 1 *"
+        label="Address line 1 *"
         placeholder="e.g. 12 MG Road"
         value={line1}
         onChange={(e) => handle('line1', ADDRESS_LIMITS.line1, e.target.value)}
@@ -178,20 +178,20 @@ export const AddressFields: React.FC<{
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
         <Input
-          label="Landmark (Optional)"
+          label="Landmark (optional)"
           placeholder="e.g. Near City Mall"
           value={landmark}
           onChange={(e) => handle('landmark', ADDRESS_LIMITS.landmark, e.target.value)}
         />
         <Input
-          label="City (Optional)"
+          label="City (optional)"
           placeholder="e.g. Mumbai"
           value={city}
           onChange={(e) => handle('city', ADDRESS_LIMITS.city, e.target.value)}
         />
       </div>
       {showLimitModal && (
-        <NoticeModal title="Character Limit" message={CHAR_LIMIT_MESSAGE} onClose={() => setShowLimitModal(false)} />
+        <NoticeModal title="Character limit" message={CHAR_LIMIT_MESSAGE} onClose={() => setShowLimitModal(false)} />
       )}
     </>
   );
@@ -210,7 +210,7 @@ const LanguageSelector: React.FC = () => {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 px-2.5 py-2 text-sm font-semibold text-white hover:bg-[#704287] rounded-md transition-colors"
+        className="flex items-center gap-1.5 px-2.5 py-2 text-sm font-medium text-white hover:bg-[#704287] rounded-md transition-colors"
         title="Language"
       >
         <Globe className="w-5 h-5" />
@@ -224,7 +224,7 @@ const LanguageSelector: React.FC = () => {
               <button
                 key={l.code}
                 onClick={() => { setLang(l.code); setOpen(false); }}
-                className="flex items-center justify-between w-full text-left px-4 py-2.5 text-sm text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors"
+                className="flex items-center justify-between w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors"
               >
                 <span>{l.name}</span>
                 {lang === l.code && <Check className="w-4 h-4 text-[#704287]" />}
@@ -266,7 +266,7 @@ export const ShareBand: React.FC = () => {
   };
 
   const enc = encodeURIComponent;
-  const optionClass = "flex items-center w-full px-4 py-3 rounded-lg border border-[#E6E9ED] text-sm font-semibold text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors";
+  const optionClass = "flex items-center w-full px-4 py-3 rounded-lg border border-[#E6E9ED] text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors";
 
   return (
     <section ref={band.ref} className={`relative bg-[#ECE9ED] ${band.inView ? 'is-inview' : ''}`}>
@@ -280,7 +280,7 @@ export const ShareBand: React.FC = () => {
         </p>
         <div className="bh-fade-up bh-d2 w-full sm:w-auto">
           <Button variant="gold" size="lg" onClick={handleShare} className="group w-full sm:w-auto px-8">
-            <span>Share Now</span>
+            <span>Share now</span>
             <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
           </Button>
         </div>
@@ -394,21 +394,21 @@ export const TopNav: React.FC<{
                       {accountLabel && (
                         <>
                           <div className="px-4 py-2.5">
-                            <span className="block text-xs text-[#634B6F]">Signed in as</span>
-                            <span className="block text-sm font-semibold text-[#381F49]">{accountLabel}</span>
+                            <span className="block text-xs font-light text-[#634B6F]">Signed in as</span>
+                            <span className="block text-sm font-medium text-[#381F49]">{accountLabel}</span>
                           </div>
                           <div className="border-t border-[#E6E9ED] my-1"></div>
                         </>
                       )}
-                      <button onClick={() => handleNav('profile_setup')} className="block w-full text-left px-4 py-2.5 text-sm text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">My Account</button>
-                      <button onClick={() => handleNav('faq')} className="block w-full text-left px-4 py-2.5 text-sm text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">FAQs</button>
+                      <button onClick={() => handleNav('profile_setup')} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">My account</button>
+                      <button onClick={() => handleNav('faq')} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">FAQs</button>
                       
                       <div className="border-t border-[#E6E9ED] my-1"></div>
                       
-                      <button onClick={() => handleNav('terms')} className="block w-full text-left px-4 py-2.5 text-sm text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">Terms &amp; Privacy Policy</button>
+                      <button onClick={() => handleNav('terms')} className="block w-full text-left px-4 py-2.5 text-sm font-medium text-black hover:bg-[#ECE9ED] hover:text-[#381F49] transition-colors">Terms &amp; privacy policy</button>
                       
                       <div className="border-t border-[#E6E9ED] my-1"></div>
-                      <button onClick={() => { setIsMenuOpen(false); onLogout(); }} className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors font-semibold">Sign out</button>
+                      <button onClick={() => { setIsMenuOpen(false); onLogout(); }} className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium">Sign out</button>
                     </div>
                   )}
                 </div>
@@ -430,7 +430,7 @@ export const PageHeader: React.FC<{ title: string; onBack?: () => void; action?:
           <ChevronLeft className="w-5 h-5" />
         </button>
       )}
-      <h1 className="text-2xl font-semibold text-black">{title}</h1>
+      <h1 className="text-2xl font-bold text-black">{title}</h1>
     </div>
     {action && <div>{action}</div>}
   </div>

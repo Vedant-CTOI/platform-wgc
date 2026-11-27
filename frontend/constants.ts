@@ -3,7 +3,7 @@ import { Template } from './types';
 export const MOCK_TEMPLATES: Template[] = [
   {
     id: 't1',
-    name: 'Diwali Mega Sale',
+    name: 'Diwali mega sale',
     category: 'Diwali',
     thumbnail: '/creatives/full-page-diwali.jpg',
     ratioId: '610x794',
@@ -17,7 +17,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't2',
-    name: 'Wedding Collection',
+    name: 'Wedding collection',
     category: 'Wedding',
     thumbnail: '/creatives/half-page-wedding.jpg',
     ratioId: '936x709',
@@ -31,7 +31,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't3',
-    name: 'Concert Tickets',
+    name: 'Concert tickets',
     category: 'Concert',
     thumbnail: '/creatives/social-media-concert.jpg',
     ratioId: '621x621',
@@ -45,7 +45,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't4',
-    name: 'Office Supplies',
+    name: 'Office supplies',
     category: 'Office',
     thumbnail: '/creatives/poster-office.jpg',
     ratioId: '610x794',
@@ -59,7 +59,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't5',
-    name: 'Diwali Gifts',
+    name: 'Diwali gifts',
     category: 'Diwali',
     thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: '621x621',
@@ -73,7 +73,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't6',
-    name: 'Wedding Decor',
+    name: 'Wedding decor',
     category: 'Wedding',
     thumbnail: '/creatives/half-page-wedding.jpg',
     ratioId: '936x709',
@@ -87,7 +87,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't7',
-    name: 'Music Festival',
+    name: 'Music festival',
     category: 'Concert',
     thumbnail: '/creatives/full-page-concert.jpg',
     ratioId: '610x794',
@@ -101,7 +101,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't8',
-    name: 'Corporate Event',
+    name: 'Corporate event',
     category: 'Office',
     thumbnail: '/creatives/half-page-office.jpg',
     ratioId: '936x709',
@@ -115,7 +115,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't9',
-    name: 'Diwali Sweets',
+    name: 'Diwali sweets',
     category: 'Diwali',
     thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: '621x621',
@@ -129,7 +129,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't10',
-    name: 'Bridal Wear',
+    name: 'Bridal wear',
     category: 'Wedding',
     thumbnail: '/creatives/full-page-wedding.jpg',
     ratioId: '610x794',
@@ -143,7 +143,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't11',
-    name: 'Rock Concert',
+    name: 'Rock concert',
     category: 'Concert',
     thumbnail: '/creatives/half-page-concert.jpg',
     ratioId: '936x709',
@@ -157,7 +157,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't12',
-    name: 'Office Furniture',
+    name: 'Office furniture',
     category: 'Office',
     thumbnail: '/creatives/social-media-office.jpg',
     ratioId: '621x621',
@@ -171,7 +171,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't13',
-    name: 'Diwali Crackers',
+    name: 'Diwali crackers',
     category: 'Diwali',
     thumbnail: '/creatives/poster-diwali.jpg',
     ratioId: '610x794',
@@ -185,7 +185,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't14',
-    name: 'Wedding Photography',
+    name: 'Wedding photography',
     category: 'Wedding',
     thumbnail: '/creatives/half-page-wedding.jpg',
     ratioId: '936x709',
@@ -199,7 +199,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't15',
-    name: 'Festive Quarter Page',
+    name: 'Festive quarter page',
     category: 'Diwali',
     thumbnail: '/creatives/full-page-diwali.jpg',
     ratioId: '468x709',
@@ -209,7 +209,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't16',
-    name: 'Bridal Standee',
+    name: 'Bridal standee',
     category: 'Wedding',
     thumbnail: '/creatives/poster-wedding.jpg',
     ratioId: 'standee-10800x21600',
@@ -219,7 +219,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't17',
-    name: 'In-store Poster',
+    name: 'In-store poster',
     category: 'Concert',
     thumbnail: '/creatives/half-page-concert.jpg',
     ratioId: 'poster-5700x4200',
@@ -229,7 +229,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't18',
-    name: 'Highway Billboard',
+    name: 'Highway billboard',
     category: 'Office',
     thumbnail: '/creatives/half-page-office.jpg',
     ratioId: 'outdoor-2x1',
@@ -239,7 +239,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't19',
-    name: 'Festive Outdoor Square',
+    name: 'Festive outdoor square',
     category: 'Diwali',
     thumbnail: '/creatives/social-media-diwali.jpg',
     ratioId: 'outdoor-1x1',
@@ -249,7 +249,7 @@ export const MOCK_TEMPLATES: Template[] = [
   },
   {
     id: 't20',
-    name: 'Bridal Outdoor Vertical',
+    name: 'Bridal outdoor vertical',
     category: 'Wedding',
     thumbnail: '/creatives/full-page-wedding.jpg',
     ratioId: 'outdoor-1x2',
@@ -270,13 +270,13 @@ export const CATEGORY_BADGE_STYLES: Record<string, string> = {
 };
 
 // Media formats grouped into categories (grouped size filter across gallery + dashboard).
-export const MEDIA_GROUPS = ['Print Ads', 'Social Media', 'Outdoor', 'Collaterals'] as const;
+export const MEDIA_GROUPS = ['Print ads', 'Social media', 'Outdoor', 'Collaterals'] as const;
 
 export const ASPECT_RATIOS = [
-  { id: '610x794', name: 'Full Page', class: 'aspect-[610/794]', group: 'Print Ads' },
-  { id: '936x709', name: 'Half Page', class: 'aspect-[936/709]', group: 'Print Ads' },
-  { id: '468x709', name: 'Quarter Page', class: 'aspect-[468/709]', group: 'Print Ads' },
-  { id: '621x621', name: '1:1 Square Post', class: 'aspect-square', group: 'Social Media' },
+  { id: '610x794', name: 'Full page', class: 'aspect-[610/794]', group: 'Print ads' },
+  { id: '936x709', name: 'Half page', class: 'aspect-[936/709]', group: 'Print ads' },
+  { id: '468x709', name: 'Quarter page', class: 'aspect-[468/709]', group: 'Print ads' },
+  { id: '621x621', name: '1:1 square post', class: 'aspect-square', group: 'Social media' },
   { id: 'outdoor-1x1', name: '1:1', class: 'aspect-square', group: 'Outdoor' },
   { id: 'outdoor-2x1', name: '2:1', class: 'aspect-[2/1]', group: 'Outdoor' },
   { id: 'outdoor-1x2', name: '1:2', class: 'aspect-[1/2]', group: 'Outdoor' },
@@ -286,7 +286,7 @@ export const ASPECT_RATIOS = [
 
 export const getRatioDisplayLabel = (ratioId?: string, fallbackClass?: string) => {
   const ratio = ASPECT_RATIOS.find(r => (ratioId ? r.id === ratioId : r.class === fallbackClass));
-  if (!ratio) return 'Social Media';
+  if (!ratio) return 'Social media';
   return ratio.group === 'Outdoor' ? `Outdoor ${ratio.name}` : ratio.name;
 };
 
