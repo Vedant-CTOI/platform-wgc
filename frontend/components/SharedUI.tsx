@@ -314,6 +314,41 @@ export const ShareBand: React.FC = () => {
   );
 };
 
+// --- Dummy Cookie Consent Banner (UK English, dismissible per session, reappears on reload) ---
+export const CookieBanner: React.FC<{
+  onAccept: () => void;
+  onReject: () => void;
+  onOpenLegal: () => void;
+}> = ({ onAccept, onReject, onOpenLegal }) => (
+  <div
+    role="region"
+    aria-label="Cookie Notice"
+    className="fixed bottom-0 inset-x-0 z-[60] bg-white/95 backdrop-blur-md border-t border-[#F2BE42]/75 shadow-[0_-8px_28px_rgba(56,31,73,0.12)]"
+  >
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <p className="text-sm font-normal text-[#634B6F] leading-relaxed">
+        <span className="font-semibold text-[#381F49] mr-1.5">We use cookies</span>
+        to enhance your browsing experience and analyse site traffic. By clicking &ldquo;Accept All&rdquo;, you consent to our use of cookies. Read our{' '}
+        <button
+          type="button"
+          onClick={onOpenLegal}
+          className="bh-link text-[#704287] hover:text-[#381F49] font-medium"
+        >
+          Privacy Policy
+        </button>.
+      </p>
+      <div className="flex items-center gap-3 shrink-0">
+        <Button variant="outline" size="sm" onClick={onReject} className="flex-1 sm:flex-initial whitespace-nowrap px-4">
+          Reject Non-Essential
+        </Button>
+        <Button variant="gold" size="sm" onClick={onAccept} className="flex-1 sm:flex-initial whitespace-nowrap px-5">
+          Accept All
+        </Button>
+      </div>
+    </div>
+  </div>
+);
+
 // --- Layout Components ---
 export const TopNav: React.FC<{ 
   isLoggedIn: boolean; 
@@ -331,7 +366,7 @@ export const TopNav: React.FC<{
 
   return (
     <>
-      <header className="bg-[#381F49] border-b border-[#704287]/50 sticky top-0 z-50 shadow-sm">
+      <header className="bg-[#381F49] border-b border-[#F2BE42]/75 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center relative">
             

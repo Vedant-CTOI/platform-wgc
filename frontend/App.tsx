@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useState } from 'react';
 import { AppState, Action, ViewState, UserProfile, Template, CampaignDraft } from './types';
-import { TopNav, ShareBand, useInViewOnce } from './components/SharedUI';
+import { TopNav, ShareBand, CookieBanner, useInViewOnce } from './components/SharedUI';
 import { LandingView, RegisterView, LoginView, OTPView } from './views/AuthViews';
 import { ProfileView } from './views/MainViews';
 import { DashboardView, StoreManagementView } from './views/MainViews';
@@ -185,6 +185,7 @@ const LandingFooter: React.FC<{ onNavigate: (view: ViewState) => void; onOpenLeg
 export default function App() {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [showLegalModal, setShowLegalModal] = useState(false);
+  const [showCookieBanner, setShowCookieBanner] = useState(true);
 
   // Helper functions to pass to views
   const navigate = (view: ViewState) => dispatch({ type: 'NAVIGATE', payload: view });
@@ -281,6 +282,14 @@ export default function App() {
       {/* Grounded Plum 900 Goldify Brand Footer for Landing */}
       {state.currentView === 'landing' && (
         <LandingFooter onNavigate={navigate} onOpenLegal={() => setShowLegalModal(true)} />
+      )}
+
+      {showCookieBanner && (
+        <CookieBanner
+          onAccept={() => setShowCookieBanner(false)}
+          onReject={() => setShowCookieBanner(false)}
+          onOpenLegal={() => setShowLegalModal(true)}
+        />
       )}
 
       {showLegalModal && <LegalModal onClose={() => setShowLegalModal(false)} />}
