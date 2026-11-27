@@ -88,7 +88,7 @@ const CanvasPreview: React.FC<{ template: Template, data: PreviewData, ratioClas
             height: `${16 * scale}cqi`
           }}
         >
-          <img src={data.jewelryImageUrl} alt="Jewelry piece" className="w-full h-full object-cover" />
+          <img src={data.jewelryImageUrl} alt="Jewellery piece" className="w-full h-full object-cover" />
         </div>
       )}
 
@@ -209,7 +209,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
           </div>
           {selectedTemplates.length > 0 && (
             <Button variant="gold" onClick={handleContinue} className="group px-6">
-              <span>Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
+              <span>Customise Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
               <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
             </Button>
           )}
@@ -220,7 +220,7 @@ export const GalleryView: React.FC<FlowProps> = ({ onNavigate, onSelectTemplate,
             <PageHeader title="Choose Templates" onBack={() => onNavigate('dashboard')} />
             {selectedTemplates.length > 0 && (
               <Button variant="gold" onClick={handleContinue} className="group px-6">
-                <span>Customize Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
+                <span>Customise Selected ({selectedTemplates.length}/{MAX_CREATIVES_PER_SESSION})</span>
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform duration-500 ease-out group-hover:translate-x-1" />
               </Button>
             )}
@@ -560,7 +560,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
     <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-8 flex flex-col h-[calc(100vh-4rem)] bg-white">
       <div className="px-2 sm:px-0">
         <PageHeader title="Add Your Details" onBack={() => onNavigate('gallery')} />
-        <p className="text-[#634B6F] font-normal mb-6">Provide the information to personalize your selected creatives.</p>
+        <p className="text-[#634B6F] font-normal mb-6">Provide the information to personalise your selected creatives.</p>
       </div>
 
       {/* Side-by-side layout forced on both mobile and desktop */}
@@ -627,7 +627,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 className="mt-1 h-5 w-5 text-[#381F49] border-[#634B6F]/50 rounded focus:ring-[#704287]"
               />
               <span className="ml-3 text-sm text-black font-medium group-hover:text-[#381F49] transition-colors">
-                Use same contact number, address, and jewelry piece for all selected creatives
+                Use same contact number, address, and jewellery piece for all selected creatives
               </span>
             </label>
             )}
@@ -712,7 +712,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                 </div>
 
                 <div className="mb-6">
-                  <label className="block text-sm font-medium text-black mb-2">Jewelry Piece for Insert *</label>
+                  <label className="block text-sm font-medium text-black mb-2">Jewellery Piece for Insert *</label>
                   <div
                     onClick={() => openUpload(index, 'jewelry')}
                     className="border-2 border-dashed border-[#634B6F]/45 rounded-xl p-6 flex flex-col items-center justify-center text-sm text-[#634B6F] cursor-pointer hover:bg-[#ECE9ED]/50 transition-colors relative overflow-hidden min-h-[120px]"
@@ -773,7 +773,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-[#E6E9ED] overflow-hidden flex flex-col">
             <div className="p-4 border-b border-[#E6E9ED] flex justify-between items-center bg-[#ECE9ED]">
-              <h3 className="font-semibold text-[#381F49]">Upload {uploadType === 'logo' ? 'Store Logo' : 'Jewelry Piece'}</h3>
+              <h3 className="font-semibold text-[#381F49]">Upload {uploadType === 'logo' ? 'Store Logo' : 'Jewellery Piece'}</h3>
               <button onClick={closeModal} className="p-1 text-[#634B6F] hover:text-[#381F49] rounded-full hover:bg-black/5 transition-colors">
                 <X className="w-5 h-5" />
               </button>
@@ -812,7 +812,7 @@ export const EditorView: React.FC<FlowProps> = ({ onNavigate, selectedTemplates,
                   <div className="w-full min-h-[80px] flex flex-col items-center justify-center text-center mb-4">
                     {isChecking && (
                       <div className="text-[#381F49] flex flex-col items-center">
-                        <p className="font-semibold">Analyzing image...</p>
+                        <p className="font-semibold">Analysing image...</p>
                         <p className="text-xs font-light text-[#634B6F] mt-1">{uploadType === 'jewelry' ? 'Checking that this is gold jewellery' : 'Checking for inappropriate content'}</p>
                       </div>
                     )}

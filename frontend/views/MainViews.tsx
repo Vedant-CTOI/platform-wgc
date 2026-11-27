@@ -564,7 +564,7 @@ export const StoreManagementView: React.FC<StoreManagementProps> = ({ user, onNa
                   <div className="w-full min-h-[80px] flex flex-col items-center justify-center text-center mb-4">
                     {isChecking && (
                       <div className="text-[#381F49] flex flex-col items-center">
-                        <p className="font-semibold">Analyzing image...</p>
+                        <p className="font-semibold">Analysing image...</p>
                         <p className="text-xs font-light text-[#634B6F] mt-1">Checking for inappropriate content</p>
                       </div>
                     )}

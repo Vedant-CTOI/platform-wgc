@@ -17,11 +17,11 @@ export const HelpView: React.FC<MiscViewProps> = ({ onBack }) => {
           <div className="space-y-6">
             <div>
               <h4 className="font-semibold text-black">How do I create a new campaign?</h4>
-              <p className="text-[#634B6F] font-normal text-sm mt-1">Navigate to your dashboard and click the "Create New Campaign" button. You can then select a template, choose your aspect ratios, and customize the content.</p>
+              <p className="text-[#634B6F] font-normal text-sm mt-1">Navigate to your dashboard and click the "Create New Campaign" button. You can then select a template, choose your aspect ratios, and customise the content.</p>
             </div>
             <div>
               <h4 className="font-semibold text-black">Can I add multiple stores to one campaign?</h4>
-              <p className="text-[#634B6F] font-normal text-sm mt-1">Yes! During the customization step, you can select multiple stores from your account. The platform will automatically generate separate images for each store you select.</p>
+              <p className="text-[#634B6F] font-normal text-sm mt-1">Yes! During the customisation step, you can select multiple stores from your account. The platform will automatically generate separate images for each store you select.</p>
             </div>
             <div>
               <h4 className="font-semibold text-black">What formats can I download?</h4>
@@ -32,7 +32,7 @@ export const HelpView: React.FC<MiscViewProps> = ({ onBack }) => {
 
         <div className="border-t border-[#E6E9ED] pt-8">
           <h3 className="text-lg font-semibold text-black mb-2">Still Need Help?</h3>
-          <p className="text-[#634B6F] font-normal text-sm mb-4">Our support team is available Monday through Friday, 9am to 6pm.</p>
+          <p className="text-[#634B6F] font-normal text-sm mb-4">Our support team is available Monday to Friday, 9am to 6pm.</p>
           <a href="mailto:support@goldify.com" className="inline-flex items-center justify-center rounded-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-[#ECE9ED] text-[#381F49] hover:bg-[#e1dce5] px-4 py-2.5 text-sm">
             Contact Support
           </a>
@@ -49,7 +49,7 @@ export const FaqView: React.FC<MiscViewProps> = ({ onBack }) => {
     { q: "Can I add multiple stores?", a: "Absolutely! You can manage multiple store locations and generate creatives for all of them at once." },
     { q: "What formats can I download?", a: "You can download your campaigns in PNG format for digital use or PDF format for high-quality printing." },
     { q: "How do I change my store logo?", a: "Go to 'Store Management' from the menu, select your store, and click 'Change Logo'." },
-    { q: "Are the templates customizable?", a: "Yes, you can customize the text, offer details, and select different aspect ratios for various platforms." },
+    { q: "Are the templates customisable?", a: "Yes, you can customise the text, offer details, and select different aspect ratios for various platforms." },
   ];
 
   return (
@@ -76,7 +76,7 @@ const CombinedLegalContent: React.FC = () => (
     <h5 className="text-black font-semibold mt-4 mb-1.5">1. Acceptance of Terms</h5>
     <p className="font-normal">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.</p>
 
-    <h5 className="text-black font-semibold mt-4 mb-1.5">2. User License</h5>
+    <h5 className="text-black font-semibold mt-4 mb-1.5">2. User Licence</h5>
     <p className="font-normal">Mauris ipsum. Nulla metus metus, ullamcorper vel, tincidunt sed, euismod in, nibh. Quisque volutpat condimentum velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nam nec ante. Sed lacinia, urna non tincidunt mattis, tortor neque adipiscing diam, a cursus ipsum ante quis turpis.</p>
 
     <h5 className="text-black font-semibold mt-4 mb-1.5">3. Disclaimer</h5>
